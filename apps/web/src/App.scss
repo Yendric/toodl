@@ -1,0 +1,19 @@
+@import "@syncfusion/ej2/material.css" screen;
+@import "@syncfusion/ej2/material-dark.css" screen and (prefers-color-scheme: dark);
+
+body {
+  margin: 0;
+  overflow-y: scroll;
+  color-adjust: exact !important;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.google-login-button {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  width: 100% !important;
+}

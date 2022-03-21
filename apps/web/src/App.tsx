@@ -1,26 +1,56 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Router from "./components/Router";
+import { BrowserRouter } from "react-router-dom";
+// import Footer from './components/Partials/Footer';
+// import NavBar from './components/Partials/NavBar';
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { AppStateProvider } from "./context/AppState";
+// import LoadingBar from './components/Partials/LoadingBar';
+import "./App.scss";
+import { FC, useMemo } from "react";
+import NavBar from "./components/Partials/NavBar";
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
+import axios from "axios";
+import Footer from "./components/Partials/Footer";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+axios.defaults.withCredentials = true;
+
+const App: FC = () => {
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: prefersDarkMode ? "dark" : "light",
+        },
+      }),
+    [prefersDarkMode]
   );
-}
+
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <AppStateProvider>
+        <BrowserRouter>
+          <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+            <div style={{ flex: "1 0 auto" }}>
+              <NavBar />
+              {/* <LoadingBar /> */}
+              <Router />
+            </div>
+            <div style={{ flexShrink: 0 }}>
+              <Footer />
+            </div>
+          </div>
+        </BrowserRouter>
+      </AppStateProvider>
+    </ThemeProvider>
+  );
+};
 
 export default App;
