@@ -1,0 +1,11 @@
+name: Cloudflare pages production build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  cloudflare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start deployment
+        run: curl -X POST https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/a6d96136-efea-401f-b8e8-ef0f51c34196
