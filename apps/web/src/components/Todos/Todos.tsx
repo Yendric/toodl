@@ -73,7 +73,7 @@ const Todos: FC = () => {
           <Sidebar />
         </Drawer>
       </Box>
-      <Box component="main" sx={{ flexGrow: 1, width: { sm: `calc(100% - 240px)` } }}>
+      <Box component="main" sx={{ flexGrow: 1, width: `calc(100% - 240px)` }}>
         <Box m={2}>
           {todos.some((todo) => todo.done) && (
             <Button sx={{ position: "absolute" }} onClick={() => destroyCompleted()} variant="contained">
@@ -85,9 +85,9 @@ const Todos: FC = () => {
           </Typography>
         </Box>
         <AddForm /> <br />
-        <Container maxWidth="md" sx={{ py: 0 }}>
+        <Container maxWidth="md" sx={{ py: 0, mb: 2 }}>
           <TableContainer component={Paper}>
-            <Table size="small" aria-label="todos">
+            <Table size="small" aria-label="todos" sx={{ minWidth: 750 }}>
               {todos.length === 0 && (
                 <caption>Zo te zien heb je nog geen todos in deze lijst, maak er één bovenaan!</caption>
               )}
