@@ -41,13 +41,13 @@ export const AuthProvider: FC = ({ children }) => {
   async function logout() {
     await axios(`${apiUrl}/auth/logout`);
     setUser({
-      username: "",
       auth: false,
     });
+    enqueueSnackbar("Account succesvol verwijderd.");
   }
 
   async function deleteAccount() {
-    await axios.post(`${apiUrl}/auth/delete`);
+    await axios.post(`${apiUrl}/auth/user_data/destroy`);
     logout();
   }
 
