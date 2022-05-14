@@ -37,8 +37,8 @@ export const SocketProvider: FC = ({ children }) => {
     return new Promise((resolve, reject) => {
       if (!socket) return;
       socket.emit(uri, args, (res: any) => {
-        if (!res) {
-          enqueueSnackbar("Er is iets foutgelopen", { variant: "warning" });
+        if (!res || res.error) {
+          enqueueSnackbar("Er is iets foutgelopen: " + res.error, { variant: "warning" });
           return reject(res.error);
         }
         return resolve(res);
