@@ -28,7 +28,7 @@ const AddForm: FC = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Grid container justifyContent="center">
+      <Grid sx={{ mt: 5 }} container justifyContent="center">
         <MobileDateTimePicker
           renderInput={(props) => <TextField style={{ marginTop: "16px" }} {...props} variant="standard" />}
           disablePast
