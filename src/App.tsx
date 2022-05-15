@@ -25,6 +25,9 @@ const App: FC = () => {
   const theme = useMemo(
     () =>
       createTheme({
+        zIndex: {
+          drawer: 1000,
+        },
         palette: {
           mode: prefersDarkMode ? "dark" : "light",
         },
