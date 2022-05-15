@@ -46,7 +46,7 @@ const App: FC = () => {
               {/* <LoadingBar /> */}
               <Router />
             </div>
-            <div style={{ flexShrink: 0 }}>
+            <div style={{ flexShrink: 0, zIndex: theme.zIndex.drawer + 1 }}>
               <Footer />
             </div>
           </div>
