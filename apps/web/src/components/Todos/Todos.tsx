@@ -76,18 +76,16 @@ const Todos: FC = () => {
       <Box component="main" sx={{ flexGrow: 1, width: `calc(100% - 240px)` }}>
         <Box m={2}>
           {todos.some((todo) => todo.done) && (
-            <Button sx={{ position: "absolute" }} onClick={() => destroyCompleted()} variant="contained">
+            <Button sx={{ float: "left" }} onClick={() => destroyCompleted()} variant="contained">
               Verwijder voltooid
             </Button>
           )}
-          <Typography sx={{ float: "right" }}>
-            Nog niet voltooid: {todos.filter((todo) => !todo.done).length}
-          </Typography>
+          <Typography sx={{ float: "right" }}>Onvoltooid: {todos.filter((todo) => !todo.done).length}</Typography>
         </Box>
-        <AddForm /> <br />
-        <Container maxWidth="md" sx={{ py: 0, mb: 2 }}>
+        <AddForm />
+        <Container maxWidth="md" sx={{ my: 2 }}>
           <TableContainer component={Paper}>
-            <Table size="small" aria-label="todos" sx={{ minWidth: 750 }}>
+            <Table size="small" aria-label="todos" sx={{ minWidth: 500 }}>
               {todos.length === 0 && (
                 <caption>Zo te zien heb je nog geen todos in deze lijst, maak er één bovenaan!</caption>
               )}
@@ -106,7 +104,7 @@ const Todos: FC = () => {
             </Typography>
           )}
           <TableContainer component={Paper}>
-            <Table size="small" aria-label="voltooide todos" sx={{ minWidth: 750 }}>
+            <Table size="small" aria-label="voltooide todos" sx={{ minWidth: 500 }}>
               <TableBody>
                 {todos
                   .filter((todo) => todo.done)
