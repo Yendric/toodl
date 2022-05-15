@@ -17,7 +17,7 @@ export const SmartschoolEventsProvider: FC = ({ children }) => {
   useEffect(() => {
     async function fetchSS() {
       let smartschoolEvents: ITodo[] = [];
-      if (user.smartschoolCourseExport !== undefined) {
+      if (user.smartschoolCourseExport) {
         const res = await axios(
           "https://" + process.env.REACT_APP_SMARTSCHOOL_PROXY_DOMAIN + user.smartschoolCourseExport.slice(26),
           {
@@ -41,7 +41,7 @@ export const SmartschoolEventsProvider: FC = ({ children }) => {
           })
         );
       }
-      if (user.smartschoolTaskExport !== undefined) {
+      if (user.smartschoolTaskExport) {
         const res = await axios(
           "https://" + process.env.REACT_APP_SMARTSCHOOL_PROXY_DOMAIN + user.smartschoolTaskExport.slice(26),
           {
