@@ -106,7 +106,7 @@ const Todos: FC = () => {
             </Typography>
           )}
           <TableContainer component={Paper}>
-            <Table size="small" aria-label="voltooide todos">
+            <Table size="small" aria-label="voltooide todos" sx={{ minWidth: 750 }}>
               <TableBody>
                 {todos
                   .filter((todo) => todo.done)
