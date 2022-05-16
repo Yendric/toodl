@@ -201,7 +201,7 @@ const Profile: FC = () => {
             Opslaan
           </Button>
           <Button variant="contained" sx={{ float: "right" }} color="error" onClick={handleOpen} startIcon={<Delete />}>
-            Verwijder account
+            Verwijder
           </Button>
           <Modal
             open={open}

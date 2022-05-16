@@ -6,6 +6,9 @@ import Login from "./Login/Login";
 import Error404 from "./Errors/Error404";
 import Settings from "./Settings/Settings";
 import Register from "./Register/Register";
+import Privacy from "./Privacy/Privacy";
+import AlgemeneVoorwaarden from "./AlgemeneVoorwaarden/AlgemeneVoorwaarden";
+import { CircularProgress, Stack } from "@mui/material";
 
 const Planning = lazy(() => import("./Planning/Planning"));
 
@@ -16,7 +19,8 @@ const Router: FC = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/privacy" element={<Login />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/voorwaarden" element={<AlgemeneVoorwaarden />} />
 
           <Route
             path="/settings"
@@ -38,7 +42,15 @@ const Router: FC = () => {
             path="/planning"
             element={
               <PrivateRoute>
-                <Planning />
+                <Suspense
+                  fallback={
+                    <Stack alignItems="center">
+                      <CircularProgress size={65} sx={{ mt: 5 }}></CircularProgress>
+                    </Stack>
+                  }
+                >
+                  <Planning />
+                </Suspense>
               </PrivateRoute>
             }
           />
