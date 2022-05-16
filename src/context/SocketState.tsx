@@ -18,7 +18,7 @@ export const SocketProvider: FC = ({ children }) => {
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
-    if (user.auth && !socket?.connected) {
+    if (user.auth && (!socket?.connected || !socket)) {
       setSocket(
         io(apiUrl.slice(0, -3), {
           withCredentials: true,
