@@ -40,15 +40,17 @@ export const AuthProvider: FC = ({ children }) => {
 
   async function logout() {
     await axios(`${apiUrl}/auth/logout`);
+
     setUser({
       auth: false,
     });
-    enqueueSnackbar("Account succesvol verwijderd.");
+    enqueueSnackbar("Succesvol uitgelogd.");
   }
 
   async function deleteAccount() {
     await axios.post(`${apiUrl}/auth/user_data/destroy`);
     logout();
+    enqueueSnackbar("Account succesvol verwijderd.");
   }
 
   async function googleLogin(googleData: GoogleLoginResponse | GoogleLoginResponseOffline) {
