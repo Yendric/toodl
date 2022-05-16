@@ -4,6 +4,7 @@ import { useSnackbar } from "notistack";
 import IUser from "../types/IUser";
 import axios from "axios";
 import { GoogleLoginResponse, GoogleLoginResponseOffline } from "react-google-login";
+import { useSocket } from "./SocketState";
 
 type AuthState = {
   user: IUser;
@@ -18,6 +19,7 @@ export const AuthContext = createContext<AuthState | undefined>(undefined);
 export const AuthProvider: FC = ({ children }) => {
   const [user, setUser] = useState<IUser>({ auth: false });
   const { setIsLoading, apiUrl } = useAppState();
+  const { socket } = useSocket();
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
@@ -40,15 +42,18 @@ export const AuthProvider: FC = ({ children }) => {
 
   async function logout() {
     await axios(`${apiUrl}/auth/logout`);
+
+    if (socket) socket.disconnect();
     setUser({
       auth: false,
     });
-    enqueueSnackbar("Account succesvol verwijderd.");
+    enqueueSnackbar("Succesvol uitgelogd.");
   }
 
   async function deleteAccount() {
     await axios.post(`${apiUrl}/auth/user_data/destroy`);
     logout();
+    enqueueSnackbar("Account succesvol verwijderd.");
   }
 
   async function googleLogin(googleData: GoogleLoginResponse | GoogleLoginResponseOffline) {
