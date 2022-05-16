@@ -25,6 +25,11 @@ export const TodoProvider: FC = ({ children }) => {
     if (!socket) return;
 
     setIsLoading(true);
+
+    socket.on("connect", () => {
+      socket.emit("todos");
+    });
+
     call("todos").then((todos: ITodo[]) => {
       setTodos(todos);
       setIsLoading(false);
