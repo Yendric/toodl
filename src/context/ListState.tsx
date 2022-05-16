@@ -23,6 +23,10 @@ export const ListProvider: FC = ({ children }) => {
     if (!socket) return;
 
     setIsLoading(true);
+
+    socket.on("connect", () => {
+      socket.emit("lists");
+    });
     socket.emit("lists", (lists: IList[]) => {
       setLists(lists);
       setIsLoading(false);
