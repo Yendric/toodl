@@ -16,6 +16,7 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import axios from "axios";
 import Footer from "./components/Partials/Footer";
+import LoadingBar from "./components/Partials/LoadingBar";
 
 axios.defaults.withCredentials = true;
 
@@ -43,7 +44,7 @@ const App: FC = () => {
           <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
             <div style={{ flex: "1 0 auto" }}>
               <NavBar />
-              {/* <LoadingBar /> */}
+              <LoadingBar />
               <Router />
             </div>
             <div style={{ flexShrink: 0, zIndex: theme.zIndex.drawer + 1 }}>
