@@ -84,22 +84,20 @@ const Todos: FC = () => {
         </Box>
         <AddForm />
         <Container maxWidth="md" sx={{ my: 2 }}>
-          <Paper sx={{ overflow: "scroll" }}>
-            <TableContainer>
-              <Table size="small" aria-label="todos">
-                {todos.length === 0 && (
-                  <caption>Zo te zien heb je nog geen todos in deze lijst, maak er één bovenaan!</caption>
-                )}
-                <TableBody>
-                  {todos
-                    .filter((todo) => !todo.done)
-                    .map((todo) => (
-                      <Todo key={todo.id} todo={todo} />
-                    ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Paper>
+          <TableContainer component={Paper}>
+            <Table size="small" aria-label="todos">
+              {todos.length === 0 && (
+                <caption>Zo te zien heb je nog geen todos in deze lijst, maak er één bovenaan!</caption>
+              )}
+              <TableBody>
+                {todos
+                  .filter((todo) => !todo.done)
+                  .map((todo) => (
+                    <Todo key={todo.id} todo={todo} />
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
           {todos.some((todo) => todo.done) && (
             <Typography variant="h6" mt={2}>
               Voltooide todos
