@@ -26,6 +26,10 @@ export const SocketProvider: FC = ({ children }) => {
       );
     }
 
+    if (!user.auth && socket?.connected) {
+      socket.disconnect();
+    }
+
     return () => {
       if (!socket) return;
       socket.disconnect();
