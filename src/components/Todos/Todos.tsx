@@ -61,7 +61,7 @@ const Todos: FC = () => {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <Box component="nav" sx={{ width: { sm: 240 }, flexShrink: { sm: 0 } }}>
+      <Box component="nav">
         <Drawer variant="permanent" open={open}>
           <Toolbar />
           <List>
@@ -73,7 +73,7 @@ const Todos: FC = () => {
           <Sidebar />
         </Drawer>
       </Box>
-      <Box component="main" sx={{ flexGrow: 1, width: `calc(100% - 240px)` }}>
+      <Box component="main" sx={{ width: open ? `calc(100% - 240px)` : `calc(100% - 56px)` }}>
         <Box m={2}>
           {todos.some((todo) => todo.done) && (
             <Button sx={{ float: "left" }} onClick={() => destroyCompleted()} variant="contained">
@@ -84,27 +84,29 @@ const Todos: FC = () => {
         </Box>
         <AddForm />
         <Container maxWidth="md" sx={{ my: 2 }}>
-          <TableContainer component={Paper}>
-            <Table size="small" aria-label="todos" sx={{ minWidth: 500 }}>
-              {todos.length === 0 && (
-                <caption>Zo te zien heb je nog geen todos in deze lijst, maak er één bovenaan!</caption>
-              )}
-              <TableBody>
-                {todos
-                  .filter((todo) => !todo.done)
-                  .map((todo) => (
-                    <Todo key={todo.id} todo={todo} />
-                  ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <Paper sx={{ overflow: "scroll" }}>
+            <TableContainer>
+              <Table size="small" aria-label="todos">
+                {todos.length === 0 && (
+                  <caption>Zo te zien heb je nog geen todos in deze lijst, maak er één bovenaan!</caption>
+                )}
+                <TableBody>
+                  {todos
+                    .filter((todo) => !todo.done)
+                    .map((todo) => (
+                      <Todo key={todo.id} todo={todo} />
+                    ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Paper>
           {todos.some((todo) => todo.done) && (
             <Typography variant="h6" mt={2}>
               Voltooide todos
             </Typography>
           )}
           <TableContainer component={Paper}>
-            <Table size="small" aria-label="voltooide todos" sx={{ minWidth: 500 }}>
+            <Table size="small" aria-label="voltooide todos">
               <TableBody>
                 {todos
                   .filter((todo) => todo.done)
