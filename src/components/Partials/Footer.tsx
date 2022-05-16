@@ -1,4 +1,5 @@
 import { Box, Container, Link, Typography, useTheme } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 
 export default function Footer() {
   const theme = useTheme();
@@ -20,6 +21,15 @@ export default function Footer() {
             Yendric Van Roey
           </Link>
           {" " + new Date().getFullYear()}
+        </Typography>
+        <Typography variant="body2" sx={{ mt: 1 }} color="textSecondary" align="center">
+          <Link component={RouterLink} to="/privacy" color="inherit">
+            Privacy beleid
+          </Link>
+          {" — "}
+          <Link component={RouterLink} to="/voorwaarden" color="inherit">
+            Algemene voorwaarden
+          </Link>
         </Typography>
       </Container>
     </Box>
