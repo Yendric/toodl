@@ -23,7 +23,7 @@ const Privacy: FC = () => {
       </p>
       <p>
         De termen die in dit Privacybeleid worden gebruikt, hebben dezelfde betekenis als in onze{" "}
-        <Link to="/algemene-voorwaarden" component={RouterLink}>
+        <Link to="/voorwaarden" component={RouterLink}>
           Algemene Voorwaarden
         </Link>
         , die toegankelijk zijn op Toodl, tenzij anders gedefinieerd in dit Privacybeleid.
