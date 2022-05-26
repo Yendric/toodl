@@ -19,6 +19,11 @@ import { useRef } from "react";
 import { useList } from "../../context/ListState";
 import { useSmartschoolEvents } from "../../context/SmartschoolEventsState";
 
+import numberingSystems from "cldr-data/supplemental/numberingSystems.json";
+import caGregorian from "cldr-data/main/nl/ca-gregorian.json";
+import numbers from "cldr-data/main/nl/numbers.json";
+import timeZoneNames from "cldr-data/main/nl/timeZoneNames.json";
+
 export default function Planning() {
   const { todos, create, destroy, update } = useTodo();
   const { events } = useSmartschoolEvents();
@@ -26,12 +31,7 @@ export default function Planning() {
   const { lists } = useList();
   const schedule = useRef<ScheduleComponent | null>(null);
 
-  loadCldr(
-    require("cldr-data/supplemental/numberingSystems.json"),
-    require("cldr-data/main/nl/ca-gregorian.json"),
-    require("cldr-data/main/nl/numbers.json"),
-    require("cldr-data/main/nl/timeZoneNames.json")
-  );
+  loadCldr(numberingSystems, caGregorian, numbers, timeZoneNames);
   L10n.load({ nl: nl.nl });
   setCulture("nl");
 
@@ -121,6 +121,7 @@ export default function Planning() {
 
   return (
     <ScheduleComponent
+      id="toodl-scheduler"
       workHours={{ highlight: false }}
       timeScale={{ enable: true, interval: 60 }}
       ref={schedule}
@@ -133,6 +134,7 @@ export default function Planning() {
       eventRendered={eventRendered}
       popupOpen={popupOpen}
       allowMultiCellSelection={false}
+      enablePersistence={true}
     >
       <ViewsDirective>
         <ViewDirective option="Week" />

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, FC } from "react";
+import { createContext, useContext, useState, useEffect, FC, ReactNode } from "react";
 import { useAppState } from "./AppState";
 import { useSocket } from "./SocketState";
 import IList from "../types/IList";
@@ -13,7 +13,7 @@ type ListState = {
 
 export const ListContext = createContext<ListState | undefined>(undefined);
 
-export const ListProvider: FC = ({ children }) => {
+export const ListProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [lists, setLists] = useState<IList[]>([]);
   const { socket, call } = useSocket();
   const { setIsLoading } = useAppState();

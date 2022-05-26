@@ -1,21 +1,21 @@
-import { createContext, useContext, useState, useEffect, FC } from "react";
+import { createContext, useContext, useState, useEffect, FC, ReactNode } from "react";
 import { useAppState } from "./AppState";
 import { useSnackbar } from "notistack";
 import IUser from "../types/IUser";
 import axios from "axios";
-import { GoogleLoginResponse, GoogleLoginResponseOffline } from "react-google-login";
+import { CredentialResponse, GoogleOAuthProvider } from "@react-oauth/google";
 
 type AuthState = {
   user: IUser;
   logout: () => Promise<void>;
-  googleLogin: (googleData: GoogleLoginResponse | GoogleLoginResponseOffline) => Promise<void>;
+  googleLogin: (credentialResponse: CredentialResponse) => Promise<void>;
   checkAuth: () => void;
   deleteAccount: () => Promise<void>;
 };
 
 export const AuthContext = createContext<AuthState | undefined>(undefined);
 
-export const AuthProvider: FC = ({ children }) => {
+export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<IUser>({ auth: false });
   const { setIsLoading, apiUrl } = useAppState();
   const { enqueueSnackbar } = useSnackbar();
@@ -53,18 +53,18 @@ export const AuthProvider: FC = ({ children }) => {
     enqueueSnackbar("Account succesvol verwijderd.");
   }
 
-  async function googleLogin(googleData: GoogleLoginResponse | GoogleLoginResponseOffline) {
-    if (!("tokenId" in googleData)) return;
+  async function googleLogin(credentialResponse: CredentialResponse) {
+    if (!("credential" in credentialResponse)) return;
 
     await axios.post(`${apiUrl}/auth/google`, {
-      token: googleData.tokenId,
+      token: credentialResponse.credential,
     });
     checkAuth();
   }
 
   return (
     <AuthContext.Provider value={{ user, logout, googleLogin, checkAuth, deleteAccount }}>
-      {children}
+      <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID ?? ""}>{children}</GoogleOAuthProvider>
     </AuthContext.Provider>
   );
 };
