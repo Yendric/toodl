@@ -27,9 +27,13 @@ export default function Planning() {
   const schedule = useRef<ScheduleComponent | null>(null);
 
   loadCldr(
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     require("cldr-data/supplemental/numberingSystems.json"),
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     require("cldr-data/main/nl/ca-gregorian.json"),
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     require("cldr-data/main/nl/numbers.json"),
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     require("cldr-data/main/nl/timeZoneNames.json")
   );
   L10n.load({ nl: nl.nl });
