@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, FC } from "react";
+import { createContext, useContext, useState, useEffect, FC, ReactNode } from "react";
 import { useAppState } from "./AppState";
 import { useSnackbar } from "notistack";
 import ITodo from "../types/ITodo";
@@ -15,7 +15,7 @@ type TodoState = {
 
 export const TodoContext = createContext<TodoState | undefined>(undefined);
 
-export const TodoProvider: FC = ({ children }) => {
+export const TodoProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [todos, setTodos] = useState<ITodo[]>([]);
   const { socket, call } = useSocket();
   const { setIsLoading } = useAppState();

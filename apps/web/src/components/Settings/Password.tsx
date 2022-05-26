@@ -30,9 +30,11 @@ const Password: FC = () => {
       reset();
       enqueueSnackbar("Wachtwoord geüpdatet");
     } catch (error) {
-      enqueueSnackbar((error as AxiosError).response?.data.message ?? "Er is iets foutgegaan", {
-        variant: "error",
-      });
+      if (error instanceof AxiosError) {
+        enqueueSnackbar(error.response?.data.message ?? "Er is iets foutgegaan", {
+          variant: "error",
+        });
+      }
     }
   });
 

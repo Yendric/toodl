@@ -46,7 +46,7 @@ const AddForm: FC = () => {
           }}
           label="Todo..."
         />
-        <Fab style={{ margin: "0 0 0 1rem" }} type="submit" color="primary" aria-label="add">
+        <Fab sx={{ marginLeft: 2, zIndex: 1 }} type="submit" color="primary" aria-label="add">
           <AddIcon />
         </Fab>
       </Grid>

@@ -1,5 +1,5 @@
 import { useSnackbar } from "notistack";
-import { createContext, useContext, useState, FC, useEffect } from "react";
+import { createContext, useContext, useState, FC, useEffect, ReactNode } from "react";
 import IList from "../types/IList";
 import ITodo from "../types/ITodo";
 import { useList } from "./ListState";
@@ -13,7 +13,7 @@ type CurrentList = {
 
 export const CurrentListContext = createContext<CurrentList | undefined>(undefined);
 
-export const CurrentListProvider: FC = ({ children }) => {
+export const CurrentListProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const { lists } = useList();
   const [currentList, setCurrentList] = useState<IList>();
   const { todos: allTodos, destroy } = useTodo();

@@ -1,5 +1,5 @@
 import { useSnackbar } from "notistack";
-import { createContext, useContext, useState, useEffect, FC } from "react";
+import { createContext, useContext, useState, useEffect, FC, ReactNode } from "react";
 import io, { Socket } from "socket.io-client";
 import { useAppState } from "./AppState";
 import { useAuth } from "./AuthState";
@@ -11,7 +11,7 @@ type SocketState = {
 
 export const SocketContext = createContext<SocketState | undefined>(undefined);
 
-export const SocketProvider: FC = ({ children }) => {
+export const SocketProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [socket, setSocket] = useState<Socket>();
   const { setIsLoading, apiUrl } = useAppState();
   const { user } = useAuth();

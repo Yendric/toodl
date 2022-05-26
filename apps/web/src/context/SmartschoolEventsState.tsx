@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, FC, useEffect } from "react";
+import { createContext, useContext, useState, FC, useEffect, ReactNode } from "react";
 import ITodo from "../types/ITodo";
 import { useAuth } from "./AuthState";
 import axios from "axios";
@@ -10,7 +10,7 @@ type SmartschoolEvents = {
 
 export const SmartschoolEventsContext = createContext<SmartschoolEvents | undefined>(undefined);
 
-export const SmartschoolEventsProvider: FC = ({ children }) => {
+export const SmartschoolEventsProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const { user } = useAuth();
   const [events, setEvents] = useState<ITodo[]>([]);
 
