@@ -9,10 +9,10 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Controller, useForm } from "react-hook-form";
 import { useAuth } from "../../context/AuthState";
-import { GoogleLogin } from "react-google-login";
 import { useTheme } from "@mui/material";
 import axios from "axios";
 import { useAppState } from "../../context/AppState";
+import { GoogleLogin } from "@react-oauth/google";
 
 type FormData = {
   email: string;
@@ -123,13 +123,8 @@ const Login: FC = () => {
         <Button sx={{ mt: 2 }} type="submit" fullWidth variant="contained" color="primary">
           Log in
         </Button>
-        <GoogleLogin
-          buttonText="Log in met Google"
-          clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID ?? ""}
-          onSuccess={googleLogin}
-          theme="dark"
-          className="google-login-button"
-        />
+
+        <GoogleLogin width="999999999" onSuccess={googleLogin} />
 
         <Grid container>
           <Grid item>

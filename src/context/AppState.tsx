@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, FC } from "react";
+import { createContext, useContext, useState, FC, ReactNode } from "react";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { SnackbarProvider } from "notistack";
@@ -18,7 +18,7 @@ export type appState = {
 
 export const AppStateContext = createContext<appState | undefined>(undefined);
 
-export const AppStateProvider: FC = ({ children }) => {
+export const AppStateProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const apiUrl = process.env.REACT_APP_API_URL + "/v1" ?? "http://localhost/api/v1";
 

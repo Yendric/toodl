@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Controller, useForm } from "react-hook-form";
 import { useAuth } from "../../context/AuthState";
-import { GoogleLogin } from "react-google-login";
+import { GoogleLogin } from "@react-oauth/google";
 import { useTheme } from "@mui/material";
 import axios from "axios";
 import { useAppState } from "../../context/AppState";
@@ -144,14 +144,7 @@ const Register: FC = () => {
         <Button sx={{ mt: 2 }} type="submit" fullWidth variant="contained" color="primary">
           Registreer
         </Button>
-        <GoogleLogin
-          buttonText="Registreer met Google"
-          clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID ?? ""}
-          onSuccess={googleLogin}
-          theme="dark"
-          className="google-login-button"
-        />
-
+        <GoogleLogin width="999999999" onSuccess={googleLogin} />
         <Grid container>
           <Grid item>
             <Link to="/login">Reeds een account? Log in</Link>
