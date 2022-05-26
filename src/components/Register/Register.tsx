@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -23,6 +23,8 @@ type FormData = {
 const Register: FC = () => {
   const { handleSubmit, control, setError } = useForm<FormData>();
   const { user, googleLogin, checkAuth } = useAuth();
+  const widthRef = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState("200");
   const { apiUrl } = useAppState();
   const navigate = useNavigate();
   const theme = useTheme();
@@ -32,6 +34,10 @@ const Register: FC = () => {
       navigate("/todos");
     }
   }, [user]);
+
+  useEffect(() => {
+    setWidth(widthRef.current?.clientWidth.toString() ?? "200");
+  }, [widthRef]);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -141,10 +147,14 @@ const Register: FC = () => {
             />
           )}
         />
-        <Button sx={{ mt: 2 }} type="submit" fullWidth variant="contained" color="primary">
-          Registreer
-        </Button>
-        <GoogleLogin width="999999999" onSuccess={googleLogin} />
+        <div ref={widthRef}>
+          <Button sx={{ mt: 2 }} type="submit" fullWidth variant="contained" color="primary">
+            Registreer
+          </Button>
+        </div>
+        <div className="google-login-button">
+          <GoogleLogin theme="filled_blue" onSuccess={googleLogin} width={width} />
+        </div>
         <Grid container>
           <Grid item>
             <Link to="/login">Reeds een account? Log in</Link>
