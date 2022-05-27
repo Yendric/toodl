@@ -125,6 +125,7 @@ export default function Planning() {
 
   return (
     <ScheduleComponent
+      id="toodl-scheduler"
       workHours={{ highlight: false }}
       timeScale={{ enable: true, interval: 60 }}
       ref={schedule}
@@ -137,6 +138,7 @@ export default function Planning() {
       eventRendered={eventRendered}
       popupOpen={popupOpen}
       allowMultiCellSelection={false}
+      enablePersistence={true}
     >
       <ViewsDirective>
         <ViewDirective option="Week" />
