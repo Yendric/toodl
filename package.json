@@ -55,7 +55,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "generate-assets": "npx pwa-asset-generator public/logo.png public/img --path-override \"/img\" --index ./public/index.html --manifest ./public/manifest.json --padding \"calc(50vh - 10%) calc(50vw - 15%)\" --quality 80 --background darkgrey"
+    "generate-assets": "npx pwa-asset-generator public/logo.png public/img --path \"%PUBLIC_URL%\" --index ./public/index.html --manifest ./public/manifest.json --padding \"calc(50vh - 10%) calc(50vw - 15%)\" --quality 80 --background darkgrey --splash-only"
   },
   "eslintConfig": {
     "extends": [
