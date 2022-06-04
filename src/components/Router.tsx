@@ -4,7 +4,6 @@ import { FC, lazy, Suspense } from "react";
 import Todos from "./Todos/Todos";
 import Login from "./Login/Login";
 import Error404 from "./Errors/Error404";
-import Settings from "./Settings/Settings";
 import Register from "./Register/Register";
 import Privacy from "./Privacy/Privacy";
 import AlgemeneVoorwaarden from "./AlgemeneVoorwaarden/AlgemeneVoorwaarden";
@@ -12,6 +11,7 @@ import { CircularProgress, Stack } from "@mui/material";
 import ScrollToTop from "./Partials/ScrollToTop";
 
 const Planning = lazy(() => import("./Planning/Planning"));
+const Settings = lazy(() => import("./Settings/Settings"));
 
 const Router: FC = () => {
   return (
@@ -27,7 +27,15 @@ const Router: FC = () => {
           path="/settings"
           element={
             <PrivateRoute>
-              <Settings />
+              <Suspense
+                fallback={
+                  <Stack alignItems="center">
+                    <CircularProgress size={65} sx={{ mt: 5 }}></CircularProgress>
+                  </Stack>
+                }
+              >
+                <Settings />
+              </Suspense>
             </PrivateRoute>
           }
         />
