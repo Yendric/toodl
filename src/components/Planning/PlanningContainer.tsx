@@ -15,7 +15,7 @@ import { DropDownList } from "@syncfusion/ej2-dropdowns";
 import ITodo from "../../types/ITodo";
 import nl from "@syncfusion/ej2-locale/src/nl.json";
 import { createElement, L10n, setCulture, loadCldr } from "@syncfusion/ej2-base";
-import { useRef } from "react";
+import { FC, useRef } from "react";
 import { useList } from "../../context/ListState";
 import { useSmartschoolEvents } from "../../context/SmartschoolEventsState";
 
@@ -24,7 +24,7 @@ import caGregorian from "cldr-data/main/nl/ca-gregorian.json";
 import numbers from "cldr-data/main/nl/numbers.json";
 import timeZoneNames from "cldr-data/main/nl/timeZoneNames.json";
 
-export default function Planning() {
+const PlanningContainer: FC = () => {
   const { todos, create, destroy, update } = useTodo();
   const { events } = useSmartschoolEvents();
 
@@ -100,12 +100,14 @@ export default function Planning() {
         const dropDownList: DropDownList = new DropDownList({
           dataSource: [
             { text: "Geen lijst (enkel planning)" },
-            ...lists.map((list) => {
-              return {
-                text: list.name,
-                value: list.id,
-              };
-            }),
+            ...lists
+              .filter((list) => !list.withoutDates)
+              .map((list) => {
+                return {
+                  text: list.name,
+                  value: list.id,
+                };
+              }),
           ],
           fields: { text: "text", value: "value" },
           value: args.data?.ListId as string,
@@ -129,7 +131,12 @@ export default function Planning() {
       actionBegin={onActionBegin}
       firstDayOfWeek={1}
       eventSettings={{
-        dataSource: [...todos.map((todo) => translate(todo, true)), ...events.map((event) => translate(event, true))],
+        dataSource: [
+          ...todos
+            .filter((todo) => !lists.find((list) => list.id === todo.listId)?.withoutDates)
+            .map((todo) => translate(todo, true)),
+          ...events.map((event) => translate(event, true)),
+        ],
       }}
       eventRendered={eventRendered}
       popupOpen={popupOpen}
@@ -145,4 +152,6 @@ export default function Planning() {
       <Inject services={[Day, Week, Month, TimelineMonth, Print, ICalendarImport]} />
     </ScheduleComponent>
   );
-}
+};
+
+export default PlanningContainer;
