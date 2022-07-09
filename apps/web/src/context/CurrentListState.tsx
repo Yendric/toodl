@@ -5,9 +5,9 @@ import ITodo from "../types/ITodo";
 import { useList } from "./ListState";
 import { useTodo } from "./TodoState";
 type CurrentList = {
-  currentList: IList | undefined;
+  list: IList | undefined;
   todos: ITodo[];
-  setCurrentList: (value: IList) => void;
+  setList: (value: IList) => void;
   destroyCompleted: (notification?: boolean) => void;
 };
 
@@ -15,14 +15,18 @@ export const CurrentListContext = createContext<CurrentList | undefined>(undefin
 
 export const CurrentListProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const { lists } = useList();
-  const [currentList, setCurrentList] = useState<IList>();
+  const [currentList, setList] = useState<IList>();
   const { todos: allTodos, destroy } = useTodo();
   const { enqueueSnackbar } = useSnackbar();
 
   const [todos, setTodos] = useState<ITodo[]>([]);
 
   useEffect(() => {
-    if (!currentList) setCurrentList(lists[0]);
+    if (!currentList || !lists.find((list) => list.id === currentList?.id)) {
+      setList(lists[0]);
+    } else {
+      setList(lists.find((list) => list.id === currentList?.id));
+    }
   }, [lists]);
 
   useEffect(() => {
@@ -38,9 +42,9 @@ export const CurrentListProvider: FC<{ children: ReactNode }> = ({ children }) =
   return (
     <CurrentListContext.Provider
       value={{
-        currentList,
+        list: currentList,
         todos,
-        setCurrentList,
+        setList,
         destroyCompleted,
       }}
     >

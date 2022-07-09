@@ -1,68 +1,89 @@
-import { Box, Divider, List, ListItem, ListItemIcon, ListItemText, Modal, Typography } from "@mui/material";
+import { Box, Divider, List, ListItem, ListItemIcon, ListItemText, Toolbar } from "@mui/material";
+
+import { styled, Theme, CSSObject } from "@mui/material/styles";
+import MuiDrawer from "@mui/material/Drawer";
+
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import MenuIcon from "@mui/icons-material/Menu";
 import { FC, useState } from "react";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import Row from "./Row";
+import SidebarItem from "./SidebarItem";
 import { useList } from "../../../context/ListState";
-import IList from "../../../types/IList";
-import Form from "./Form";
+import CreateListModal from "./CreateListModal";
 
 const Sidebar: FC = () => {
   const { lists } = useList();
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
-  const { create } = useList();
+  const [open, setOpen] = useState(window.screen.width >= 1280);
 
-  const onSubmit = (list: IList) => {
-    handleClose();
-    create(list);
+  const handleDrawerToggle = () => {
+    setOpen(!open);
   };
 
-  return (
-    <>
-      <Divider />
-      <List>
-        {lists.map((list) => (
-          <Row key={list.id} list={list} />
-        ))}
-      </List>
-      <Divider />
-      <List>
-        <ListItem button onClick={handleOpen}>
-          <ListItemIcon>
-            <AddCircleIcon />
-          </ListItemIcon>
-          <ListItemText primary="Maak een todolijst" />
-        </ListItem>
-      </List>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: "background.paper",
-            borderRadius: 2,
-            boxShadow: 24,
-            p: 4,
-          }}
-        >
-          <Typography variant="h6" component="h2">
-            Lijst aanmaken
-          </Typography>
+  const drawerWidth = 240;
 
-          <Form onSubmit={onSubmit} />
-        </Box>
-      </Modal>
-    </>
+  const openedMixin = (theme: Theme): CSSObject => ({
+    width: drawerWidth,
+    transition: theme.transitions.create("width", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    overflowX: "hidden",
+  });
+
+  const closedMixin = (theme: Theme): CSSObject => ({
+    transition: theme.transitions.create("width", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    overflowX: "hidden",
+    width: `calc(${theme.spacing(7)})`,
+  });
+
+  const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== "open" })(({ theme, open }) => ({
+    width: drawerWidth,
+    flexShrink: 0,
+    whiteSpace: "nowrap",
+    boxSizing: "border-box",
+    ...(open && {
+      ...openedMixin(theme),
+      "& .MuiDrawer-paper": openedMixin(theme),
+    }),
+    ...(!open && {
+      ...closedMixin(theme),
+      "& .MuiDrawer-paper": closedMixin(theme),
+    }),
+  }));
+
+  return (
+    <Box component="nav">
+      <Drawer variant="permanent" open={open}>
+        <Toolbar />
+        <List>
+          <ListItem button onClick={handleDrawerToggle}>
+            <ListItemIcon>{open ? <ChevronLeftIcon /> : <MenuIcon />}</ListItemIcon>
+          </ListItem>
+        </List>
+        <Divider />
+        <Divider />
+        <List>
+          {lists.map((list) => (
+            <SidebarItem key={list.id} list={list} />
+          ))}
+        </List>
+        <Divider />
+        <List>
+          <ListItem button onClick={() => setModalVisible(true)}>
+            <ListItemIcon>
+              <AddCircleIcon />
+            </ListItemIcon>
+            <ListItemText primary="Maak een todolijst" />
+          </ListItem>
+        </List>
+        <CreateListModal visible={modalVisible} onDismissed={() => setModalVisible(false)} />
+      </Drawer>
+    </Box>
   );
 };
 

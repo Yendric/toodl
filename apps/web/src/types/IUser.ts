@@ -6,6 +6,9 @@ type IUser = {
   onlyLinked?: boolean;
   smartschoolCourseExport?: string;
   smartschoolTaskExport?: string;
+  dailyNotification?: boolean;
+  reminderNotification?: boolean;
+  nowNotification?: boolean;
 };
 
 export default IUser;

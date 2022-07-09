@@ -7,26 +7,40 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useAuth } from "../../context/AuthState";
 import { useTheme } from "@mui/material";
-import axios from "axios";
-import { useAppState } from "../../context/AppState";
 import { GoogleLogin } from "@react-oauth/google";
+import useAxios from "../../hooks/useAxios";
+import { useSnackbar } from "notistack";
+import Joi from "joi";
+import { joiResolver } from "@hookform/resolvers/joi";
+import joiMessages from "../../helpers/joiMessages";
 
 type FormData = {
   email: string;
   password: string;
 };
 
-const Login: FC = () => {
-  const { handleSubmit, control, setError } = useForm<FormData>();
+const schema = Joi.object({
+  email: Joi.string().email({ tlds: false }).required(),
+  password: Joi.string().min(8).max(50).required(),
+}).messages(joiMessages);
+
+const LoginContainer: FC = () => {
+  const {
+    handleSubmit,
+    setError,
+    register,
+    formState: { errors },
+  } = useForm<FormData>({ resolver: joiResolver(schema) });
   const widthRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState("200");
   const { user, googleLogin, checkAuth } = useAuth();
-  const { apiUrl } = useAppState();
   const navigate = useNavigate();
   const theme = useTheme();
+  const axios = useAxios();
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     if (user.auth) {
@@ -42,11 +56,12 @@ const Login: FC = () => {
     try {
       if (!data.email || !data.password) return;
 
-      await axios.post(`${apiUrl}/auth/login`, {
+      await axios.post("/auth/login", {
         email: data.email,
         password: data.password,
       });
       checkAuth();
+      enqueueSnackbar("Succesvol ingelogd");
       navigate("/todos");
     } catch {
       setError("email", { message: "Foutief wachtwoord of email adres" });
@@ -72,59 +87,26 @@ const Login: FC = () => {
         Log in
       </Typography>
       <form onSubmit={onSubmit} noValidate>
-        <Controller
-          name="email"
-          control={control}
-          defaultValue=""
-          rules={{
-            required: "Gelieve uw e-mail adres in te vullen.",
-            pattern: {
-              value:
-                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-              message: "Geef een correct email adres op",
-            },
-          }}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <TextField
-              error={!!error}
-              helperText={error ? error.message : null}
-              margin="dense"
-              variant="outlined"
-              label="E-mail adres"
-              value={value}
-              onChange={onChange}
-              fullWidth
-            />
-          )}
+        <TextField
+          inputProps={register("email")}
+          error={!!errors.email}
+          helperText={errors.email?.message}
+          margin="dense"
+          variant="outlined"
+          label="E-mail adres"
+          autoComplete="email"
+          fullWidth
         />
-        <Controller
-          name="password"
-          control={control}
-          defaultValue=""
-          rules={{
-            required: "Gelieve uw wachtwoord in te vullen.",
-            minLength: {
-              value: 8,
-              message: "Geef een wachtwoord op dat langer is dan 8 tekens.",
-            },
-            maxLength: {
-              value: 256,
-              message: "Geef een wachtwoord op dat korter is dan 256 tekens.",
-            },
-          }}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <TextField
-              error={!!error}
-              helperText={error ? error.message : null}
-              margin="dense"
-              variant="outlined"
-              type="password"
-              label="Wachtwoord"
-              value={value}
-              onChange={onChange}
-              fullWidth
-            />
-          )}
+        <TextField
+          inputProps={register("password")}
+          error={!!errors.password}
+          helperText={errors.password?.message}
+          margin="dense"
+          variant="outlined"
+          type="password"
+          label="Wachtwoord"
+          autoComplete="current-password"
+          fullWidth
         />
         <div ref={widthRef}>
           <Button sx={{ mt: 2 }} type="submit" fullWidth variant="contained" color="primary">
@@ -144,4 +126,4 @@ const Login: FC = () => {
   );
 };
 
-export default Login;
+export default LoginContainer;
