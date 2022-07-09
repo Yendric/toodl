@@ -2,8 +2,13 @@ import { createContext, useContext, useState, useEffect, FC, ReactNode } from "r
 import { useAppState } from "./AppState";
 import { useSnackbar } from "notistack";
 import IUser from "../types/IUser";
-import axios from "axios";
 import { CredentialResponse, GoogleOAuthProvider } from "@react-oauth/google";
+import useAxios from "../hooks/useAxios";
+import { SmartschoolEventsProvider } from "./SmartschoolEventsState";
+import { CurrentListProvider } from "./CurrentListState";
+import { ListProvider } from "./ListState";
+import { TodoProvider } from "./TodoState";
+import { SocketProvider } from "./SocketState";
 
 type AuthState = {
   user: IUser;
@@ -17,29 +22,31 @@ export const AuthContext = createContext<AuthState | undefined>(undefined);
 
 export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<IUser>({ auth: false });
-  const { setIsLoading, apiUrl } = useAppState();
+  const { addLoading, removeLoading } = useAppState();
   const { enqueueSnackbar } = useSnackbar();
+  const axios = useAxios();
 
   useEffect(() => {
     checkAuth();
   }, []);
 
   async function checkAuth() {
-    setIsLoading(true);
+    addLoading("auth");
 
     try {
-      const res = await axios(`${apiUrl}/auth/user_data`);
-      enqueueSnackbar("Succesvol ingelogd");
+      const res = await axios("/auth/user_data");
+      addLoading("todos");
+      addLoading("lists");
       setUser({ ...res.data, auth: true });
     } catch {
       setUser({ ...user, auth: false });
     }
 
-    setIsLoading(false);
+    removeLoading("auth");
   }
 
   async function logout() {
-    await axios(`${apiUrl}/auth/logout`);
+    await axios("auth/logout");
 
     setUser({
       auth: false,
@@ -48,7 +55,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   }
 
   async function deleteAccount() {
-    await axios.post(`${apiUrl}/auth/user_data/destroy`);
+    await axios.post("/auth/user_data/destroy");
     logout();
     enqueueSnackbar("Account succesvol verwijderd.");
   }
@@ -56,7 +63,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   async function googleLogin(credentialResponse: CredentialResponse) {
     if (!("credential" in credentialResponse)) return;
 
-    await axios.post(`${apiUrl}/auth/google`, {
+    await axios.post("/auth/google", {
       token: credentialResponse.credential,
     });
     checkAuth();
@@ -64,7 +71,21 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ user, logout, googleLogin, checkAuth, deleteAccount }}>
-      <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID ?? ""}>{children}</GoogleOAuthProvider>
+      <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID ?? ""}>
+        {user.auth ? (
+          <SocketProvider>
+            <TodoProvider>
+              <ListProvider>
+                <CurrentListProvider>
+                  <SmartschoolEventsProvider>{children}</SmartschoolEventsProvider>
+                </CurrentListProvider>
+              </ListProvider>
+            </TodoProvider>
+          </SocketProvider>
+        ) : (
+          children
+        )}
+      </GoogleOAuthProvider>
     </AuthContext.Provider>
   );
 };
