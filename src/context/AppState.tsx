@@ -1,44 +1,41 @@
-import { createContext, useContext, useState, FC, ReactNode } from "react";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import { createContext, useContext, useState, FC, ReactNode, useEffect } from "react";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { SnackbarProvider } from "notistack";
 import nlLocale from "date-fns/locale/nl-BE";
-import { TodoProvider } from "./TodoState";
 import { AuthProvider } from "./AuthState";
-import { SocketProvider } from "./SocketState";
-import { ListProvider } from "./ListState";
-import { CurrentListProvider } from "./CurrentListState";
-import { SmartschoolEventsProvider } from "./SmartschoolEventsState";
 
 export type appState = {
   isLoading: boolean;
-  setIsLoading: (isLoading: boolean) => void;
-  apiUrl: string;
+  addLoading: (name: string) => void;
+  removeLoading: (name: string) => void;
 };
 
 export const AppStateContext = createContext<appState | undefined>(undefined);
 
 export const AppStateProvider: FC<{ children: ReactNode }> = ({ children }) => {
+  const [loading, setLoading] = useState<string[]>(["auth"]);
   const [isLoading, setIsLoading] = useState(true);
-  const apiUrl = process.env.REACT_APP_API_URL + "/v1" ?? "http://localhost/api/v1";
+
+  useEffect(() => {
+    setIsLoading(loading.length > 0);
+  }, [loading]);
+
+  function addLoading(name: string) {
+    setLoading((current) => [...current, name]);
+  }
+
+  function removeLoading(name: string) {
+    setLoading((current) => current.filter((l) => l !== name));
+  }
 
   return (
-    <AppStateContext.Provider value={{ isLoading, setIsLoading, apiUrl }}>
+    <AppStateContext.Provider value={{ isLoading, addLoading, removeLoading }}>
       <SnackbarProvider maxSnack={3} variant="success">
         <AuthProvider>
-          <SocketProvider>
-            <TodoProvider>
-              <ListProvider>
-                <CurrentListProvider>
-                  <SmartschoolEventsProvider>
-                    <LocalizationProvider locale={nlLocale} dateAdapter={AdapterDateFns}>
-                      {children}
-                    </LocalizationProvider>
-                  </SmartschoolEventsProvider>
-                </CurrentListProvider>
-              </ListProvider>
-            </TodoProvider>
-          </SocketProvider>
+          <LocalizationProvider adapterLocale={nlLocale} dateAdapter={AdapterDateFns}>
+            {children}
+          </LocalizationProvider>
         </AuthProvider>
       </SnackbarProvider>
     </AppStateContext.Provider>

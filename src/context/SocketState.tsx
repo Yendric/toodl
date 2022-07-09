@@ -1,26 +1,21 @@
-import { useSnackbar } from "notistack";
 import { createContext, useContext, useState, useEffect, FC, ReactNode } from "react";
 import io, { Socket } from "socket.io-client";
-import { useAppState } from "./AppState";
 import { useAuth } from "./AuthState";
 
 type SocketState = {
   socket: Socket | undefined;
-  call: (uri: string, args?: any) => Promise<any>;
 };
 
 export const SocketContext = createContext<SocketState | undefined>(undefined);
 
 export const SocketProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [socket, setSocket] = useState<Socket>();
-  const { setIsLoading, apiUrl } = useAppState();
   const { user } = useAuth();
-  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     if (user.auth && !socket) {
       setSocket(
-        io(apiUrl.slice(0, -3), {
+        io(process.env.REACT_APP_API_URL ?? "", {
           withCredentials: true,
         })
       );
@@ -35,28 +30,13 @@ export const SocketProvider: FC<{ children: ReactNode }> = ({ children }) => {
       if (!socket) return;
       socket.disconnect();
       setSocket(undefined);
-      setIsLoading(false);
     };
   }, [user, socket]);
-
-  function call(uri: string, args?: any) {
-    return new Promise((resolve, reject) => {
-      if (!socket) return;
-      socket.emit(uri, args, (res: any) => {
-        if (!res || res.error) {
-          enqueueSnackbar("Er is iets foutgelopen: " + res.error, { variant: "warning" });
-          return reject(res.error);
-        }
-        return resolve(res);
-      });
-    });
-  }
 
   return (
     <SocketContext.Provider
       value={{
         socket,
-        call,
       }}
     >
       {children}
