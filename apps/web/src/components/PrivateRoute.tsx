@@ -7,15 +7,13 @@ const PrivateRoute: FC<{ children?: ReactNode }> = ({ children }) => {
   const { user } = useAuth();
   const { isLoading } = useAppState();
 
-  if (!isLoading) {
-    if (user.auth) {
-      return <>{children}</>;
-    } else {
-      return <Navigate to="/login" />;
-    }
+  if (user.auth) {
+    return <>{children}</>;
+  } else if (!isLoading) {
+    return <Navigate to="/login" />;
+  } else {
+    return <></>;
   }
-
-  return <></>;
 };
 
 export default PrivateRoute;
