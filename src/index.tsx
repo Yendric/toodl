@@ -6,7 +6,7 @@ import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals from "./reportWebVitals";
 import { registerLicense } from "@syncfusion/ej2-base";
 
-registerLicense("ORg4AjUWIQA/Gnt2VVhhQlFac1hJXGFWfVJpTGpQdk5xdV9DaVZUTWY/P1ZhSXxRdkBhX39Xc3NXRGBZVkQ=");
+registerLicense(process.env.REACT_APP_SYNCFUSION_LICENSE ?? "");
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
