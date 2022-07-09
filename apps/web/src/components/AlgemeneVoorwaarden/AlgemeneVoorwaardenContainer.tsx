@@ -1,7 +1,7 @@
 import { Container } from "@mui/material";
 import { FC } from "react";
 
-const AlgemeneVoorwaarden: FC = () => {
+const AlgemeneVoorwaardenContainer: FC = () => {
   return (
     <Container>
       <h1>Algemene voorwaarden</h1>
@@ -89,4 +89,4 @@ const AlgemeneVoorwaarden: FC = () => {
   );
 };
 
-export default AlgemeneVoorwaarden;
+export default AlgemeneVoorwaardenContainer;
