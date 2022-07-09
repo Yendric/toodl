@@ -3,7 +3,7 @@ import { FC } from "react";
 import Link from "@mui/material/Link";
 import { Link as RouterLink } from "react-router-dom";
 
-const Privacy: FC = () => {
+const PrivacyContainer: FC = () => {
   return (
     <Container>
       <h1>Privacybeleid</h1>
@@ -130,4 +130,4 @@ const Privacy: FC = () => {
   );
 };
 
-export default Privacy;
+export default PrivacyContainer;
