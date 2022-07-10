@@ -5,6 +5,7 @@ import ITodo from "../types/ITodo";
 import { useSocket } from "./SocketState";
 import Confetti from "react-confetti";
 import useAxios from "../hooks/useAxios";
+import { Fade } from "@mui/material";
 
 type TodoState = {
   todos: ITodo[];
@@ -23,18 +24,18 @@ export const TodoProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const { removeLoading, addLoading } = useAppState();
   const { enqueueSnackbar } = useSnackbar();
   const [runConfetti, setRunConfetti] = useState(false);
-  const [renderConfetti, setRenderConfetti] = useState(false);
 
   const axios = useAxios();
 
   useEffect(() => {
+    if (!socket) return;
+
     addLoading("todos");
     axios("/todos").then(({ data }) => {
       setTodos(data);
       removeLoading("todos");
     });
 
-    if (!socket) return;
     // Event listener voor todo changes op andere toestellen
     socket.on("todos", (todos: ITodo[]) => {
       setTodos(todos);
@@ -59,10 +60,14 @@ export const TodoProvider: FC<{ children: ReactNode }> = ({ children }) => {
   }
 
   async function destroy(todo: ITodo, notification = true) {
-    await axios.delete(`/todos/${todo.id}`);
+    if (!todo.done && todos.filter((ttodo) => !ttodo.done && ttodo.listId == todo.listId).length === 1) {
+      setRunConfetti(true);
+      setTimeout(() => setRunConfetti(false), 2000);
+    }
+    const res = await axios.delete(`/todos/${todo.id}`);
     notification && enqueueSnackbar("Todo verwijderd");
 
-    return true;
+    return res.data;
   }
 
   /*
@@ -71,10 +76,7 @@ export const TodoProvider: FC<{ children: ReactNode }> = ({ children }) => {
   function toggleDone(todo: ITodo) {
     if (!todo.done && todos.filter((ttodo) => !ttodo.done && ttodo.listId == todo.listId).length === 1) {
       setRunConfetti(true);
-      setRenderConfetti(true);
-
       setTimeout(() => setRunConfetti(false), 2000);
-      setTimeout(() => setRenderConfetti(false), 4000);
     }
     update({ ...todo, done: !todo.done });
   }
@@ -95,7 +97,11 @@ export const TodoProvider: FC<{ children: ReactNode }> = ({ children }) => {
         destroyCompleted,
       }}
     >
-      {renderConfetti && <Confetti run={runConfetti} recycle={false} tweenDuration={2000} />}
+      <Fade in={runConfetti} timeout={500} unmountOnExit>
+        <div style={{ height: "100vh", width: "100vh", position: "absolute" }}>
+          <Confetti />
+        </div>
+      </Fade>
       {children}
     </TodoContext.Provider>
   );

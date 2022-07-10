@@ -1,8 +1,5 @@
 import { Box, Divider, List, ListItem, ListItemIcon, ListItemText, Toolbar } from "@mui/material";
-
-import { styled, Theme, CSSObject } from "@mui/material/styles";
-import MuiDrawer from "@mui/material/Drawer";
-
+import Drawer from "@mui/material/Drawer";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import MenuIcon from "@mui/icons-material/Menu";
 import { FC, useState } from "react";
@@ -21,44 +18,22 @@ const Sidebar: FC = () => {
     setOpen(!open);
   };
 
-  const drawerWidth = 240;
-
-  const openedMixin = (theme: Theme): CSSObject => ({
-    width: drawerWidth,
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    overflowX: "hidden",
-  });
-
-  const closedMixin = (theme: Theme): CSSObject => ({
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    overflowX: "hidden",
-    width: `calc(${theme.spacing(7)})`,
-  });
-
-  const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== "open" })(({ theme, open }) => ({
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: "nowrap",
-    boxSizing: "border-box",
-    ...(open && {
-      ...openedMixin(theme),
-      "& .MuiDrawer-paper": openedMixin(theme),
-    }),
-    ...(!open && {
-      ...closedMixin(theme),
-      "& .MuiDrawer-paper": closedMixin(theme),
-    }),
-  }));
-
   return (
     <Box component="nav">
-      <Drawer variant="permanent" open={open}>
+      <Drawer
+        sx={{
+          width: window.screen.width <= 1280 ? "56px" : open ? "16rem" : "56px",
+          transition: "width 225ms cubic-bezier(0, 0, 0.2, 1) 0ms",
+        }}
+        PaperProps={{
+          sx: {
+            width: open ? "16rem" : "56px",
+            transition: "width 225ms cubic-bezier(0, 0, 0.2, 1) 0ms",
+          },
+        }}
+        variant="permanent"
+        open={open}
+      >
         <Toolbar />
         <List>
           <ListItem button onClick={handleDrawerToggle}>
