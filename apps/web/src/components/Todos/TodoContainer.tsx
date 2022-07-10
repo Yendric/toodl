@@ -11,6 +11,7 @@ import Box from "@mui/material/Box";
 import Sidebar from "./Sidebar/Sidebar";
 import { useCurrentList } from "../../context/CurrentListState";
 import TodoRow from "./TodoRow";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 const TodoContainer: FC = () => {
   const currentList = useCurrentList();
@@ -40,11 +41,15 @@ const TodoContainer: FC = () => {
                 <caption>Zo te zien heb je nog geen todos in deze lijst, maak er één bovenaan!</caption>
               )}
               <TableBody>
-                {currentList.todos
-                  .filter((todo) => !todo.done)
-                  .map((todo) => (
-                    <TodoRow key={todo.id} todo={todo} />
-                  ))}
+                <TransitionGroup appear={false} component={null} className="todo-list">
+                  {currentList.todos
+                    .filter((todo) => !todo.done)
+                    .map((todo) => (
+                      <CSSTransition key={todo.id} timeout={200} classNames="todo">
+                        <TodoRow todo={todo} />
+                      </CSSTransition>
+                    ))}
+                </TransitionGroup>
               </TableBody>
             </Table>
           </TableContainer>
@@ -52,11 +57,15 @@ const TodoContainer: FC = () => {
           <TableContainer component={Paper}>
             <Table size="small" aria-label="voltooide todos">
               <TableBody>
-                {currentList.todos
-                  .filter((todo) => todo.done)
-                  .map((todo) => (
-                    <TodoRow key={todo.id} todo={todo} />
-                  ))}
+                <TransitionGroup appear={false} component={null} className="todo-list">
+                  {currentList.todos
+                    .filter((todo) => todo.done)
+                    .map((todo) => (
+                      <CSSTransition key={todo.id} timeout={200} classNames="todo">
+                        <TodoRow key={todo.id} todo={todo} />
+                      </CSSTransition>
+                    ))}
+                </TransitionGroup>
               </TableBody>
             </Table>
           </TableContainer>

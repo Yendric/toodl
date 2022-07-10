@@ -50,46 +50,54 @@ const TodoEditRow: FC<Props> = ({ todo, toggleEditing }) => {
   return (
     <TableRow style={{ transition: "height 2s" }}>
       <TableCell padding="checkbox">
-        <Checkbox
-          checked={todo.done}
-          onChange={() => todos.toggleDone(todo)}
-          value="primary"
-          inputProps={{ "aria-label": "primary checkbox" }}
-        />
+        <div>
+          <Checkbox
+            checked={todo.done}
+            onChange={() => todos.toggleDone(todo)}
+            value="primary"
+            inputProps={{ "aria-label": "primary checkbox" }}
+          />
+        </div>
       </TableCell>
       {!currentList?.withoutDates && (
         <TableCell width="20%">
-          <Controller
-            control={control}
-            name="startTime"
-            render={({ field: { onChange, value } }) => (
-              <MobileDateTimePicker
-                value={value}
-                onChange={onChange}
-                renderInput={(props) => <TextField {...props} variant="standard" />}
-                inputFormat="dd/MM/yyyy HH:mm"
-              />
-            )}
-          />
+          <div>
+            <Controller
+              control={control}
+              name="startTime"
+              render={({ field: { onChange, value } }) => (
+                <MobileDateTimePicker
+                  value={value}
+                  onChange={onChange}
+                  renderInput={(props) => <TextField {...props} variant="standard" />}
+                  inputFormat="dd/MM/yyyy HH:mm"
+                />
+              )}
+            />
+          </div>
         </TableCell>
       )}
       <TableCell>
-        <TextField
-          inputProps={register("subject")}
-          error={!!errors.subject}
-          helperText={errors.subject?.message}
-          onKeyDown={(e) => handleKeyDown(e)}
-          variant="standard"
-          fullWidth
-        />
+        <div>
+          <TextField
+            inputProps={register("subject")}
+            error={!!errors.subject}
+            helperText={errors.subject?.message}
+            onKeyDown={(e) => handleKeyDown(e)}
+            variant="standard"
+            fullWidth
+          />
+        </div>
       </TableCell>
       <TableCell align="right" style={{ whiteSpace: "nowrap" }}>
-        <IconButton onClick={handleSubmit(onSubmit)} aria-label="edit" size="large">
-          <SaveIcon fontSize="small" />
-        </IconButton>
-        <IconButton onClick={toggleEditing} aria-label="edit" size="large">
-          <CloseIcon fontSize="small" />
-        </IconButton>
+        <div>
+          <IconButton onClick={handleSubmit(onSubmit)} aria-label="edit" size="large">
+            <SaveIcon fontSize="small" />
+          </IconButton>
+          <IconButton onClick={toggleEditing} aria-label="edit" size="large">
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        </div>
       </TableCell>
     </TableRow>
   );
