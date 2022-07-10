@@ -39,7 +39,7 @@ const CreateTodoForm: FC = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Grid sx={{ mt: 5 }} container justifyContent="center">
+      <Grid sx={{ mb: 2 }} container justifyContent="center">
         {!currentList.list?.withoutDates && (
           <Controller
             control={control}
