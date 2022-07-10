@@ -48,7 +48,7 @@ const TodoEditRow: FC<Props> = ({ todo, toggleEditing }) => {
   }
 
   return (
-    <TableRow>
+    <TableRow style={{ transition: "height 2s" }}>
       <TableCell padding="checkbox">
         <Checkbox
           checked={todo.done}

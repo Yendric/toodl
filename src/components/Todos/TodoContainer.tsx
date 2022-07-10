@@ -18,24 +18,23 @@ const TodoContainer: FC = () => {
   return (
     <Box sx={{ display: "flex" }}>
       <Sidebar />
-      <Box component="main" sx={{ width: "100%" }}>
-        <Box m={2}>
-          {currentList.todos.some((todo) => todo.done) && (
-            <Button
-              sx={{ float: "left", position: "absolute" }}
-              onClick={() => currentList.destroyCompleted()}
-              variant="contained"
-            >
-              Verwijder voltooid
-            </Button>
-          )}
+      <Box component="main" sx={{ p: 2, width: "calc(100% - 56px)" }}>
+        <Box sx={{ mb: 2 }}>
+          <Button
+            sx={{ float: "left" }}
+            disabled={!currentList.todos.some((todo) => todo.done)}
+            onClick={() => currentList.destroyCompleted()}
+            variant="contained"
+          >
+            Verwijder voltooid
+          </Button>
           <Typography sx={{ float: "right" }}>
             Onvoltooid: {currentList.todos.filter((todo) => !todo.done).length}
           </Typography>
         </Box>
         <CreateTodoForm />
-        <Container maxWidth="md" sx={{ my: 2 }}>
-          <TableContainer component={Paper}>
+        <Container sx={{ p: 0 }} maxWidth="md">
+          <TableContainer component={Paper} sx={{ mb: 2 }}>
             <Table size="small" aria-label="todos">
               {currentList.todos.length === 0 && (
                 <caption>Zo te zien heb je nog geen todos in deze lijst, maak er één bovenaan!</caption>
@@ -49,11 +48,7 @@ const TodoContainer: FC = () => {
               </TableBody>
             </Table>
           </TableContainer>
-          {currentList.todos.some((todo) => todo.done) && (
-            <Typography variant="h6" mt={2}>
-              Voltooide todos
-            </Typography>
-          )}
+          {currentList.todos.some((todo) => todo.done) && <Typography variant="h6">Voltooide todos</Typography>}
           <TableContainer component={Paper}>
             <Table size="small" aria-label="voltooide todos">
               <TableBody>

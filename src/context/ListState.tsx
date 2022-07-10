@@ -22,14 +22,14 @@ export const ListProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const axios = useAxios();
 
   useEffect(() => {
-    addLoading("lists");
+    if (!socket) return;
 
+    addLoading("lists");
     axios("/lists").then(({ data }) => {
       setLists(data);
       removeLoading("lists");
     });
 
-    if (!socket) return;
     // Event listener voor list changes op andere toestellen
     socket.on("lists", (lists: IList[]) => {
       setLists(lists);
