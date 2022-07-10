@@ -35,3 +35,44 @@ a {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
 }
+
+/* Todo row animaties, veel te moeilijk dankzij MUI :) */
+.todo-enter > td {
+  max-height: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+.todo-enter > td > * {
+  max-height: 0px;
+  overflow: hidden;
+}
+.todo-enter-active > td {
+  max-height: 43.5px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  transition: max-height 200ms, padding 200ms;
+}
+.todo-enter-active > td > * {
+  max-height: 43.5px;
+  transition: max-height 200ms, padding 200ms;
+}
+
+.todo-exit-active > td {
+  max-height: 0px !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  transition: max-height 200ms, padding 200ms;
+}
+.todo-exit-active > td > * {
+  max-height: 0px !important;
+  transition: max-height 200ms, padding 200ms;
+}
+.todo-exit > td {
+  max-height: 43.5px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+.todo-exit > td > * {
+  overflow: hidden;
+  max-height: 43.5px;
+}
