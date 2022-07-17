@@ -1,4 +1,4 @@
-import { ListItem, ListItemIcon, ListItemText } from "@mui/material";
+import { ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import { FC, MouseEvent, useState } from "react";
 import CircleIcon from "@mui/icons-material/Circle";
 import IList from "../../../types/IList";
@@ -27,7 +27,27 @@ const SidebarItem: FC<Props> = ({ list }) => {
         }}
       >
         <ListItemIcon>
-          <CircleIcon sx={{ color: list.color }} />
+          <div
+            style={{
+              fontSize: 16,
+              position: "relative",
+              display: "inline-flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <CircleIcon color="primary" sx={{ color: list.color }} />
+            <Typography
+              component="span"
+              sx={{
+                position: "absolute",
+                textShadow: "1px 1px 2px rgb(0 0 0 / 48%)",
+                marginTop: "0.15em",
+              }}
+            >
+              {list.name.charAt(0)}
+            </Typography>
+          </div>
         </ListItemIcon>
         <ListItemText primary={list.name} />
       </ListItem>
