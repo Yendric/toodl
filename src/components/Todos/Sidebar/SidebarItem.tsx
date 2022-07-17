@@ -42,6 +42,7 @@ const SidebarItem: FC<Props> = ({ list }) => {
               sx={{
                 position: "absolute",
                 textShadow: "1px 1px 2px rgb(0 0 0 / 48%)",
+                color: "white",
                 marginTop: "0.15em",
               }}
             >
