@@ -71,7 +71,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ user, logout, googleLogin, checkAuth, deleteAccount }}>
-      <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID ?? ""}>
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID ?? ""}>
         {user.auth ? (
           <SocketProvider>
             <TodoProvider>

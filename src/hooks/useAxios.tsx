@@ -4,7 +4,7 @@ import { useSnackbar } from "notistack";
 function useAxios() {
   const { enqueueSnackbar } = useSnackbar();
 
-  const apiUrl = process.env.REACT_APP_API_URL + "/v1" ?? "http://localhost/api/v1";
+  const apiUrl = import.meta.env.VITE_API_URL + "/v1" ?? "http://localhost/api/v1";
 
   const api = axios.create({ baseURL: apiUrl });
 
