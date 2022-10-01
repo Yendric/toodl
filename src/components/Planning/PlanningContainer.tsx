@@ -18,7 +18,7 @@ import { createElement, L10n, setCulture, loadCldr } from "@syncfusion/ej2-base"
 import { FC, useRef } from "react";
 import { useList } from "../../context/ListState";
 import { useSmartschoolEvents } from "../../context/SmartschoolEventsState";
-
+import "./Planning.scss";
 import numberingSystems from "cldr-data/supplemental/numberingSystems.json";
 import caGregorian from "cldr-data/main/nl/ca-gregorian.json";
 import numbers from "cldr-data/main/nl/numbers.json";
