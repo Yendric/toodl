@@ -16,7 +16,7 @@ export const SmartschoolEventsProvider: FC<{ children: ReactNode }> = ({ childre
 
   useEffect(() => {
     async function fetchSS() {
-      const proxySite = `https://${process.env.REACT_APP_SMARTSCHOOL_PROXY_DOMAIN}`;
+      const proxySite = `https://${import.meta.env.VITE_SMARTSCHOOL_PROXY_DOMAIN}`;
       if (user.smartschoolCourseExport) {
         const events = await getEventsFromIcal(`${proxySite}${user.smartschoolCourseExport.slice(26)}`);
         setEvents((current) => [...current, ...events]);

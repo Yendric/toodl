@@ -15,7 +15,7 @@ export const SocketProvider: FC<{ children: ReactNode }> = ({ children }) => {
   useEffect(() => {
     if (user.auth && !socket) {
       setSocket(
-        io(process.env.REACT_APP_API_URL ?? "", {
+        io(import.meta.env.VITE_API_URL ?? "", {
           withCredentials: true,
         })
       );
