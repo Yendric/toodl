@@ -3,6 +3,7 @@ import PrivateRoute from "./PrivateRoute";
 import { FC, lazy, Suspense } from "react";
 import { CircularProgress, Stack } from "@mui/material";
 import ScrollToTop from "./Partials/ScrollToTop";
+import LandingContainer from "./Landing/LandingContainer";
 
 const Planning = lazy(() => import("./Planning/PlanningContainer"));
 const Settings = lazy(() => import("./Settings/SettingsContainer"));
@@ -55,7 +56,7 @@ const Router: FC = () => {
             }
           />
 
-          <Route path="/" element={<LoginContainer />} />
+          <Route path="/" element={<LandingContainer />} />
           <Route path="*" element={<Error404 />} />
         </Routes>
       </Suspense>
