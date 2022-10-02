@@ -44,7 +44,7 @@ const RegisterContainer: FC = () => {
 
   useEffect(() => {
     if (user.auth) {
-      navigate("/todos");
+      navigate("/todos?newUser=true");
     }
   }, [user]);
 
@@ -62,7 +62,6 @@ const RegisterContainer: FC = () => {
         password: data.password,
       });
       checkAuth();
-      navigate("/todos?newUser=true");
     } catch {
       setError("email", { message: "Dit e-mail adres is al in gebruik" });
     }
