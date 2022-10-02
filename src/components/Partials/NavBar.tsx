@@ -32,7 +32,7 @@ const NavBar: FC = () => {
   return (
     <AppBar position="sticky" sx={{ zIndex: theme.zIndex.drawer + 1 }}>
       <Toolbar>
-        <Link to="/todos" style={{ textDecoration: "none", flexGrow: user.auth ? 0 : 1 }}>
+        <Link to="/" style={{ textDecoration: "none", flexGrow: user.auth ? 0 : 1 }}>
           <Typography variant="h6">Toodl</Typography>
         </Link>
         {user.auth ? (

@@ -12,12 +12,14 @@ import Sidebar from "./Sidebar/Sidebar";
 import { useCurrentList } from "../../context/CurrentListState";
 import TodoRow from "./TodoRow";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
+import WelcomeUserModal from "./WelcomeUserModal";
 
 const TodoContainer: FC = () => {
   const currentList = useCurrentList();
 
   return (
     <Box sx={{ display: "flex" }}>
+      <WelcomeUserModal />
       <Sidebar />
       <Box component="main" sx={{ p: 2, width: "calc(100% - 56px)" }}>
         <Box sx={{ mb: 2 }}>
