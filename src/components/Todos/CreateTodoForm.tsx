@@ -48,9 +48,8 @@ const CreateTodoForm: FC = () => {
               <MobileDateTimePicker
                 value={value}
                 onChange={onChange}
-                renderInput={(props) => <TextField style={{ marginTop: "1rem" }} {...props} variant="standard" />}
-                disablePast
-                inputFormat="dd/MM/yyyy HH:mm"
+                slotProps={{ textField: { style:{ marginTop: "1rem" }, variant:"standard" }}}
+                format="dd/MM/yyyy HH:mm"
               />
             )}
           />
