@@ -69,7 +69,7 @@ const TodoEditRow: FC<Props> = ({ todo, toggleEditing }) => {
                 <MobileDateTimePicker
                   value={value}
                   onChange={onChange}
-                  renderInput={(props) => <TextField {...props} variant="standard" />}
+                  slotProps={{ textField: { variant: "standard" } }}
                   format="dd/MM/yyyy HH:mm"
                 />
               )}
