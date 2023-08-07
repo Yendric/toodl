@@ -34,8 +34,6 @@ const LoginContainer: FC = () => {
     register,
     formState: { errors },
   } = useForm<FormData>({ resolver: joiResolver(schema) });
-  const widthRef = useRef<HTMLDivElement>(null);
-  const [width, setWidth] = useState("200");
   const { user, googleLogin, checkAuth } = useAuth();
   const navigate = useNavigate();
   const theme = useTheme();
@@ -47,10 +45,6 @@ const LoginContainer: FC = () => {
       navigate("/todos");
     }
   }, [user]);
-
-  useEffect(() => {
-    setWidth(widthRef.current?.clientWidth.toString() ?? "200");
-  }, [widthRef]);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -108,13 +102,11 @@ const LoginContainer: FC = () => {
           autoComplete="current-password"
           fullWidth
         />
-        <div ref={widthRef}>
-          <Button sx={{ mt: 2 }} type="submit" fullWidth variant="contained" color="primary">
-            Log in
-          </Button>
-        </div>
+        <Button sx={{ mt: 2 }} type="submit" fullWidth variant="contained" color="primary">
+          Log in
+        </Button>
         <div className="google-login-button">
-          <GoogleLogin theme="filled_blue" onSuccess={googleLogin} width={width} />
+          <GoogleLogin theme="filled_blue" onSuccess={googleLogin} useOneTap />
         </div>
         <Grid container>
           <Grid item>

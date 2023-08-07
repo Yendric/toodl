@@ -70,7 +70,7 @@ const TodoEditRow: FC<Props> = ({ todo, toggleEditing }) => {
                   value={value}
                   onChange={onChange}
                   renderInput={(props) => <TextField {...props} variant="standard" />}
-                  inputFormat="dd/MM/yyyy HH:mm"
+                  format="dd/MM/yyyy HH:mm"
                 />
               )}
             />
