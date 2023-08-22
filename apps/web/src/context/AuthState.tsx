@@ -26,7 +26,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   useEffect(() => {
     checkAuth();
-  }, []);
+  }, [navigator.onLine, user]);
 
   async function checkAuth() {
     if (navigator.onLine) {
