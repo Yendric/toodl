@@ -30,7 +30,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   async function checkAuth() {
     if (navigator.onLine) {
-      queryClient.invalidateQueries();
+      queryClient.resumePausedMutations().then(() => queryClient.invalidateQueries());
       try {
         await api("/auth/user_data");
         setIsAuth(true);
