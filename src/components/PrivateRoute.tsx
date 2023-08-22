@@ -1,19 +1,22 @@
-import { FC, ReactNode } from "react";
-import { Navigate } from "react-router-dom";
-import { useAppState } from "../context/AppState";
+import { useSnackbar } from "notistack";
+import { FC, ReactNode, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthState";
+import { CurrentListProvider } from "../context/CurrentListState";
 
 const PrivateRoute: FC<{ children?: ReactNode }> = ({ children }) => {
-  const { user } = useAuth();
-  const { isLoading } = useAppState();
+  const { isAuth, isLoading } = useAuth();
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
 
-  if (user.auth) {
-    return <>{children}</>;
-  } else if (!isLoading) {
-    return <Navigate to="/login" />;
-  } else {
-    return <></>;
-  }
+  useEffect(() => {
+    if (!isLoading && !isAuth) {
+      navigate("/login");
+      enqueueSnackbar("U bent niet ingelogd", { variant: "warning" });
+    }
+  }, [isAuth, isLoading]);
+
+  return <CurrentListProvider>{children}</CurrentListProvider>;
 };
 
 export default PrivateRoute;

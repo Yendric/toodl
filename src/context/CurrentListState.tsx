@@ -1,51 +1,51 @@
-import { useSnackbar } from "notistack";
-import { createContext, useContext, useState, FC, useEffect, ReactNode } from "react";
+import { FC, ReactNode, createContext, useContext, useEffect, useState } from "react";
+import { useLists } from "../api/list/getLists";
+import { useDeleteTodo } from "../api/todo/destroyTodo";
+import { useTodos } from "../api/todo/getTodos";
 import IList from "../types/IList";
 import ITodo from "../types/ITodo";
-import { useList } from "./ListState";
-import { useTodo } from "./TodoState";
+
 type CurrentList = {
   list: IList | undefined;
-  todos: ITodo[];
+  listTodos: ITodo[];
+  destroyCompleted: () => void;
   setList: (value: IList) => void;
-  destroyCompleted: (notification?: boolean) => void;
 };
 
 export const CurrentListContext = createContext<CurrentList | undefined>(undefined);
 
 export const CurrentListProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const { lists } = useList();
-  const [currentList, setList] = useState<IList>();
-  const { todos: allTodos, destroy } = useTodo();
-  const { enqueueSnackbar } = useSnackbar();
+  const [list, setList] = useState<IList>();
 
-  const [todos, setTodos] = useState<ITodo[]>([]);
+  const { data: lists, isSuccess: isListSuccess } = useLists();
+  const { data: todos, isSuccess: isTodoSuccess } = useTodos();
+  const [listTodos, setListTodos] = useState<ITodo[]>([]);
+  const deleteTodoMutation = useDeleteTodo();
 
   useEffect(() => {
-    if (!currentList || !lists.find((list) => list.id === currentList?.id)) {
+    if (isTodoSuccess && list != undefined) setListTodos(todos.filter((todo) => todo.listId === list.id));
+  }, [todos, list]);
+
+  function destroyCompleted() {
+    if (isTodoSuccess && list != undefined)
+      listTodos.filter((todo) => todo.done).map((todo) => deleteTodoMutation.mutate(todo));
+  }
+
+  useEffect(() => {
+    if (isListSuccess && (!list || !lists.find((find) => find.id === list.id))) {
       setList(lists[0]);
-    } else {
-      setList(lists.find((list) => list.id === currentList?.id));
+    } else if (isListSuccess) {
+      setList(lists.find((find) => find.id === list?.id));
     }
   }, [lists]);
-
-  useEffect(() => {
-    if (!currentList) return;
-    setTodos(allTodos.filter((todo) => todo.listId === currentList.id));
-  }, [allTodos, currentList]);
-
-  function destroyCompleted(notification = true) {
-    todos.filter((todo) => todo.done).forEach((todo) => destroy(todo, false));
-    notification && enqueueSnackbar("Voltooide todos verwijderd");
-  }
 
   return (
     <CurrentListContext.Provider
       value={{
-        list: currentList,
-        todos,
-        setList,
+        list,
+        listTodos,
         destroyCompleted,
+        setList,
       }}
     >
       {children}

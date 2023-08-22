@@ -1,91 +1,90 @@
-import { createContext, useContext, useState, useEffect, FC, ReactNode } from "react";
-import { useAppState } from "./AppState";
-import { useSnackbar } from "notistack";
-import IUser from "../types/IUser";
 import { CredentialResponse, GoogleOAuthProvider } from "@react-oauth/google";
-import useAxios from "../hooks/useAxios";
-import { SmartschoolEventsProvider } from "./SmartschoolEventsState";
-import { CurrentListProvider } from "./CurrentListState";
-import { ListProvider } from "./ListState";
-import { TodoProvider } from "./TodoState";
-import { SocketProvider } from "./SocketState";
+import { useQueryClient } from "@tanstack/react-query";
+import { useSnackbar } from "notistack";
+import { FC, ReactNode, createContext, useContext, useEffect, useState } from "react";
+import api from "../api/api";
+import { useUser } from "../api/user/getUser";
 
 type AuthState = {
-  user: IUser;
   logout: () => Promise<void>;
   googleLogin: (credentialResponse: CredentialResponse) => Promise<void>;
   checkAuth: () => void;
-  deleteAccount: () => Promise<void>;
+  isAuth: boolean;
+  isLoading: boolean;
+  register: (data: { username: string; email: string; password: string }) => Promise<void>;
+  login: (data: { email: string; password: string }) => Promise<void>;
 };
 
 export const AuthContext = createContext<AuthState | undefined>(undefined);
 
 export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<IUser>({ auth: false });
-  const { addLoading, removeLoading } = useAppState();
+  const [isAuth, setIsAuth] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { enqueueSnackbar } = useSnackbar();
-  const axios = useAxios();
+  const { data: user } = useUser();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     checkAuth();
   }, []);
 
   async function checkAuth() {
-    addLoading("auth");
-
-    try {
-      const res = await axios("/auth/user_data");
-      addLoading("todos");
-      addLoading("lists");
-      setUser({ ...res.data, auth: true });
-    } catch {
-      setUser({ ...user, auth: false });
+    if (navigator.onLine) {
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+      try {
+        await api("/auth/user_data");
+        setIsAuth(true);
+      } catch {
+        // Er was een error bij het fetchen van de gebruiker, wat impliceert dat deze niet meer ingelogd is
+        setIsAuth(false);
+      }
+    } else {
+      // Er is geen internet, indien er een gebruiker gecachet is door React Query wordt auth op true gezet, anders false
+      setIsAuth(!!user);
     }
 
-    removeLoading("auth");
+    setIsLoading(false);
+  }
+
+  /* Enkele helper methods voor authenticatie */
+
+  async function register(data: { username: string; email: string; password: string }) {
+    await api.post("/auth/register", data);
+    checkAuth();
+  }
+
+  async function login(data: { email: string; password: string }) {
+    await api.post("/auth/login", data);
+
+    checkAuth();
+    enqueueSnackbar("Succesvol ingelogd");
   }
 
   async function logout() {
-    await axios("auth/logout");
+    await api("auth/logout");
 
-    setUser({
-      auth: false,
-    });
+    checkAuth();
+    // Invalidate queries zodat geen offline todos bij een andere gebruiker terecht zouden komen
+    queryClient.clear();
     enqueueSnackbar("Succesvol uitgelogd.");
-  }
-
-  async function deleteAccount() {
-    await axios.post("/auth/user_data/destroy");
-    logout();
-    enqueueSnackbar("Account succesvol verwijderd.");
   }
 
   async function googleLogin(credentialResponse: CredentialResponse) {
     if (!("credential" in credentialResponse)) return;
 
-    await axios.post("/auth/google", {
+    await api.post("/auth/google", {
       token: credentialResponse.credential,
     });
     checkAuth();
   }
 
+  if (!import.meta.env.VITE_GOOGLE_CLIENT_ID) {
+    return "Geen GOOGLE_CLIENT_ID ingesteld in .env";
+  }
+
   return (
-    <AuthContext.Provider value={{ user, logout, googleLogin, checkAuth, deleteAccount }}>
-      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID ?? ""}>
-        {user.auth ? (
-          <SocketProvider>
-            <TodoProvider>
-              <ListProvider>
-                <CurrentListProvider>
-                  <SmartschoolEventsProvider>{children}</SmartschoolEventsProvider>
-                </CurrentListProvider>
-              </ListProvider>
-            </TodoProvider>
-          </SocketProvider>
-        ) : (
-          children
-        )}
-      </GoogleOAuthProvider>
+    <AuthContext.Provider value={{ isAuth, isLoading, logout, googleLogin, checkAuth, register, login }}>
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>{children}</GoogleOAuthProvider>
     </AuthContext.Provider>
   );
 };

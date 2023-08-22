@@ -1,11 +1,9 @@
-import { joiResolver } from "@hookform/resolvers/joi";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Button, FormControlLabel, FormLabel, Input, Modal, Switch, TextField, Typography } from "@mui/material";
-import Joi from "joi";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
-import { useCurrentList } from "../../../context/CurrentListState";
-import { useList } from "../../../context/ListState";
-import joiMessages from "../../../helpers/joiMessages";
+import { z } from "zod";
+import { useCreateList } from "../../../api/list/createList";
 import IList from "../../../types/IList";
 
 interface Props {
@@ -13,25 +11,25 @@ interface Props {
   onDismissed: () => void;
 }
 
-const schema = Joi.object({
-  name: Joi.string().max(20).required(),
-})
-  .messages(joiMessages)
-  .unknown(true);
+const schema = z.object({
+  name: z.string().min(1).max(20),
+  color: z.string().length(7),
+  withoutDates: z.boolean(),
+});
 
 const CreateListModal: FC<Props> = ({ visible, onDismissed }) => {
   const {
     handleSubmit,
     register,
+    reset,
     formState: { errors },
-  } = useForm<IList>({ resolver: joiResolver(schema) });
-  const lists = useList();
-  const currentList = useCurrentList();
+  } = useForm<IList>({ resolver: zodResolver(schema) });
+  const createListMutation = useCreateList();
 
   const onSubmit = async (list: IList) => {
     onDismissed();
-    const createdList = await lists.create(list);
-    currentList.setList(createdList);
+    reset();
+    createListMutation.mutate(list);
   };
 
   return (
@@ -69,7 +67,10 @@ const CreateListModal: FC<Props> = ({ visible, onDismissed }) => {
           />
           <FormLabel>Kleur</FormLabel>
           <Input defaultValue="#33AAFF" {...register("color")} type="color" fullWidth />
-          <FormControlLabel control={<Switch {...register("withoutDates")} />} label="Data uitschakelen" />
+          <FormControlLabel
+            control={<Switch {...register("withoutDates")} defaultChecked={true} />}
+            label="Deadlines uitschakelen"
+          />
           <Box sx={{ textAlign: "center", mt: 1 }}>
             <Button type="submit" variant="contained" color="primary">
               Maken

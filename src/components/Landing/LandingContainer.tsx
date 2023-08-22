@@ -4,14 +4,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthState";
 
 const LandingContainer: FC = () => {
-  const { user } = useAuth();
+  const { isAuth } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user.auth) {
+    if (isAuth) {
       navigate("/todos");
     }
-  }, [user]);
+  }, [isAuth]);
 
   const images = [
     "https://unsplash.com/photos/2JknzBYDu6k/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjY0NzI2OTc3&force=true&w=2400",

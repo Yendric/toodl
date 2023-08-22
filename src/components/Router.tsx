@@ -1,9 +1,9 @@
-import { Routes, Route } from "react-router-dom";
-import PrivateRoute from "./PrivateRoute";
-import { FC, lazy, Suspense } from "react";
 import { CircularProgress, Stack } from "@mui/material";
-import ScrollToTop from "./Partials/ScrollToTop";
+import { FC, Suspense, lazy } from "react";
+import { Route, Routes } from "react-router-dom";
 import LandingContainer from "./Landing/LandingContainer";
+import ScrollToTop from "./Partials/ScrollToTop";
+import PrivateRoute from "./PrivateRoute";
 
 const Planning = lazy(() => import("./Planning/PlanningContainer"));
 const Settings = lazy(() => import("./Settings/SettingsContainer"));
