@@ -63,7 +63,13 @@ const App: FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <PersistQueryClientProvider client={queryClient} persistOptions={{ persister }}>
+      <PersistQueryClientProvider
+        client={queryClient}
+        persistOptions={{ persister }}
+        onSuccess={() => {
+          queryClient.resumePausedMutations().then(() => queryClient.invalidateQueries());
+        }}
+      >
         <AppStateProvider>
           <BrowserRouter>
             <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
