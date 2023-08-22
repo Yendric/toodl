@@ -1679,7 +1679,7 @@
     magic-string "^0.25.0"
     string.prototype.matchall "^4.0.6"
 
-"@syncfusion/ej2-base@^22.2.9", "@syncfusion/ej2-base@~22.2.9":
+"@syncfusion/ej2-base@^22.2.5", "@syncfusion/ej2-base@~22.2.9":
   version "22.2.9"
   resolved "https://registry.yarnpkg.com/@syncfusion/ej2-base/-/ej2-base-22.2.9.tgz#05f9b040d9721991bbf16cd5ec3560f21f9c005c"
   integrity sha512-8oSAl8QaAqbqZAPW90DTbPmCdqMFyaIJVqr4D9VRNpeUl4UFGmeN1ICWZMC1Am4trvXmrPrp8YbU/yBI0v9keQ==
@@ -1831,7 +1831,7 @@
   dependencies:
     "@syncfusion/ej2-base" "~22.2.5"
 
-"@syncfusion/ej2-react-schedule@^22.2.8":
+"@syncfusion/ej2-react-schedule@^22.2.5":
   version "22.2.8"
   resolved "https://registry.yarnpkg.com/@syncfusion/ej2-react-schedule/-/ej2-react-schedule-22.2.8.tgz#82a860136431d5249827d524c84b04ba62d38b4d"
   integrity sha512-TCF7P0X3y3lkmxqbrf4dkdePRPt8zrUutpMc+EawzSDGgAMU7xvgmKJ2WX8nSAylZn4zIRIuouzpdivkX9O5Sw==
