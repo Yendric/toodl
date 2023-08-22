@@ -1,11 +1,12 @@
-import { FC } from "react";
-import TableRow from "@mui/material/TableRow";
-import { useTodo } from "../../context/TodoState";
-import ITodo from "../../types/ITodo";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Checkbox, IconButton, TableCell, Typography } from "@mui/material";
+import TableRow from "@mui/material/TableRow";
+import { FC } from "react";
+import { useDeleteTodo } from "../../api/todo/destroyTodo";
+import { useToggleTodo } from "../../api/todo/toggleTodo";
 import { useCurrentList } from "../../context/CurrentListState";
-import { toDateTimeString } from "../../helpers/DateTime";
+import { toDateTimeString } from "../../helpers/dateTime";
+import ITodo from "../../types/ITodo";
 
 interface Props {
   todo: ITodo;
@@ -13,23 +14,24 @@ interface Props {
 }
 
 const TodoShowRow: FC<Props> = ({ todo, toggleEditing }) => {
-  const { list: currentList } = useCurrentList();
-  const { toggleDone, destroy } = useTodo();
+  const { list } = useCurrentList();
+  const toggleTodoMutation = useToggleTodo();
+  const deleteTodoMutation = useDeleteTodo();
 
   return (
     <TableRow>
-      <TableCell padding="checkbox">
+      <TableCell padding="checkbox" sx={{ padding: "0 !important" }}>
         <div>
           <Checkbox
             checked={todo.done}
-            onChange={() => toggleDone(todo)}
+            onChange={() => toggleTodoMutation.mutate(todo)}
             value="primary"
             inputProps={{ "aria-label": "primary checkbox" }}
           />
         </div>
       </TableCell>
-      {!currentList?.withoutDates && (
-        <TableCell width="20%">
+      {!list?.withoutDates && (
+        <TableCell width="20%" sx={{ padding: "0 !important" }}>
           <div>
             <Typography onClick={toggleEditing} style={{ textDecoration: todo.done ? "line-through" : "none" }}>
               {toDateTimeString(todo.startTime)}
@@ -37,16 +39,16 @@ const TodoShowRow: FC<Props> = ({ todo, toggleEditing }) => {
           </div>
         </TableCell>
       )}
-      <TableCell>
+      <TableCell sx={{ padding: "0 !important" }}>
         <div>
           <Typography onClick={toggleEditing} style={{ textDecoration: todo.done ? "line-through" : "none" }}>
             {todo.subject}
           </Typography>
         </div>
       </TableCell>
-      <TableCell align="right" style={{ whiteSpace: "nowrap" }}>
+      <TableCell align="right" style={{ whiteSpace: "nowrap" }} sx={{ padding: "0 !important" }}>
         <div>
-          <IconButton onClick={() => destroy(todo)} aria-label="delete" size="large">
+          <IconButton onClick={() => deleteTodoMutation.mutate(todo)} aria-label="delete" size="large">
             <DeleteIcon fontSize="small" />
           </IconButton>
         </div>

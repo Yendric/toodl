@@ -1,31 +1,28 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { useTheme } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import { Link, useNavigate } from "react-router-dom";
-import Grid from "@mui/material/Grid";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { useForm } from "react-hook-form";
-import { useAuth } from "../../context/AuthState";
-import { useTheme } from "@mui/material";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import { GoogleLogin } from "@react-oauth/google";
-import useAxios from "../../hooks/useAxios";
-import { useSnackbar } from "notistack";
-import Joi from "joi";
-import { joiResolver } from "@hookform/resolvers/joi";
-import joiMessages from "../../helpers/joiMessages";
+import { FC, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
+import { z } from "zod";
+import { useAuth } from "../../context/AuthState";
 
 type FormData = {
   email: string;
   password: string;
 };
 
-const schema = Joi.object({
-  email: Joi.string().email({ tlds: false }).required(),
-  password: Joi.string().min(8).max(50).required(),
-}).messages(joiMessages);
+const schema = z.object({
+  email: z.string().email().min(3).max(50),
+  password: z.string().min(8).max(50),
+});
 
 const LoginContainer: FC = () => {
   const {
@@ -33,30 +30,20 @@ const LoginContainer: FC = () => {
     setError,
     register,
     formState: { errors },
-  } = useForm<FormData>({ resolver: joiResolver(schema) });
-  const { user, googleLogin, checkAuth } = useAuth();
+  } = useForm<FormData>({ resolver: zodResolver(schema) });
+  const { googleLogin, isAuth, login } = useAuth();
   const navigate = useNavigate();
   const theme = useTheme();
-  const axios = useAxios();
-  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
-    if (user.auth) {
+    if (isAuth) {
       navigate("/todos");
     }
-  }, [user]);
+  }, [isAuth]);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      if (!data.email || !data.password) return;
-
-      await axios.post("/auth/login", {
-        email: data.email,
-        password: data.password,
-      });
-      checkAuth();
-      enqueueSnackbar("Succesvol ingelogd");
-      navigate("/todos");
+      await login(data);
     } catch {
       setError("email", { message: "Foutief wachtwoord of email adres" });
       setError("password", { message: "Foutief wachtwoord of email adres" });

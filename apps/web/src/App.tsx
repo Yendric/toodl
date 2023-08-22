@@ -1,24 +1,48 @@
-import Router from "./components/Router";
-import { BrowserRouter } from "react-router-dom";
-// import Footer from './components/Partials/Footer';
-// import NavBar from './components/Partials/NavBar';
-import useMediaQuery from "@mui/material/useMediaQuery";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-import { AppStateProvider } from "./context/AppState";
-// import LoadingBar from './components/Partials/LoadingBar';
-import "./App.scss";
-import { FC, useMemo } from "react";
-import NavBar from "./components/Partials/NavBar";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import axios from "axios";
+import CssBaseline from "@mui/material/CssBaseline";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { registerLicense } from "@syncfusion/ej2-base";
+import { QueryClient } from "@tanstack/react-query";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import i18next from "i18next";
+import { FC, useMemo } from "react";
+import { BrowserRouter } from "react-router-dom";
+import { z } from "zod";
+import { zodI18nMap } from "zod-i18n-map";
+import translation from "zod-i18n-map/locales/nl/zod.json";
+import "./App.scss";
 import Footer from "./components/Partials/Footer";
-import LoadingBar from "./components/Partials/LoadingBar";
+import NavBar from "./components/Partials/NavBar";
+import Router from "./components/Router";
+import { AppStateProvider } from "./context/AppState";
+import { createIDBPersister } from "./helpers/createIDBPersister";
 
-axios.defaults.withCredentials = true;
+/* Zod i18n */
+i18next.init({
+  lng: "nl",
+  resources: {
+    nl: { zod: translation },
+  },
+});
+z.setErrorMap(zodI18nMap);
+
+/* SyncFusion EJ2 react scheduler license */
+registerLicense(import.meta.env.VITE_SYNCFUSION_LICENSE ?? "");
+
+/* React query client */
+const queryClient = new QueryClient({
+  logger: {
+    // Anders wordt de console volgespammed met 401 unauthorized errors, welke worden gebruikt om te weten of de gebruiker ingelogd is
+    log: () => {},
+    warn: () => {},
+    error: () => {},
+  },
+});
+const persister = createIDBPersister();
 
 const App: FC = () => {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -33,26 +57,33 @@ const App: FC = () => {
           mode: prefersDarkMode ? "dark" : "light",
         },
       }),
-    [prefersDarkMode]
+    [prefersDarkMode],
   );
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AppStateProvider>
-        <BrowserRouter>
-          <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-            <div style={{ flex: "1 0 auto" }}>
-              <NavBar />
-              <LoadingBar />
-              <Router />
+      <PersistQueryClientProvider
+        client={queryClient}
+        persistOptions={{ persister }}
+        onSuccess={() => {
+          queryClient.resumePausedMutations().then(() => queryClient.invalidateQueries());
+        }}
+      >
+        <AppStateProvider>
+          <BrowserRouter>
+            <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+              <div style={{ flex: "1 0 auto" }}>
+                <NavBar />
+                <Router />
+              </div>
+              <div style={{ flexShrink: 0, zIndex: theme.zIndex.drawer + 1 }}>
+                <Footer />
+              </div>
             </div>
-            <div style={{ flexShrink: 0, zIndex: theme.zIndex.drawer + 1 }}>
-              <Footer />
-            </div>
-          </div>
-        </BrowserRouter>
-      </AppStateProvider>
+          </BrowserRouter>
+        </AppStateProvider>
+      </PersistQueryClientProvider>
     </ThemeProvider>
   );
 };

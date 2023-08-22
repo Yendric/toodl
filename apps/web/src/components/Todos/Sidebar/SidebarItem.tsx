@@ -1,8 +1,8 @@
+import CircleIcon from "@mui/icons-material/Circle";
 import { ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import { FC, MouseEvent, useState } from "react";
-import CircleIcon from "@mui/icons-material/Circle";
-import IList from "../../../types/IList";
 import { useCurrentList } from "../../../context/CurrentListState";
+import IList from "../../../types/IList";
 import EditListModal from "./EditListModal";
 
 type Props = {

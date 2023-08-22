@@ -1,7 +1,7 @@
-import { FC } from "react";
-import ProfileForm from "./ProfileForm";
-import PasswordForm from "./PasswordForm";
 import { Box } from "@mui/material";
+import { FC } from "react";
+import PasswordForm from "./PasswordForm";
+import ProfileForm from "./ProfileForm";
 
 const SettingsContainer: FC = () => {
   return (

@@ -1,6 +1,6 @@
-import { FC } from "react";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import { FC } from "react";
 
 const Error404: FC = () => {
   return (
