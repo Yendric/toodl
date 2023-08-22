@@ -1,20 +1,18 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { useTheme } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import { Link, useNavigate } from "react-router-dom";
-import Grid from "@mui/material/Grid";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { useForm } from "react-hook-form";
-import { useAuth } from "../../context/AuthState";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import { GoogleLogin } from "@react-oauth/google";
-import { useTheme } from "@mui/material";
-import useAxios from "../../hooks/useAxios";
-import Joi from "joi";
-import { joiResolver } from "@hookform/resolvers/joi";
-import joiMessages from "../../helpers/joiMessages";
+import { FC, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
+import { z } from "zod";
+import { useAuth } from "../../context/AuthState";
 
 type FormData = {
   username: string;
@@ -22,11 +20,11 @@ type FormData = {
   password: string;
 };
 
-const schema = Joi.object({
-  username: Joi.string().max(50).required(),
-  email: Joi.string().email({ tlds: false }).max(50).required(),
-  password: Joi.string().min(8).max(50).required(),
-}).messages(joiMessages);
+const schema = z.object({
+  username: z.string().min(1).max(50),
+  email: z.string().email().min(3).max(50),
+  password: z.string().min(8).max(50),
+});
 
 const RegisterContainer: FC = () => {
   const {
@@ -34,29 +32,20 @@ const RegisterContainer: FC = () => {
     setError,
     register,
     formState: { errors },
-  } = useForm<FormData>({ resolver: joiResolver(schema) });
-  const { user, googleLogin, checkAuth } = useAuth();
+  } = useForm<FormData>({ resolver: zodResolver(schema) });
+  const { googleLogin, isAuth, register: registerUser } = useAuth();
   const navigate = useNavigate();
   const theme = useTheme();
-  const axios = useAxios();
 
   useEffect(() => {
-    if (user.auth) {
+    if (isAuth) {
       navigate("/todos?newUser=true");
     }
-  }, [user]);
-
+  }, [isAuth]);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      if (!data.email || !data.password || !data.username) return;
-
-      await axios.post("/auth/register", {
-        username: data.username,
-        email: data.email,
-        password: data.password,
-      });
-      checkAuth();
+      await registerUser(data);
     } catch {
       setError("email", { message: "Dit e-mail adres is al in gebruik" });
     }
@@ -111,9 +100,9 @@ const RegisterContainer: FC = () => {
           autoComplete="current-password"
           fullWidth
         />
-          <Button sx={{ mt: 2 }} type="submit" fullWidth variant="contained" color="primary">
-            Registreer
-          </Button>
+        <Button sx={{ mt: 2 }} type="submit" fullWidth variant="contained" color="primary">
+          Registreer
+        </Button>
         <div className="google-login-button">
           <GoogleLogin theme="filled_blue" onSuccess={googleLogin} useOneTap />
         </div>

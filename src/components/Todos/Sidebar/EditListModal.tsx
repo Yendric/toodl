@@ -1,10 +1,10 @@
-import { joiResolver } from "@hookform/resolvers/joi";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Button, FormControlLabel, FormLabel, Input, Modal, Switch, TextField, Typography } from "@mui/material";
-import Joi from "joi";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
-import { useList } from "../../../context/ListState";
-import joiMessages from "../../../helpers/joiMessages";
+import { z } from "zod";
+import { useDeleteList } from "../../../api/list/destroyList";
+import { useUpdateList } from "../../../api/list/updateList";
 import IList from "../../../types/IList";
 
 interface Props {
@@ -13,23 +13,25 @@ interface Props {
   onDismissed: () => void;
 }
 
-const schema = Joi.object({
-  name: Joi.string().max(20).required(),
-})
-  .messages(joiMessages)
-  .unknown(true);
+const schema = z.object({
+  name: z.string().min(1).max(20),
+  color: z.string().length(7),
+  withoutDates: z.boolean(),
+});
 
 const EditListModal: FC<Props> = ({ visible, onDismissed, list }) => {
   const {
     handleSubmit,
     register,
     formState: { errors },
-  } = useForm<IList>({ defaultValues: list, resolver: joiResolver(schema) });
-  const lists = useList();
+  } = useForm<z.infer<typeof schema>>({ defaultValues: list, resolver: zodResolver(schema) });
 
-  const onSubmit = (list: IList) => {
+  const updateListMutation = useUpdateList();
+  const deleteListMutation = useDeleteList();
+
+  const onSubmit = (data: z.infer<typeof schema>) => {
     onDismissed();
-    lists.update(list);
+    updateListMutation.mutate({ ...list, ...data });
   };
 
   return (
@@ -69,7 +71,7 @@ const EditListModal: FC<Props> = ({ visible, onDismissed, list }) => {
           <Input defaultValue={list.color} {...register("color")} type="color" fullWidth />
           <FormControlLabel
             control={<Switch defaultChecked={list.withoutDates} {...register("withoutDates")} />}
-            label="Data uitschakelen"
+            label="Deadlines uitschakelen"
           />
 
           <Box sx={{ textAlign: "center", mt: 1 }}>
@@ -79,8 +81,8 @@ const EditListModal: FC<Props> = ({ visible, onDismissed, list }) => {
             <Button
               type="button"
               onClick={() => {
-                lists.destroy(list);
                 onDismissed();
+                deleteListMutation.mutate(list);
               }}
               variant="contained"
               color="error"

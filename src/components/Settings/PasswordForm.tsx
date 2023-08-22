@@ -1,25 +1,17 @@
-import { Button, CardContent, Divider, FormControl, TextField, Typography, Card } from "@mui/material";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Security from "@mui/icons-material/Security";
-import { useSnackbar } from "notistack";
+import { Button, Card, CardContent, Divider, FormControl, Skeleton, TextField, Typography } from "@mui/material";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
-import { useAuth } from "../../context/AuthState";
-import useAxios from "../../hooks/useAxios";
-import Joi from "joi";
-import { joiResolver } from "@hookform/resolvers/joi";
-import joiMessages from "../../helpers/joiMessages";
+import { z } from "zod";
+import { useUser } from "../../api/user/getUser";
+import { useUpdatePassword } from "../../api/user/updatePassword";
 
-type FormData = {
-  oldPassword: string;
-  newPassword: string;
-  confirmPassword: string;
-};
-
-const schema = Joi.object({
-  oldPassword: Joi.string().min(8).max(50).required(),
-  newPassword: Joi.string().min(8).max(50).required(),
-  confirmPassword: Joi.string().min(8).max(50).required(),
-}).messages(joiMessages);
+const schema = z.object({
+  newPassword: z.string().min(8).max(50),
+  confirmPassword: z.string().min(8).max(50),
+  oldPassword: z.string().min(8).max(50).optional(),
+});
 
 const PasswordForm: FC = () => {
   const {
@@ -27,21 +19,39 @@ const PasswordForm: FC = () => {
     reset,
     register,
     formState: { errors },
-  } = useForm<FormData>({ resolver: joiResolver(schema) });
-  const { enqueueSnackbar } = useSnackbar();
-  const { user, checkAuth } = useAuth();
-  const axios = useAxios();
-
+  } = useForm<z.infer<typeof schema>>({ resolver: zodResolver(schema) });
+  const { data: user, isSuccess } = useUser();
+  const updatePasswordMutation = useUpdatePassword();
   const onSubmit = handleSubmit(async (data) => {
-    await axios.post("/auth/user_data/update_password", {
-      oldPassword: data.oldPassword,
-      newPassword: data.newPassword,
-      confirmPassword: data.confirmPassword,
-    });
-    checkAuth();
     reset();
-    enqueueSnackbar("Wachtwoord geüpdatet");
+    updatePasswordMutation.mutate({ ...data, ...user });
   });
+
+  if (!isSuccess || !navigator.onLine) {
+    return (
+      <Card sx={{ mt: 2 }}>
+        <CardContent>
+          <Typography variant="h5" component="h2">
+            Wachtwoord veranderen
+          </Typography>
+          <Typography variant="subtitle1" color="text.secondary">
+            Verander je wachtwoord
+          </Typography>
+        </CardContent>
+        <Divider />
+        <CardContent>
+          <FormControl component="fieldset" fullWidth sx={{ mt: -2 }}>
+            <Skeleton height={90} />
+            <Skeleton height={90} />
+            <Skeleton height={90} />
+          </FormControl>
+          <Button variant="contained" color="primary" disabled startIcon={<Security />} sx={{ mt: 1 }}>
+            Wachtwoord veranderen
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card sx={{ mt: 2 }}>
@@ -65,7 +75,7 @@ const PasswordForm: FC = () => {
                 inputProps={register("oldPassword")}
                 error={!!errors.oldPassword}
                 helperText={errors.oldPassword?.message}
-                margin="normal"
+                margin="dense"
                 variant="outlined"
                 label="Oud wachtwoord"
                 autoComplete="old-password"
@@ -77,7 +87,7 @@ const PasswordForm: FC = () => {
               inputProps={register("newPassword")}
               error={!!errors.newPassword}
               helperText={errors.newPassword?.message}
-              margin="normal"
+              margin="dense"
               autoComplete="new-password"
               variant="outlined"
               label="Nieuw wachtwoord"
@@ -88,7 +98,7 @@ const PasswordForm: FC = () => {
               inputProps={register("confirmPassword")}
               error={!!errors.confirmPassword}
               helperText={errors.confirmPassword?.message}
-              margin="normal"
+              margin="dense"
               autoComplete="new-password"
               variant="outlined"
               label="Bevestig nieuw wachtwoord"
@@ -96,7 +106,7 @@ const PasswordForm: FC = () => {
               fullWidth
             />
           </FormControl>
-          <Button variant="contained" color="primary" type="submit" startIcon={<Security />}>
+          <Button variant="contained" color="primary" type="submit" startIcon={<Security />} sx={{ mt: 1 }}>
             {user.onlyLinked ? "Wachtwoord instellen" : "Wachtwoord veranderen"}
           </Button>
         </CardContent>

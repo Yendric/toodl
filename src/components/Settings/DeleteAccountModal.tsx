@@ -1,6 +1,6 @@
 import { Box, Button, Modal, Typography } from "@mui/material";
 import { FC } from "react";
-import { useAuth } from "../../context/AuthState";
+import { useDeleteUser } from "../../api/user/destroyUser";
 
 interface Props {
   visible: boolean;
@@ -8,7 +8,7 @@ interface Props {
 }
 
 const DeleteAccountModal: FC<Props> = ({ visible, onDismissed }) => {
-  const { deleteAccount } = useAuth();
+  const deleteUserMutation = useDeleteUser();
 
   return (
     <Modal
@@ -35,7 +35,7 @@ const DeleteAccountModal: FC<Props> = ({ visible, onDismissed }) => {
         </Typography>
         <Typography sx={{ mb: 2 }}>Deze actie kan niet ongedaan worden gemaakt</Typography>
         <Box sx={{ textAlign: "center" }}>
-          <Button variant="contained" sx={{ mr: 1 }} color="error" onClick={deleteAccount}>
+          <Button variant="contained" sx={{ mr: 1 }} color="error" onClick={() => deleteUserMutation.mutate()}>
             Ja, verwijder
           </Button>
           <Button variant="contained" onClick={onDismissed}>

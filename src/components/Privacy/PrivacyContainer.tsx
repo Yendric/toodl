@@ -1,6 +1,6 @@
 import { Container } from "@mui/material";
-import { FC } from "react";
 import Link from "@mui/material/Link";
+import { FC } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
 const PrivacyContainer: FC = () => {
@@ -35,8 +35,7 @@ const PrivacyContainer: FC = () => {
         Voor een betere ervaring, tijdens het gebruik van onze Service, kan ik je vragen om ons bepaalde persoonlijk
         identificeerbare informatie te verstrekken, inclusief maar niet beperkt tot gebruikersnamen, e-mails,
         wachtwoorden (hashed), todo&lsquo;s (en al hun eigenschappen: naam, datums, etc.), gebruikersinstellingen, todo
-        lijsten, smartschool agenda links. De informatie die ik vraag wordt bewaard op je apparaat en wordt op geen
-        enkele manier door mij verzameld.
+        lijsten, iCal URLs.
       </p>
       <p>
         <strong>Log Gegevens</strong>

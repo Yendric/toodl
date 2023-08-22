@@ -1,20 +1,21 @@
-import { useState, useEffect, FC } from "react";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import { useTheme } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import { FC, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthState";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import IconButton from "@mui/material/IconButton";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
-import { useTheme } from "@mui/material";
 
 const NavBar: FC = () => {
-  const { user, logout } = useAuth();
+  const { logout, isAuth } = useAuth();
+
   const location = useLocation();
   const [value, setValue] = useState<boolean | string>(false);
   const [anchorEl, setAnchorEl] = useState<(EventTarget & HTMLButtonElement) | null>(null);
@@ -32,10 +33,10 @@ const NavBar: FC = () => {
   return (
     <AppBar position="sticky" sx={{ zIndex: theme.zIndex.drawer + 1 }}>
       <Toolbar>
-        <Link to="/" style={{ textDecoration: "none", flexGrow: user.auth ? 0 : 1 }}>
+        <Link to="/" style={{ textDecoration: "none", flexGrow: isAuth ? 0 : 1 }}>
           <Typography variant="h6">Toodl</Typography>
         </Link>
-        {user.auth ? (
+        {isAuth ? (
           <>
             <Tabs
               value={value}
