@@ -3,7 +3,7 @@ import { Box, Button, FormControlLabel, FormLabel, Input, Modal, Switch, TextFie
 import { FC } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useDeleteList } from "../../../api/list/destroyList";
+import { useDestroyList } from "../../../api/list/destroyList";
 import { useUpdateList } from "../../../api/list/updateList";
 import IList from "../../../types/IList";
 
@@ -27,7 +27,7 @@ const EditListModal: FC<Props> = ({ visible, onDismissed, list }) => {
   } = useForm<z.infer<typeof schema>>({ defaultValues: list, resolver: zodResolver(schema) });
 
   const updateListMutation = useUpdateList();
-  const deleteListMutation = useDeleteList();
+  const deleteListMutation = useDestroyList();
 
   const onSubmit = (data: z.infer<typeof schema>) => {
     onDismissed();

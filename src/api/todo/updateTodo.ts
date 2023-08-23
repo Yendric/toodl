@@ -7,6 +7,7 @@ export const useUpdateTodo = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
+    mutationKey: ["updateTodo"],
     onMutate: async (payload) => {
       await queryClient.cancelQueries(["todos"]);
       updateLocal<ITodo>(payload, queryClient, ["todos"], sortFn);

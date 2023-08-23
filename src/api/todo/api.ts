@@ -1,5 +1,7 @@
+import { queryClient } from "../../queryClient";
 import ITodo from "../../types/ITodo";
 import api from "../api";
+import { updateLocalId } from "../offlineHelpers";
 
 export function sortFn(a: ITodo, b: ITodo) {
   return a.startTime.valueOf() - b.startTime.valueOf();
@@ -17,8 +19,28 @@ export async function index() {
   });
 }
 
-export async function create(todo: Omit<ITodo, "id">) {
-  return (await api.post<ITodo>("/todos", todo)).data;
+export async function store(todo: ITodo) {
+  const createdTodo = (await api.post<ITodo>("/todos", todo)).data;
+
+  // Update alle mutaties met betrekking tot deze todo
+  queryClient
+    .getMutationCache()
+    .getAll()
+    /* @ts-ignore */
+    // Verkrijg alle mutaties van deze todo
+    .filter((mutation) => mutation.state.variables?.id === todo.id)
+    .forEach((mutation) =>
+      // Verander het tijdelijke id van deze mutatie naar het nieuwe ID van deze zonet aangemaakte lijst
+      mutation.setState({
+        ...mutation.state,
+        /* @ts-ignore */
+        variables: { ...mutation.state.variables, id: createdTodo.id },
+      }),
+    );
+
+  // Update de local todo met het nieuwe id
+  updateLocalId<ITodo>(todo.id, createdTodo.id, queryClient, ["todos"], sortFn);
+  return createdTodo;
 }
 
 export async function update(todo: ITodo) {

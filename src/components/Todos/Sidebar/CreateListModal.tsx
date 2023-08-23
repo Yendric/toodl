@@ -3,7 +3,7 @@ import { Box, Button, FormControlLabel, FormLabel, Input, Modal, Switch, TextFie
 import { FC } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useCreateList } from "../../../api/list/createList";
+import { useStoreList } from "../../../api/list/storeList";
 import IList from "../../../types/IList";
 
 interface Props {
@@ -24,7 +24,7 @@ const CreateListModal: FC<Props> = ({ visible, onDismissed }) => {
     reset,
     formState: { errors },
   } = useForm<IList>({ resolver: zodResolver(schema) });
-  const createListMutation = useCreateList();
+  const createListMutation = useStoreList();
 
   const onSubmit = async (list: IList) => {
     onDismissed();

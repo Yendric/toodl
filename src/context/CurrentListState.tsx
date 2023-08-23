@@ -1,6 +1,6 @@
 import { FC, ReactNode, createContext, useContext, useEffect, useState } from "react";
 import { useLists } from "../api/list/getLists";
-import { useDeleteTodo } from "../api/todo/destroyTodo";
+import { useDestroyTodo } from "../api/todo/destroyTodo";
 import { useTodos } from "../api/todo/getTodos";
 import IList from "../types/IList";
 import ITodo from "../types/ITodo";
@@ -20,7 +20,7 @@ export const CurrentListProvider: FC<{ children: ReactNode }> = ({ children }) =
   const { data: lists, isSuccess: isListSuccess } = useLists();
   const { data: todos, isSuccess: isTodoSuccess } = useTodos();
   const [listTodos, setListTodos] = useState<ITodo[]>([]);
-  const deleteTodoMutation = useDeleteTodo();
+  const deleteTodoMutation = useDestroyTodo();
 
   useEffect(() => {
     if (isTodoSuccess && list != undefined) setListTodos(todos.filter((todo) => todo.listId === list.id));

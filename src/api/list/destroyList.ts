@@ -4,11 +4,12 @@ import IList from "../../types/IList";
 import { destroyLocal } from "../offlineHelpers";
 import { destroy } from "./api";
 
-export const useDeleteList = () => {
+export const useDestroyList = () => {
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
+    mutationKey: ["destroyList"],
     onMutate: async (payload) => {
       await queryClient.cancelQueries(["lists"]);
       destroyLocal<IList>(payload, queryClient, ["lists"]);

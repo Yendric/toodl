@@ -21,9 +21,9 @@ import { useSnackbar } from "notistack";
 import { FC, useEffect, useRef } from "react";
 import { useIcals } from "../../api/icals/getIcals";
 import { useLists } from "../../api/list/getLists";
-import { useCreateTodo } from "../../api/todo/createTodo";
-import { useDeleteTodo } from "../../api/todo/destroyTodo";
+import { useDestroyTodo } from "../../api/todo/destroyTodo";
 import { useTodos } from "../../api/todo/getTodos";
+import { useStoreTodo } from "../../api/todo/storeTodo";
 import { useUpdateTodo } from "../../api/todo/updateTodo";
 import ITodo from "../../types/ITodo";
 import "./Planning.scss";
@@ -37,9 +37,9 @@ const PlanningContainer: FC = () => {
   const { data: lists, isSuccess: listSuccess } = useLists();
   const { data: events, isSuccess: icalSuccess } = useIcals();
 
-  const createTodoMutation = useCreateTodo();
+  const createTodoMutation = useStoreTodo();
   const updateTodoMutation = useUpdateTodo();
-  const deleteTodoMutation = useDeleteTodo();
+  const deleteTodoMutation = useDestroyTodo();
 
   const { enqueueSnackbar } = useSnackbar();
 

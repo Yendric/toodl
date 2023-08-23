@@ -7,6 +7,7 @@ export const useToggleTodo = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
+    mutationKey: ["toggleTodo"],
     onMutate: async (payload) => {
       await queryClient.cancelQueries(["todos"]);
       updateLocal<ITodo>({ ...payload, done: !payload.done }, queryClient, ["todos"], sortFn);
