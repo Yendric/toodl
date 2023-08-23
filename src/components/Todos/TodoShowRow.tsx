@@ -2,7 +2,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { Checkbox, IconButton, TableCell, Typography } from "@mui/material";
 import TableRow from "@mui/material/TableRow";
 import { FC } from "react";
-import { useDeleteTodo } from "../../api/todo/destroyTodo";
+import { useDestroyTodo } from "../../api/todo/destroyTodo";
 import { useToggleTodo } from "../../api/todo/toggleTodo";
 import { useCurrentList } from "../../context/CurrentListState";
 import { toDateTimeString } from "../../helpers/dateTime";
@@ -16,7 +16,7 @@ interface Props {
 const TodoShowRow: FC<Props> = ({ todo, toggleEditing }) => {
   const { list } = useCurrentList();
   const toggleTodoMutation = useToggleTodo();
-  const deleteTodoMutation = useDeleteTodo();
+  const deleteTodoMutation = useDestroyTodo();
 
   return (
     <TableRow>

@@ -93,7 +93,7 @@ const LoginContainer: FC = () => {
           Log in
         </Button>
         <div className="google-login-button">
-          <GoogleLogin theme="filled_blue" onSuccess={googleLogin} useOneTap />
+          <GoogleLogin theme="filled_blue" onSuccess={googleLogin} />
         </div>
         <Grid container>
           <Grid item>

@@ -1,9 +1,10 @@
 import { CredentialResponse, GoogleOAuthProvider } from "@react-oauth/google";
-import { useQueryClient } from "@tanstack/react-query";
+import { onlineManager, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { FC, ReactNode, createContext, useContext, useEffect, useState } from "react";
 import api from "../api/api";
 import { useUser } from "../api/user/getUser";
+import { isOnline } from "../helpers/isOnline";
 
 type AuthState = {
   logout: () => Promise<void>;
@@ -23,14 +24,43 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { data: user } = useUser();
   const queryClient = useQueryClient();
+  const [online, setOnlineState] = useState(false);
+
+  function setOnline(online: boolean) {
+    setOnlineState(online);
+    onlineManager.setOnline(online);
+  }
+
+  useEffect(() => {
+    onlineManager.setOnline(false);
+    window.addEventListener("online", () => {
+      (async () => {
+        setOnline(await isOnline());
+      })();
+    });
+    window.addEventListener("offline", () => {
+      (async () => {
+        setOnline(await isOnline());
+      })();
+    });
+
+    const interval = setInterval(() => {
+      (async () => {
+        setOnline(await isOnline());
+      })();
+    }, 5000);
+    (async () => {
+      setOnline(await isOnline());
+    })();
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     checkAuth();
-  }, [navigator.onLine, user]);
+  }, [online, user]);
 
   async function checkAuth() {
-    if (navigator.onLine) {
-      queryClient.resumePausedMutations().then(() => queryClient.invalidateQueries());
+    if (online) {
       try {
         await api("/auth/user_data");
         setIsAuth(true);
@@ -38,6 +68,15 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
         // Er was een error bij het fetchen van de gebruiker, wat impliceert dat deze niet meer ingelogd is
         setIsAuth(false);
       }
+      await Promise.all(
+        queryClient
+          .getMutationCache()
+          .getAll()
+          .map(async (mutation) => {
+            await mutation.continue();
+          }),
+      );
+      queryClient.invalidateQueries();
     } else {
       // Er is geen internet, indien er een gebruiker gecachet is door React Query wordt auth op true gezet, anders false
       setIsAuth(!!user);

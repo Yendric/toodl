@@ -7,7 +7,7 @@ import { MobileDateTimePicker } from "@mui/x-date-pickers";
 import { FC } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
-import { useCreateTodo } from "../../api/todo/createTodo";
+import { useStoreTodo } from "../../api/todo/storeTodo";
 import { useCurrentList } from "../../context/CurrentListState";
 import ITodo from "../../types/ITodo";
 
@@ -37,7 +37,7 @@ const CreateTodoForm: FC<{ disabled?: boolean }> = ({ disabled = false }) => {
   } = useForm<ITodo>({ defaultValues: { startTime: new Date(), subject: "" }, resolver: zodResolver(schema) });
 
   const currentList = useCurrentList();
-  const createTodoMutation = useCreateTodo();
+  const createTodoMutation = useStoreTodo();
 
   function onSubmit(todo: ITodo) {
     reset();
