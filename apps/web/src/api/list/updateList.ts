@@ -9,6 +9,7 @@ export const useUpdateList = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
+    mutationKey: ["updateList"],
     onMutate: async (payload) => {
       await queryClient.cancelQueries(["lists"]);
       updateLocal<IList>(payload, queryClient, ["lists"], sortFn);
