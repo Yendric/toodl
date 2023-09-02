@@ -15,6 +15,7 @@ export async function index() {
       ...todo,
       startTime: new Date(todo.startTime),
       endTime: todo.endTime && new Date(todo.endTime),
+      localId: todo.id,
     };
   });
 }
@@ -26,14 +27,12 @@ export async function store(todo: ITodo) {
   queryClient
     .getMutationCache()
     .getAll()
-    /* @ts-ignore */
     // Verkrijg alle mutaties van deze todo
     .filter((mutation) => mutation.state.variables?.id === todo.id)
     .forEach((mutation) =>
       // Verander het tijdelijke id van deze mutatie naar het nieuwe ID van deze zonet aangemaakte lijst
       mutation.setState({
         ...mutation.state,
-        /* @ts-ignore */
         variables: { ...mutation.state.variables, id: createdTodo.id },
       }),
     );

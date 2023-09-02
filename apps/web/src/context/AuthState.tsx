@@ -67,6 +67,8 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
       } catch {
         // Er was een error bij het fetchen van de gebruiker, wat impliceert dat deze niet meer ingelogd is
         setIsAuth(false);
+        // Invalidate queries zodat geen offline todos bij een andere gebruiker terecht zouden komen
+        queryClient.clear();
       }
       await Promise.all(
         queryClient

@@ -60,9 +60,7 @@ const TodoTable: FC = () => {
                 {listTodos
                   .filter((todo) => !todo.done)
                   .map((todo) => (
-                    /* We gebruiken deze speciale key en niet 'id', omdat we optimistische updates doen en hiervoor tijdelijk een ander id gebruiken
-                       Als bonus geeft dit een leuke edit animatie */
-                    <CSSTransition key={todo.startTime + todo.subject} timeout={200} classNames="todo">
+                    <CSSTransition key={todo.localId} timeout={200} classNames="todo">
                       <TodoRow todo={todo} />
                     </CSSTransition>
                   ))}
@@ -78,7 +76,7 @@ const TodoTable: FC = () => {
                 {listTodos
                   .filter((todo) => todo.done)
                   .map((todo) => (
-                    <CSSTransition key={todo.startTime + todo.subject} timeout={200} classNames="todo">
+                    <CSSTransition key={todo.localId} timeout={200} classNames="todo">
                       <TodoRow todo={todo} />
                     </CSSTransition>
                   ))}

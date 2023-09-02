@@ -1,13 +1,18 @@
 import { QueryClient } from "@tanstack/react-query";
 
-export function createLocal<T extends {}>(
+interface BaseType {
+  id: number;
+  localId: number;
+}
+
+export function createLocal<T extends BaseType>(
   newItem: Omit<T, "id">,
   queryClient: QueryClient,
   queryKey: string[],
   sortFn: (a: T, b: T) => number = () => 0,
 ) {
-  /* @ts-ignore */
-  const newItemWithId = { ...newItem, id: Date.now() } as T;
+  const id = Date.now();
+  const newItemWithId = { ...newItem, id: id, localId: id } as T;
   queryClient.setQueryData<T[]>(queryKey, (old) => {
     return [...(old ?? []), newItemWithId].sort(sortFn);
   });
@@ -15,7 +20,7 @@ export function createLocal<T extends {}>(
   return newItemWithId;
 }
 
-export function updateLocal<T extends Record<string, any>>(
+export function updateLocal<T extends BaseType>(
   updateItem: T,
   queryClient: QueryClient,
   queryKey: string[],
@@ -33,7 +38,7 @@ export function updateLocal<T extends Record<string, any>>(
   });
 }
 
-export function updateLocalId<T extends Record<string, any>>(
+export function updateLocalId<T extends BaseType>(
   oldId: number,
   newId: number,
   queryClient: QueryClient,
@@ -52,11 +57,7 @@ export function updateLocalId<T extends Record<string, any>>(
   });
 }
 
-export function destroyLocal<T extends Record<string, any>>(
-  destroyItem: T,
-  queryClient: QueryClient,
-  queryKey: string[],
-) {
+export function destroyLocal<T extends BaseType>(destroyItem: T, queryClient: QueryClient, queryKey: string[]) {
   queryClient.setQueryData<T[]>(queryKey, (old) => {
     return old?.filter((item) => item.id !== destroyItem.id);
   });

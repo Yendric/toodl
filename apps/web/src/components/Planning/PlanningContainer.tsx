@@ -46,6 +46,7 @@ const PlanningContainer: FC = () => {
   const schedule = useRef<ScheduleComponent | null>(null);
 
   useEffect(() => {
+    // Refresh wanneer een lijst geüpdatet wordt. Zo zie je meteen geüpdatete kleuren.
     if (!schedule.current) return;
     schedule.current.refresh();
   }, [lists]);
@@ -60,13 +61,13 @@ const PlanningContainer: FC = () => {
         click: printSchedule,
       });
     } else {
-      let data = args.data as Record<string, any>;
+      let data = args.data as Record<string, unknown>;
       if (Array.isArray(data)) data = data[0];
       if (!data) return;
       if (data?.origin === "iCal")
         return enqueueSnackbar("iCal events kunnen niet worden bewerkt.", { variant: "warning" });
 
-      const todo = data as ITodo;
+      const todo = data as unknown as ITodo;
 
       if (args.requestType === "eventCreate") {
         createTodoMutation.mutate(todo);

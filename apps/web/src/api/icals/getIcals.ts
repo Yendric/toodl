@@ -11,9 +11,10 @@ export const useIcals = () => {
   return useQuery({
     queryKey: ["icals", "user"],
     queryFn: async () => {
+      if (!user) return [];
+
       return (
         await Promise.all(
-          /* @ts-ignore */
           user.icalUrls?.map(async (url) => {
             const res = await axios(url, { withCredentials: false });
             const icalString = res.data;

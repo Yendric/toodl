@@ -103,8 +103,7 @@ const Sidebar: FC = () => {
         <Divider />
         <List>
           {lists.map((list) => (
-            // We gebruiken deze speciale key en niet 'id', omdat we optimistische updates doen en hiervoor tijdelijk een ander id gebruiken
-            <SidebarItem key={list.color + list.name + list.withoutDates} list={list} />
+            <SidebarItem key={list.localId} list={list} />
           ))}
         </List>
         <Divider />
