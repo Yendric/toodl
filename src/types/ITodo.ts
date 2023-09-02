@@ -1,5 +1,6 @@
 interface ITodo {
   id: number;
+  localId: number;
   done: boolean;
   subject: string;
   startTime: Date;

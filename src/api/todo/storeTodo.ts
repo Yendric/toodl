@@ -19,7 +19,6 @@ export const useStoreTodo = () => {
 
       // Vertel de mutation wat het tijdelijke local id is
       const mutation = queryClient.getMutationCache().getAll().at(-1);
-      /* @ts-ignore */
       mutation?.setState({ ...mutation.state, variables: { ...mutation.state.variables, id: localTodo.id } });
     },
     onSuccess: () => {

@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { FC, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, FieldError, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { z } from "zod";
 import { useUser } from "../../api/user/getUser";
@@ -180,8 +180,7 @@ const ProfileForm: FC = () => {
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { value, onChange }, fieldState: { error } }) => (
-                  /* @ts-ignore */
-                  <IcalInput value={value} onChange={onChange} error={error} />
+                  <IcalInput value={value} onChange={onChange} error={error as unknown as FieldError[]} />
                 )}
               />
             </Grid>
