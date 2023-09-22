@@ -8,7 +8,7 @@
     "@fontsource/roboto": "^5.0.8",
     "@hookform/resolvers": "^3.3.0",
     "@mui/icons-material": "^5.14.3",
-    "@mui/material": "^5.14.5",
+    "@mui/material": "^5.14.7",
     "@mui/x-date-pickers": "^6.11.2",
     "@react-oauth/google": "^0.11.1",
     "@syncfusion/ej2-base": "^22.2.5",
