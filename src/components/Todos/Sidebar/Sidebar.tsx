@@ -23,7 +23,7 @@ const Sidebar: FC = () => {
       <Box component="nav">
         <Drawer
           sx={{
-            width: window.screen.width <= 1280 ? "56px" : open ? "16rem" : "56px",
+            width: window.screen.width < 1280 ? "56px" : open ? "16rem" : "56px",
             transition: "width 225ms cubic-bezier(0, 0, 0.2, 1) 0ms",
             whiteSpace: "nowrap",
           }}
@@ -80,7 +80,7 @@ const Sidebar: FC = () => {
     <Box component="nav">
       <Drawer
         sx={{
-          width: window.screen.width <= 1280 ? "56px" : open ? "16rem" : "56px",
+          width: window.screen.width < 1280 ? "56px" : open ? "16rem" : "56px",
           transition: "width 225ms cubic-bezier(0, 0, 0.2, 1) 0ms",
           whiteSpace: "nowrap",
         }}
