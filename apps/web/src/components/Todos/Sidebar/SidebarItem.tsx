@@ -2,11 +2,11 @@ import CircleIcon from "@mui/icons-material/Circle";
 import { ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import { FC, MouseEvent, useState } from "react";
 import { useCurrentList } from "../../../context/CurrentListState";
-import IList from "../../../types/IList";
+import { LocalList } from "../../../types/List";
 import EditListModal from "./EditListModal";
 
 type Props = {
-  list: IList;
+  list: LocalList;
 };
 
 const SidebarItem: FC<Props> = ({ list }) => {

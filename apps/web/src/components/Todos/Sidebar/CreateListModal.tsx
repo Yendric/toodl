@@ -1,21 +1,13 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, Button, FormControlLabel, FormLabel, Input, Modal, Switch, TextField, Typography } from "@mui/material";
+import { Box, Button, FormLabel, Input, Modal, TextField, Typography } from "@mui/material";
 import { FC } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { useStoreList } from "../../../api/list/storeList";
-import IList from "../../../types/IList";
+import { useZodForm } from "../../../hooks/useZodForm";
+import { storeSchema } from "../../../schemas/list";
 
 interface Props {
   visible: boolean;
   onDismissed: () => void;
 }
-
-const schema = z.object({
-  name: z.string().min(1).max(20),
-  color: z.string().length(7),
-  withoutDates: z.boolean(),
-});
 
 const CreateListModal: FC<Props> = ({ visible, onDismissed }) => {
   const {
@@ -23,14 +15,15 @@ const CreateListModal: FC<Props> = ({ visible, onDismissed }) => {
     register,
     reset,
     formState: { errors },
-  } = useForm<IList>({ resolver: zodResolver(schema) });
+  } = useZodForm({ schema: storeSchema });
+
   const createListMutation = useStoreList();
 
-  const onSubmit = async (list: IList) => {
+  const onSubmit = handleSubmit((list) => {
     onDismissed();
     reset();
     createListMutation.mutate(list);
-  };
+  });
 
   return (
     <Modal
@@ -56,7 +49,7 @@ const CreateListModal: FC<Props> = ({ visible, onDismissed }) => {
           Lijst aanmaken
         </Typography>
 
-        <form onSubmit={handleSubmit(onSubmit)} noValidate>
+        <form onSubmit={onSubmit} noValidate>
           <FormLabel>Naam</FormLabel>
           <TextField
             inputProps={register("name")}
@@ -67,10 +60,6 @@ const CreateListModal: FC<Props> = ({ visible, onDismissed }) => {
           />
           <FormLabel>Kleur</FormLabel>
           <Input defaultValue="#33AAFF" {...register("color")} type="color" fullWidth />
-          <FormControlLabel
-            control={<Switch {...register("withoutDates")} defaultChecked={true} />}
-            label="Deadlines uitschakelen"
-          />
           <Box sx={{ textAlign: "center", mt: 1 }}>
             <Button type="submit" variant="contained" color="primary">
               Maken

@@ -1,4 +1,4 @@
-type IUser = {
+export type User = {
   id: number;
   username: string;
   email: string;
@@ -8,5 +8,3 @@ type IUser = {
   reminderNotification: boolean;
   nowNotification: boolean;
 };
-
-export default IUser;
