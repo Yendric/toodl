@@ -1,10 +1,10 @@
 import { FC, useState } from "react";
-import ITodo from "../../types/ITodo";
-import TodoEditRow from "./TodoEditRow";
-import TodoShowRow from "./TodoShowRow";
+import { LocalTodo } from "../../types/Todo";
+import TodoEditRow from "./TodoRowEdit";
+import TodoShowRow from "./TodoRowShow";
 
 interface Props {
-  todo: ITodo;
+  todo: LocalTodo;
 }
 
 const TodoRow: FC<Props> = ({ todo }) => {

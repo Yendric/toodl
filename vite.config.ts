@@ -8,9 +8,9 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["img/*.jpg", "favicon.ico", "logo192.png", "logo512.png"],
+      includeAssets: ["img/*.jpg", "favicon.ico", "logo192.png", "logo512.png", ".well-known/*"],
       workbox: {
-        maximumFileSizeToCacheInBytes: 4000000,
+        maximumFileSizeToCacheInBytes: 5000000,
       },
       manifest: {
         short_name: "Toodl",

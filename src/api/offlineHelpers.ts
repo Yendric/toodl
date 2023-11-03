@@ -6,7 +6,7 @@ interface BaseType {
 }
 
 export function createLocal<T extends BaseType>(
-  newItem: Omit<T, "id">,
+  newItem: Omit<T, "id" | "localId">,
   queryClient: QueryClient,
   queryKey: string[],
   sortFn: (a: T, b: T) => number = () => 0,

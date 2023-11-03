@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { add } from "date-fns";
-import ITodo from "../../types/ITodo";
+import { LocalTodo, UnstoredTodo } from "../../types/Todo";
 import { createLocal } from "../offlineHelpers";
 import { sortFn, store } from "./api";
 
@@ -9,13 +9,13 @@ export const useStoreTodo = () => {
 
   return useMutation({
     mutationKey: ["storeTodo"],
-    onMutate: async (todo: Omit<ITodo, "id">) => {
+    onMutate: async (todo: UnstoredTodo) => {
       await queryClient.cancelQueries(["todos"]);
 
       // Onderstaande logica gebeurt ook op de server en moeten we dus op de client nabootsen
       todo.endTime ??= add(todo.startTime, { hours: 1 });
 
-      const localTodo = createLocal<ITodo>(todo, queryClient, ["todos"], sortFn);
+      const localTodo = createLocal<LocalTodo>(todo, queryClient, ["todos"], sortFn);
 
       // Vertel de mutation wat het tijdelijke local id is
       const mutation = queryClient.getMutationCache().getAll().at(-1);

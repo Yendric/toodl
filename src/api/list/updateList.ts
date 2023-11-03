@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import IList from "../../types/IList";
+import { LocalList } from "../../types/List";
 import { updateLocal } from "../offlineHelpers";
 import { sortFn, update } from "./api";
 
@@ -12,7 +12,7 @@ export const useUpdateList = () => {
     mutationKey: ["updateList"],
     onMutate: async (payload) => {
       await queryClient.cancelQueries(["lists"]);
-      updateLocal<IList>(payload, queryClient, ["lists"], sortFn);
+      updateLocal<LocalList>(payload, queryClient, ["lists"], sortFn);
       enqueueSnackbar("Lijst gewijzigd");
     },
     onSuccess: () => {

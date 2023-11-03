@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import ITodo from "../../types/ITodo";
+import { LocalTodo } from "../../types/Todo";
 import { updateLocal } from "../offlineHelpers";
 import { sortFn, toggle } from "./api";
 
@@ -10,7 +10,7 @@ export const useToggleTodo = () => {
     mutationKey: ["toggleTodo"],
     onMutate: async (payload) => {
       await queryClient.cancelQueries(["todos"]);
-      updateLocal<ITodo>({ ...payload, done: !payload.done }, queryClient, ["todos"], sortFn);
+      updateLocal<LocalTodo>({ ...payload, done: !payload.done }, queryClient, ["todos"], sortFn);
     },
     onSuccess: () => {
       console.log("[SYNC] Todo gesynchroniseerd met server (UPDATE)");

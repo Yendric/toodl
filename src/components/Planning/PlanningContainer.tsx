@@ -25,7 +25,7 @@ import { useDestroyTodo } from "../../api/todo/destroyTodo";
 import { useTodos } from "../../api/todo/getTodos";
 import { useStoreTodo } from "../../api/todo/storeTodo";
 import { useUpdateTodo } from "../../api/todo/updateTodo";
-import ITodo from "../../types/ITodo";
+import { LocalTodo } from "../../types/Todo";
 import "./Planning.scss";
 
 loadCldr(numberingSystems, caGregorian, numbers, timeZoneNames);
@@ -67,7 +67,7 @@ const PlanningContainer: FC = () => {
       if (data?.origin === "iCal")
         return enqueueSnackbar("iCal events kunnen niet worden bewerkt.", { variant: "warning" });
 
-      const todo = data as unknown as ITodo;
+      const todo = data as unknown as LocalTodo;
 
       if (args.requestType === "eventCreate") {
         createTodoMutation.mutate(todo);
@@ -116,14 +116,12 @@ const PlanningContainer: FC = () => {
         const dropDownList: DropDownList = new DropDownList({
           dataSource: [
             { text: "Geen lijst (enkel zichtbaar in planningsweergave)" },
-            ...lists
-              .filter((list) => !list.withoutDates)
-              .map((list) => {
-                return {
-                  text: list.name,
-                  value: list.id,
-                };
-              }),
+            ...lists.map((list) => {
+              return {
+                text: list.name,
+                value: list.id,
+              };
+            }),
           ],
           fields: { text: "text", value: "value" },
           value: args.data?.listId as string,
@@ -167,10 +165,7 @@ const PlanningContainer: FC = () => {
       actionBegin={onActionBegin}
       firstDayOfWeek={1}
       eventSettings={{
-        dataSource: [
-          ...todos.filter((todo) => !lists.find((list) => list.id === todo.listId)?.withoutDates),
-          ...events,
-        ],
+        dataSource: [...todos.filter((todo) => todo.enableDeadline), ...events],
         fields: {
           id: "id",
           subject: { name: "subject" },

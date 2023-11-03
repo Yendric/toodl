@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import IList from "../../types/IList";
+import { LocalList, UnstoredList } from "../../types/List";
 import { createLocal } from "../offlineHelpers";
 import { sortFn, store } from "./api";
 
@@ -11,9 +11,9 @@ export const useStoreList = () => {
 
   return useMutation({
     mutationKey: ["storeList"],
-    onMutate: async (payload: Omit<IList, "id">) => {
+    onMutate: async (payload: UnstoredList) => {
       await queryClient.cancelQueries(["lists"]);
-      const localList = createLocal<IList>(payload, queryClient, ["lists"], sortFn);
+      const localList = createLocal<LocalList>(payload, queryClient, ["lists"], sortFn);
 
       // Vertel de mutation wat het tijdelijke local id is
       const mutation = queryClient.getMutationCache().getAll().at(-1);

@@ -1,18 +1,28 @@
 import { queryClient } from "../../queryClient";
-import IList from "../../types/IList";
+import { List, LocalList, UnstoredList } from "../../types/List";
 import api from "../api";
 import { updateLocalId } from "../offlineHelpers";
 
-export function sortFn(a: IList, b: IList) {
+export function sortFn(a: LocalList, b: LocalList) {
   return a.name.localeCompare(b.name);
 }
 
 export async function index() {
-  return (await api<IList[]>("/lists")).data.map((list) => ({ ...list, localId: list.id }));
+  return (await api<List[]>("/lists")).data.map((list) => ({ ...list, localId: list.id }));
 }
 
-export async function store(list: IList) {
-  const createdList = (await api.post<IList>("/lists", list)).data;
+export async function store(list: LocalList | UnstoredList) {
+  if (!("id" in list)) {
+    const errorMessage = `Er is iets foutgegaan bij het synchroniseren van een lijst.
+    Lijst info: '${JSON.stringify(list)}'`;
+
+    alert(errorMessage);
+    console.error(errorMessage);
+
+    return;
+  }
+
+  const createdList = (await api.post<List>("/lists", list)).data;
 
   // Update alle todo mutaties met betrekking tot deze lijst
   queryClient
@@ -29,7 +39,7 @@ export async function store(list: IList) {
   queryClient
     .getMutationCache()
     .getAll()
-    // Verkrijg alle mutaties van lijsten (deze hebben de color property - ik weet het, lelijke manier)
+    // Verkrijg alle mutaties van lijsten
     .filter((mutation) => mutation.state.variables?.id === list.id)
     .forEach((mutation) =>
       // Verander het tijdelijke id van deze mutatie naar het nieuwe ID van deze zonet aangemaakte lijst
@@ -40,15 +50,15 @@ export async function store(list: IList) {
     );
 
   // Update de local lijst met het nieuwe id
-  updateLocalId<IList>(list.id, createdList.id, queryClient, ["lists"], sortFn);
+  updateLocalId<LocalList>(list.id, createdList.id, queryClient, ["lists"], sortFn);
 
   return createdList;
 }
 
-export async function update(list: IList) {
+export async function update(list: LocalList) {
   return (await api.post(`/lists/${list.id}`, list)).data;
 }
 
-export async function destroy(list: IList) {
+export async function destroy(list: LocalList) {
   await api.delete(`/lists/${list.id}`);
 }

@@ -1,14 +1,14 @@
 import { queryClient } from "../../queryClient";
-import ITodo from "../../types/ITodo";
+import { LocalTodo, Todo, UnstoredTodo } from "../../types/Todo";
 import api from "../api";
 import { updateLocalId } from "../offlineHelpers";
 
-export function sortFn(a: ITodo, b: ITodo) {
+export function sortFn(a: Todo, b: Todo) {
   return a.startTime.valueOf() - b.startTime.valueOf();
 }
 
 export async function index() {
-  const { data: todos } = await api<ITodo[]>("/todos");
+  const { data: todos } = await api<Todo[]>("/todos");
 
   return todos.map(function (todo) {
     return {
@@ -20,8 +20,18 @@ export async function index() {
   });
 }
 
-export async function store(todo: ITodo) {
-  const createdTodo = (await api.post<ITodo>("/todos", todo)).data;
+export async function store(todo: LocalTodo | UnstoredTodo) {
+  if (!("id" in todo)) {
+    const errorMessage = `Er is iets foutgegaan bij het synchroniseren van een todo.
+    Todo info: '${JSON.stringify(todo)}'`;
+
+    alert(errorMessage);
+    console.error(errorMessage);
+
+    return;
+  }
+
+  const createdTodo = (await api.post<Todo>("/todos", todo)).data;
 
   // Update alle mutaties met betrekking tot deze todo
   queryClient
@@ -38,18 +48,18 @@ export async function store(todo: ITodo) {
     );
 
   // Update de local todo met het nieuwe id
-  updateLocalId<ITodo>(todo.id, createdTodo.id, queryClient, ["todos"], sortFn);
+  updateLocalId<LocalTodo>(todo.id, createdTodo.id, queryClient, ["todos"], sortFn);
   return createdTodo;
 }
 
-export async function update(todo: ITodo) {
-  return (await api.post<ITodo>(`/todos/${todo.id}`, todo)).data;
+export async function update(todo: LocalTodo) {
+  return (await api.post<Todo>(`/todos/${todo.id}`, todo)).data;
 }
 
-export async function destroy(todo: ITodo) {
+export async function destroy(todo: LocalTodo) {
   await api.delete(`/todos/${todo.id}`);
 }
 
-export async function toggle(todo: ITodo) {
+export async function toggle(todo: LocalTodo) {
   return await update({ ...todo, done: !todo.done });
 }

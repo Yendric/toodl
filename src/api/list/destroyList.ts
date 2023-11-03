@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import IList from "../../types/IList";
+import { LocalList } from "../../types/List";
 import { destroyLocal } from "../offlineHelpers";
 import { destroy } from "./api";
 
@@ -12,7 +12,7 @@ export const useDestroyList = () => {
     mutationKey: ["destroyList"],
     onMutate: async (payload) => {
       await queryClient.cancelQueries(["lists"]);
-      destroyLocal<IList>(payload, queryClient, ["lists"]);
+      destroyLocal<LocalList>(payload, queryClient, ["lists"]);
       enqueueSnackbar("Lijst verwijderd");
     },
     onSuccess: () => {
