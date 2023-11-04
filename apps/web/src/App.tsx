@@ -15,7 +15,6 @@ import { zodI18nMap } from "zod-i18n-map";
 import translation from "zod-i18n-map/locales/nl/zod.json";
 import { setMutationDefaults } from "./api/mutationDefaults";
 import "./App.scss";
-import Footer from "./components/Partials/Footer";
 import NavBar from "./components/Partials/NavBar";
 import Router from "./components/Router";
 import { AppStateProvider } from "./context/AppState";
@@ -61,15 +60,8 @@ const App: FC = () => {
       <PersistQueryClientProvider client={queryClient} persistOptions={{ persister, maxAge: Infinity }}>
         <AppStateProvider>
           <BrowserRouter>
-            <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-              <div style={{ flex: "1 0 auto" }}>
-                <NavBar />
-                <Router />
-              </div>
-              <div style={{ flexShrink: 0, zIndex: theme.zIndex.drawer + 1 }}>
-                <Footer />
-              </div>
-            </div>
+            <NavBar />
+            <Router />
           </BrowserRouter>
         </AppStateProvider>
       </PersistQueryClientProvider>
