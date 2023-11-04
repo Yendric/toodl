@@ -23,6 +23,7 @@ const DeadlineModal: FC<Props> = ({ visible, onDismissed, todo }) => {
   }, [todo]);
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const smallScreen = window.screen.width < 1280;
 
   const updateTodoMutation = useUpdateTodo();
 
@@ -74,7 +75,7 @@ const DeadlineModal: FC<Props> = ({ visible, onDismissed, todo }) => {
                 onChange={onChange}
                 onAccept={async (_) => await onSubmit()}
                 onClose={onDismissed}
-                orientation="landscape"
+                orientation={smallScreen ? "portrait" : "landscape"}
               />
             )}
           />

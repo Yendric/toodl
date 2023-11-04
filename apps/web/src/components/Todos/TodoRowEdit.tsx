@@ -1,4 +1,3 @@
-import CloseIcon from "@mui/icons-material/Close";
 import SaveIcon from "@mui/icons-material/Save";
 import { Checkbox, IconButton, TableCell, TextField, Typography } from "@mui/material";
 import TableRow from "@mui/material/TableRow";
@@ -26,8 +25,7 @@ const TodoEditRow: FC<Props> = ({ todo, toggleEditing }) => {
   const toggleTodoMutation = useToggleTodo();
 
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
-    if (event.key === "Enter") onSubmit();
-    if (event.key === "Escape") toggleEditing();
+    if (event.key === "Enter" || event.key === "Escape") onSubmit();
   }
 
   const onSubmit = handleSubmit((data) => {
@@ -57,6 +55,8 @@ const TodoEditRow: FC<Props> = ({ todo, toggleEditing }) => {
             onKeyDown={(e) => handleKeyDown(e)}
             variant="standard"
             fullWidth
+            autoFocus
+            onBlur={onSubmit}
           />
           {todo.enableDeadline && (
             <Typography
@@ -73,9 +73,6 @@ const TodoEditRow: FC<Props> = ({ todo, toggleEditing }) => {
         <div>
           <IconButton onClick={onSubmit} aria-label="edit" size="large">
             <SaveIcon fontSize="small" />
-          </IconButton>
-          <IconButton onClick={toggleEditing} aria-label="edit" size="large">
-            <CloseIcon fontSize="small" />
           </IconButton>
         </div>
       </TableCell>

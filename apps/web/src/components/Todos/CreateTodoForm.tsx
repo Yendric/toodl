@@ -1,5 +1,5 @@
-import AddIcon from "@mui/icons-material/Add";
-import Fab from "@mui/material/Fab";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { IconButton, InputAdornment } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import { FC, KeyboardEvent } from "react";
@@ -59,13 +59,19 @@ const CreateTodoForm: FC<{ disabled?: boolean }> = ({ disabled = false }) => {
           helperText={errors.subject?.message}
           variant="standard"
           label={`Wat moet er gebeuren, ${user.username}?`}
-          sx={{ maxWidth: "22.5rem" }}
-          fullWidth
           onKeyDown={handleKeyDown}
+          fullWidth
+          sx={{ maxWidth: "25rem" }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton type="submit" edge="start" color="default">
+                  <AddCircleIcon />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
-        <Fab sx={{ marginLeft: 2, zIndex: 1 }} type="submit" color="primary" aria-label="add" disabled={disabled}>
-          <AddIcon />
-        </Fab>
       </Grid>
     </form>
   );
