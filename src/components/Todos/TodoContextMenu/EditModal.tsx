@@ -52,7 +52,7 @@ const EditModal: FC<Props> = ({ visible, onDismissed, todo }) => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: "70%",
+            width: "max(70%, 400px)",
             bgcolor: "background.paper",
             borderRadius: 2,
             boxShadow: 24,
