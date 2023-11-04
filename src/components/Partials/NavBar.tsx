@@ -33,9 +33,14 @@ const NavBar: FC = () => {
   return (
     <AppBar position="sticky" sx={{ zIndex: theme.zIndex.drawer + 1 }}>
       <Toolbar>
-        <Link to="/" style={{ textDecoration: "none", flexGrow: isAuth ? 0 : 1 }}>
-          <Typography variant="h6">Toodl</Typography>
-        </Link>
+        <div style={{ textDecoration: "none", flexGrow: isAuth ? 0 : 1 }}>
+          <Typography variant="h5">Toodl</Typography>
+          <Link to="https://yendric.be" target="_blank">
+            <Typography mt="-0.3rem" fontSize="0.75rem" color="text.secondary">
+              By Yendric
+            </Typography>
+          </Link>
+        </div>
         {isAuth ? (
           <>
             <Tabs
