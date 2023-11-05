@@ -1,4 +1,5 @@
 import { FC, ReactNode, createContext, useContext, useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useLists } from "../api/list/getLists";
 import { useDestroyTodo } from "../api/todo/destroyTodo";
 import { useTodos } from "../api/todo/getTodos";
@@ -9,12 +10,14 @@ type CurrentList = {
   list: LocalList | undefined;
   listTodos: LocalTodo[];
   destroyCompleted: () => void;
-  setList: (value: LocalList) => void;
 };
 
 export const CurrentListContext = createContext<CurrentList | undefined>(undefined);
 
 export const CurrentListProvider: FC<{ children: ReactNode }> = ({ children }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentListId = Number(searchParams.get("list"));
+
   const [list, setList] = useState<LocalList>();
 
   const { data: lists, isSuccess: isListSuccess } = useLists();
@@ -32,12 +35,15 @@ export const CurrentListProvider: FC<{ children: ReactNode }> = ({ children }) =
   }
 
   useEffect(() => {
-    if (isListSuccess && (!list || !lists.find((find) => find.id === list.id))) {
+    if (!isListSuccess) return;
+
+    if (currentListId && lists.find((find) => find.id === currentListId)) {
+      setList(lists.find((find) => find.id === currentListId));
+    } else {
       setList(lists[0]);
-    } else if (isListSuccess) {
-      setList(lists.find((find) => find.id === list?.id));
+      setSearchParams({ list: lists[0].id.toString() });
     }
-  }, [lists]);
+  }, [lists, currentListId]);
 
   return (
     <CurrentListContext.Provider
@@ -45,7 +51,6 @@ export const CurrentListProvider: FC<{ children: ReactNode }> = ({ children }) =
         list,
         listTodos,
         destroyCompleted,
-        setList,
       }}
     >
       {children}
