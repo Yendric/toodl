@@ -1,6 +1,7 @@
 import { CircularProgress, Stack } from "@mui/material";
 import { FC, Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
+import { CurrentListProvider } from "../context/CurrentListState";
 import LandingContainer from "./Landing/LandingContainer";
 import ScrollToTop from "./Partials/ScrollToTop";
 import PrivateRoute from "./PrivateRoute";
@@ -43,7 +44,9 @@ const Router: FC = () => {
             path="/todos"
             element={
               <PrivateRoute>
-                <TodoContainer />
+                <CurrentListProvider>
+                  <TodoContainer />
+                </CurrentListProvider>
               </PrivateRoute>
             }
           />
