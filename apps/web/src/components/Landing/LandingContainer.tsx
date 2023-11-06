@@ -25,8 +25,7 @@ const LandingContainer: FC = () => {
     <div
       style={{
         backgroundImage: `url(${image})`,
-        height: "100%",
-        position: "relative",
+        height: "100vh",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
