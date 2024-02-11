@@ -1,4 +1,4 @@
-import { FC, ReactNode, createContext, useContext, useEffect, useState } from "react";
+import { FC, ReactNode, createContext, useContext, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useLists } from "../api/list/getLists";
 import { useDestroyTodo } from "../api/todo/destroyTodo";
@@ -12,35 +12,44 @@ type CurrentList = {
   destroyCompleted: () => void;
 };
 
+type ListData = {
+  id: number;
+  list: LocalList;
+  todos: LocalTodo[];
+};
+
 export const CurrentListContext = createContext<CurrentList | undefined>(undefined);
 
 export const CurrentListProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentListId = Number(searchParams.get("list"));
 
-  const [list, setList] = useState<LocalList>();
-
   const { data: lists, isSuccess: isListSuccess } = useLists();
   const { data: todos, isSuccess: isTodoSuccess } = useTodos();
-  const [listTodos, setListTodos] = useState<LocalTodo[]>([]);
   const deleteTodoMutation = useDestroyTodo();
 
-  useEffect(() => {
-    if (isTodoSuccess && list != undefined) setListTodos(todos.filter((todo) => todo.listId === list.id));
-  }, [todos, list]);
+  console.log("rerender");
+
+  const list = useMemo(() => {
+    if (!isListSuccess || !isTodoSuccess) return;
+
+    const list = lists.find((find) => find.id === currentListId);
+
+    if (!list) return undefined;
+    return {
+      id: currentListId,
+      list,
+      todos: todos.filter((todo) => todo.listId === list.id),
+    };
+  }, [lists, todos, currentListId]);
 
   function destroyCompleted() {
     if (isTodoSuccess && list != undefined)
-      listTodos.filter((todo) => todo.done).map((todo) => deleteTodoMutation.mutate(todo));
+      list.todos.filter((todo) => todo.done).map((todo) => deleteTodoMutation.mutate(todo));
   }
 
   useEffect(() => {
-    if (!isListSuccess) return;
-
-    if (currentListId && lists.find((find) => find.id === currentListId)) {
-      setList(lists.find((find) => find.id === currentListId));
-    } else {
-      setList(lists[0]);
+    if (isListSuccess && searchParams.get("list") == undefined) {
       setSearchParams({ list: lists[0].id.toString() });
     }
   }, [lists, currentListId]);
@@ -48,8 +57,8 @@ export const CurrentListProvider: FC<{ children: ReactNode }> = ({ children }) =
   return (
     <CurrentListContext.Provider
       value={{
-        list,
-        listTodos,
+        list: list?.list,
+        listTodos: list?.todos || [],
         destroyCompleted,
       }}
     >

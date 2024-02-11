@@ -16,50 +16,38 @@ a {
 }
 
 /* Todo row animaties, veel te moeilijk dankzij MUI :) */
-.todo-enter > td {
-  max-height: 0px;
-  padding-top: 0px;
-  padding-bottom: 0px;
+.todo-enter div {
+  overflow-y: hidden;
+  max-height: 0;
 }
-.todo-enter > td > * {
-  max-height: 0px;
-  overflow: hidden;
+.todo-enter-active div {
+  max-height: 50px;
+  transition: all 200ms ease-in-out;
 }
-.todo-enter-active > td {
-  max-height: 43.5px;
-  padding-top: 6px;
-  padding-bottom: 6px;
-  transition:
-    max-height 200ms,
-    padding 200ms;
+.todo-exit div {
+  max-height: 50px;
 }
-.todo-enter-active > td > * {
-  max-height: 43.5px;
-  transition:
-    max-height 200ms,
-    padding 200ms;
+.todo-exit-active div {
+  max-height: 0;
+  overflow-y: hidden;
+  transition: all 200ms ease-in-out;
 }
 
-.todo-exit-active > td {
-  max-height: 0px !important;
-  padding-top: 0px !important;
-  padding-bottom: 0px !important;
-  transition:
-    max-height 200ms,
-    padding 200ms;
+.todo-enter td {
+  border-width: 0px;
 }
-.todo-exit-active > td > * {
-  max-height: 0px !important;
-  transition:
-    max-height 200ms,
-    padding 200ms;
+.todo-enter-active td {
+  border-width: 1px;
+  transition: all 100ms ease-in-out;
 }
-.todo-exit > td {
-  max-height: 43.5px;
-  padding-top: 6px;
-  padding-bottom: 6px;
+.todo-exit td {
+  border-width: 1px;
 }
-.todo-exit > td > * {
-  overflow: hidden;
-  max-height: 43.5px;
+.todo-exit-active td {
+  border-width: 0px;
+  transition: all 100ms ease-in-out;
+}
+
+td {
+  padding: 0 !important;
 }
