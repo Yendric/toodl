@@ -67,7 +67,10 @@ const PlanningContainer: FC = () => {
       if (data?.origin === "iCal")
         return enqueueSnackbar("iCal events kunnen niet worden bewerkt.", { variant: "warning" });
 
-      const todo = data as unknown as LocalTodo;
+      const todo = {
+        ...data,
+        enableDeadline: true,
+      } as LocalTodo;
 
       if (args.requestType === "eventCreate") {
         createTodoMutation.mutate(todo);
