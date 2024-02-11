@@ -28,8 +28,6 @@ export const CurrentListProvider: FC<{ children: ReactNode }> = ({ children }) =
   const { data: todos, isSuccess: isTodoSuccess } = useTodos();
   const deleteTodoMutation = useDestroyTodo();
 
-  console.log("rerender");
-
   const list = useMemo(() => {
     if (!isListSuccess || !isTodoSuccess) return;
 
