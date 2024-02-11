@@ -1,5 +1,5 @@
 import CircleIcon from "@mui/icons-material/Circle";
-import { ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material";
+import { ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import { FC, MouseEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import { useCurrentList } from "../../../context/CurrentListState";
@@ -17,9 +17,8 @@ const SidebarItem: FC<Props> = ({ list }) => {
   return (
     <>
       <Link to={`?${new URLSearchParams({ list: list.id.toString() })}`}>
-        <ListItem
+        <ListItemButton
           selected={currentList.list?.id === list.id}
-          button
           key={list.id}
           onDoubleClick={() => setModalVisible(true)}
           onContextMenu={(e: MouseEvent) => {
@@ -51,7 +50,7 @@ const SidebarItem: FC<Props> = ({ list }) => {
             </div>
           </ListItemIcon>
           <ListItemText primary={list.name} />
-        </ListItem>
+        </ListItemButton>
       </Link>
       <EditListModal visible={modalVisible} onDismissed={() => setModalVisible(false)} list={list} />
     </>
