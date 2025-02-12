@@ -29,7 +29,7 @@
     "react-hook-form": "^7.45.4",
     "react-router-dom": "^6.15.0",
     "typescript": "^5.1.6",
-    "vite": "^4.4.9",
+    "vite": "^6.1.0",
     "zod": "^3.22.3",
     "zod-i18n-map": "^2.15.0"
   },
