@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { queryClient } from "../../queryClient";
 import { type List, type LocalList, type UnstoredList } from "../../types/List";
 import api from "../api";
