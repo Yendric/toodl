@@ -1,5 +1,5 @@
 import { Container } from "@mui/material";
-import { FC } from "react";
+import { type FC } from "react";
 
 const AlgemeneVoorwaardenContainer: FC = () => {
   return (

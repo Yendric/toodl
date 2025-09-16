@@ -8,7 +8,7 @@ import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { GoogleLogin } from "@react-oauth/google";
-import { FC, useEffect } from "react";
+import { useEffect, type FC } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
@@ -56,10 +56,11 @@ const RegisterContainer: FC = () => {
       component="main"
       maxWidth="xs"
       sx={{
-        marginTop: 8,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh"
       }}
     >
       <Avatar sx={{ m: 1, bgcolor: theme.palette.primary.main }}>
@@ -103,14 +104,17 @@ const RegisterContainer: FC = () => {
         <Button sx={{ mt: 2 }} type="submit" fullWidth variant="contained" color="primary">
           Registreer
         </Button>
-        <div className="google-login-button">
-          <GoogleLogin theme="filled_blue" onSuccess={googleLogin} />
-        </div>
-        <Grid container>
+
+        <Grid container sx={{ mt: 1 }}>
           <Grid item>
             <Link to="/login">Reeds een account? Log in</Link>
           </Grid>
         </Grid>
+        <hr />
+        <div className="google-login-button">
+          <GoogleLogin theme="filled_blue" onSuccess={googleLogin} />
+        </div>
+
       </form>
     </Container>
   );

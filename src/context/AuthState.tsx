@@ -1,7 +1,7 @@
-import { CredentialResponse, GoogleOAuthProvider } from "@react-oauth/google";
+import { GoogleOAuthProvider, type CredentialResponse } from "@react-oauth/google";
 import { onlineManager, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { FC, ReactNode, createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, type FC, type ReactNode } from "react";
 import api from "../api/api";
 import { useUser } from "../api/user/getUser";
 import { isOnline } from "../helpers/isOnline";

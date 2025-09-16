@@ -1,5 +1,5 @@
-import { FC, useState } from "react";
-import { LocalTodo } from "../../types/Todo";
+import { useState, type FC } from "react";
+import { type LocalTodo } from "../../types/Todo";
 import TodoEditRow from "./TodoRowEdit";
 import TodoShowRow from "./TodoRowShow";
 

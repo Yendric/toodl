@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useId } from "react";
-import { DefaultValues, FieldValues, UseFormProps, UseFormReturn, useForm } from "react-hook-form";
+import { useForm, type DefaultValues, type FieldValues, type UseFormProps, type UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 
 export type UseZodForm<TInput extends FieldValues> = UseFormReturn<TInput> & {
@@ -20,12 +19,10 @@ export function useZodForm<TSchema extends z.ZodType>(
     },
   }) as UseZodForm<TSchema["_input"]>;
 
-  form.id = useId();
+  // form.id = useId();
 
   return form;
 }
-
-export type AnyZodForm = UseZodForm<any>;
 
 export function getDefaults<Schema extends z.AnyZodObject>(schema: Schema) {
   return Object.fromEntries(

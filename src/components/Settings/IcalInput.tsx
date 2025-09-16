@@ -1,17 +1,15 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
   Box,
-  Button,
   FormControl,
   FormGroup,
   FormHelperText,
-  FormLabel,
   IconButton,
   InputAdornment,
-  OutlinedInput,
+  OutlinedInput
 } from "@mui/material";
-import { FC } from "react";
-import { FieldError } from "react-hook-form";
+import { type FC } from "react";
+import { type FieldError } from "react-hook-form";
 
 interface Props {
   value: string[] | undefined;
@@ -49,13 +47,6 @@ const IcalInput: FC<Props> = ({ value, onChange, error }) => {
 
   return (
     <Box sx={{ mb: 2, mt: -2 }}>
-      <FormLabel component="legend" sx={{ mb: 1 }}>
-        iCal-kalenders van derden importeren
-        <Button variant="contained" size="small" onClick={addIcal} sx={{ ml: 1 }}>
-          iCal-URL Toevoegen
-        </Button>
-      </FormLabel>
-
       <FormGroup>
         {value &&
           value.map((ical, index) => (

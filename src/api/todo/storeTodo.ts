@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { add } from "date-fns";
-import { LocalTodo, UnstoredTodo } from "../../types/Todo";
+import { type LocalTodo, type UnstoredTodo } from "../../types/Todo";
 import { createLocal } from "../offlineHelpers";
 import { sortFn, store } from "./api";
 

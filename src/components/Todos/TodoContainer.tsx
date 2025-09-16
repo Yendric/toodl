@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
-import { FC } from "react";
-import Sidebar from "./Sidebar/Sidebar";
+import { type FC } from "react";
+import Sidebar from "../Sidebar/Sidebar";
 import TodoTable from "./TodoTable";
 import WelcomeUserModal from "./WelcomeUserModal";
 

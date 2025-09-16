@@ -1,13 +1,13 @@
 import SaveIcon from "@mui/icons-material/Save";
 import { Checkbox, IconButton, TableCell, TextField, Typography } from "@mui/material";
 import TableRow from "@mui/material/TableRow";
-import { FC, KeyboardEvent } from "react";
+import { type FC, type KeyboardEvent } from "react";
 import { useToggleTodo } from "../../api/todo/toggleTodo";
 import { useUpdateTodo } from "../../api/todo/updateTodo";
 import { toDateTimeString } from "../../helpers/dateTime";
 import { useZodForm } from "../../hooks/useZodForm";
 import { updateSchema } from "../../schemas/todo";
-import { LocalTodo } from "../../types/Todo";
+import { type LocalTodo } from "../../types/Todo";
 
 interface Props {
   todo: LocalTodo;

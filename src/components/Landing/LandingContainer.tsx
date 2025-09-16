@@ -1,5 +1,5 @@
 import { Button, Card, CardActions, CardContent, Typography } from "@mui/material";
-import { FC, useEffect } from "react";
+import { useEffect, type FC } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthState";
 

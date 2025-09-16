@@ -1,6 +1,6 @@
 import { Menu, MenuItem } from "@mui/material";
-import { FC, useState } from "react";
-import { LocalTodo } from "../../../types/Todo";
+import { useState, type FC } from "react";
+import { type LocalTodo } from "../../../types/Todo";
 import DeadlineModal from "./DeadlineModal";
 import DestroyModal from "./DestroyModal";
 import EditModal from "./EditModal";

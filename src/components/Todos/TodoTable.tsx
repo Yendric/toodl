@@ -5,8 +5,7 @@ import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
-import { FC, useState } from "react";
-import { CSSTransition, TransitionGroup } from "react-transition-group";
+import { useState, type FC } from "react";
 import { useCurrentList } from "../../context/CurrentListState";
 import CreateTodoForm from "./CreateTodoForm";
 import DestroyCompletedModal from "./DestroyCompletedModal";
@@ -63,15 +62,15 @@ const TodoTable: FC = () => {
                 <caption>Zo te zien heb je nog geen todos in deze lijst, maak er één bovenaan!</caption>
               )}
               <TableBody>
-                <TransitionGroup appear={false} component={null} className="todo-list">
-                  {listTodos
-                    .filter((todo) => !todo.done)
-                    .map((todo) => (
-                      <CSSTransition key={todo.localId} timeout={200} classNames="todo">
-                        <TodoRow todo={todo} />
-                      </CSSTransition>
-                    ))}
-                </TransitionGroup>
+                {/* <TransitionGroup appear={false} component={null} className="todo-list"> */}
+                {listTodos
+                  .filter((todo) => !todo.done)
+                  .map((todo) => (
+                    // <CSSTransition key={todo.localId} timeout={200} classNames="todo">
+                    <TodoRow key={todo.localId} todo={todo} />
+                    // </CSSTransition>
+                  ))}
+                {/* </TransitionGroup> */}
               </TableBody>
             </Table>
           </TableContainer>
@@ -79,15 +78,15 @@ const TodoTable: FC = () => {
           <TableContainer component={Paper}>
             <Table size="small" aria-label="voltooide todos">
               <TableBody>
-                <TransitionGroup appear={false} component={null} className="todo-list">
-                  {listTodos
-                    .filter((todo) => todo.done)
-                    .map((todo) => (
-                      <CSSTransition key={todo.localId} timeout={200} classNames="todo">
-                        <TodoRow todo={todo} />
-                      </CSSTransition>
-                    ))}
-                </TransitionGroup>
+                {/* <TransitionGroup appear={false} component={null} className="todo-list"> */}
+                {listTodos
+                  .filter((todo) => todo.done)
+                  .map((todo) => (
+                    // <CSSTransition key={todo.localId} timeout={200} classNames="todo">
+                    <TodoRow key={todo.localId} todo={todo} />
+                    // </CSSTransition>
+                  ))}
+                {/* </TransitionGroup> */}
               </TableBody>
             </Table>
           </TableContainer>

@@ -1,5 +1,5 @@
 import { queryClient } from "../../queryClient";
-import { LocalTodo, Todo, UnstoredTodo } from "../../types/Todo";
+import { type LocalTodo, type Todo, type UnstoredTodo } from "../../types/Todo";
 import api from "../api";
 import { updateLocalId } from "../offlineHelpers";
 

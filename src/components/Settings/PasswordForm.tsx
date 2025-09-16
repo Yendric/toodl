@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Security from "@mui/icons-material/Security";
 import { Button, Card, CardContent, Divider, FormControl, Skeleton, TextField, Typography } from "@mui/material";
-import { FC } from "react";
+import { type FC } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useUser } from "../../api/user/getUser";
