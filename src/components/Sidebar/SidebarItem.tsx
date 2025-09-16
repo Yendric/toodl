@@ -1,9 +1,9 @@
 import CircleIcon from "@mui/icons-material/Circle";
 import { ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
-import { FC, MouseEvent, useState } from "react";
+import { useState, type FC, type MouseEvent } from "react";
 import { Link } from "react-router-dom";
-import { useCurrentList } from "../../../context/CurrentListState";
-import { LocalList } from "../../../types/List";
+import { useCurrentList } from "../../context/CurrentListState";
+import { type LocalList } from "../../types/List";
 import EditListModal from "./EditListModal";
 
 type Props = {
@@ -16,7 +16,7 @@ const SidebarItem: FC<Props> = ({ list }) => {
 
   return (
     <>
-      <Link to={`?${new URLSearchParams({ list: list.id.toString() })}`}>
+      <Link to={`/todos?${new URLSearchParams({ list: list.id.toString() })}`}>
         <ListItemButton
           selected={currentList.list?.id === list.id}
           key={list.id}

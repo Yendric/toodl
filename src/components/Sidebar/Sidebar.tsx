@@ -1,14 +1,20 @@
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Box, Divider, List, ListItem, ListItemIcon, ListItemText, Skeleton, Toolbar } from "@mui/material";
+import SettingsIcon from "@mui/icons-material/Settings";
+import { Box, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Skeleton, Typography } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
-import { FC, useState } from "react";
-import { useLists } from "../../../api/list/getLists";
+import { useState, type FC } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { useLists } from "../../api/list/getLists";
+import { useAuth } from "../../context/AuthState";
 import CreateListModal from "./CreateListModal";
 import SidebarItem from "./SidebarItem";
 
 const Sidebar: FC = () => {
+  const { logout } = useAuth();
+
   const { data: lists, isSuccess } = useLists();
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -18,25 +24,29 @@ const Sidebar: FC = () => {
     setOpen(!open);
   };
 
+  const location = useLocation();
+  const isSettingsRoute = location.pathname === "/settings";
+
+  const drawerWidth = open ? "16rem" : "56px";
+
   if (!isSuccess) {
     return (
       <Box component="nav">
         <Drawer
           sx={{
-            width: window.screen.width < 1280 ? "56px" : open ? "16rem" : "56px",
+            width: window.screen.width < 1280 ? "56px" : drawerWidth,
             transition: "width 225ms cubic-bezier(0, 0, 0.2, 1) 0ms",
             whiteSpace: "nowrap",
           }}
           PaperProps={{
             sx: {
-              width: open ? "16rem" : "56px",
+              width: drawerWidth,
               transition: "width 225ms cubic-bezier(0, 0, 0.2, 1) 0ms",
             },
           }}
           variant="permanent"
           open={open}
         >
-          <Toolbar />
           <List>
             <ListItem button onClick={handleDrawerToggle}>
               <ListItemIcon>{open ? <ChevronLeftIcon /> : <MenuIcon />}</ListItemIcon>
@@ -80,23 +90,22 @@ const Sidebar: FC = () => {
     <Box component="nav">
       <Drawer
         sx={{
-          width: window.screen.width < 1280 ? "56px" : open ? "16rem" : "56px",
+          width: window.screen.width < 1280 ? "56px" : drawerWidth,
           transition: "width 225ms cubic-bezier(0, 0, 0.2, 1) 0ms",
           whiteSpace: "nowrap",
         }}
         PaperProps={{
           sx: {
-            width: open ? "16rem" : "56px",
+            width: drawerWidth,
             transition: "width 225ms cubic-bezier(0, 0, 0.2, 1) 0ms",
           },
         }}
         variant="permanent"
         open={open}
       >
-        <Toolbar />
         <List>
           <ListItem button onClick={handleDrawerToggle}>
-            <ListItemIcon>{open ? <ChevronLeftIcon /> : <MenuIcon />}</ListItemIcon>
+            <ListItemIcon>{open ? <><ChevronLeftIcon /><Typography sx={{ marginLeft: "1rem" }}>Toodl</Typography></> : <MenuIcon />}</ListItemIcon>
           </ListItem>
         </List>
         <Divider />
@@ -108,11 +117,28 @@ const Sidebar: FC = () => {
         </List>
         <Divider />
         <List>
-          <ListItem button onClick={() => setModalVisible(true)}>
+          <ListItemButton onClick={() => setModalVisible(true)}>
             <ListItemIcon>
               <AddCircleIcon />
             </ListItemIcon>
             <ListItemText primary="Maak een todolijst" />
+          </ListItemButton>
+        </List>
+        <Divider />
+        <List>
+
+          <Link to="/settings">
+            <ListItemButton selected={isSettingsRoute}  >
+              <ListItemIcon>
+                <SettingsIcon />
+              </ListItemIcon>
+              <ListItemText primary="Instellingen" />
+            </ListItemButton></Link>
+          <ListItem button onClick={logout}>
+            <ListItemIcon>
+              <LogoutIcon />
+            </ListItemIcon>
+            <ListItemText primary="Afmelden" />
           </ListItem>
         </List>
         <CreateListModal visible={modalVisible} onDismissed={() => setModalVisible(false)} />

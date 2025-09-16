@@ -13,6 +13,9 @@ a {
 .google-login-button {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
+  display:flex;
+  flex-direction: row;
+ justify-content:center;
 }
 
 /* Todo row animaties, veel te moeilijk dankzij MUI :) */

@@ -1,9 +1,9 @@
 import { Box, Button, FormLabel, Input, Modal, TextField, Typography } from "@mui/material";
-import { FC, useState } from "react";
-import { useUpdateList } from "../../../api/list/updateList";
-import { useZodForm } from "../../../hooks/useZodForm";
-import { updateSchema } from "../../../schemas/list";
-import { LocalList } from "../../../types/List";
+import { useState, type FC } from "react";
+import { useUpdateList } from "../../api/list/updateList";
+import { useZodForm } from "../../hooks/useZodForm";
+import { updateSchema } from "../../schemas/list";
+import { type LocalList } from "../../types/List";
 import DestroyListModal from "./DestroyListModal";
 
 interface Props {

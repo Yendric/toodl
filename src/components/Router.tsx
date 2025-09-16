@@ -1,12 +1,11 @@
 import { CircularProgress, Stack } from "@mui/material";
-import { FC, Suspense, lazy } from "react";
+import { Suspense, lazy, type FC } from "react";
 import { Route, Routes } from "react-router-dom";
 import { CurrentListProvider } from "../context/CurrentListState";
 import LandingContainer from "./Landing/LandingContainer";
 import ScrollToTop from "./Partials/ScrollToTop";
 import PrivateRoute from "./PrivateRoute";
 
-const Planning = lazy(() => import("./Planning/PlanningContainer"));
 const Settings = lazy(() => import("./Settings/SettingsContainer"));
 const Error404 = lazy(() => import("./Errors/Error404"));
 const TodoContainer = lazy(() => import("./Todos/TodoContainer"));
@@ -36,7 +35,10 @@ const Router: FC = () => {
             path="/settings"
             element={
               <PrivateRoute>
-                <Settings />
+
+                <CurrentListProvider>
+                  <Settings />
+                </CurrentListProvider>
               </PrivateRoute>
             }
           />
@@ -47,14 +49,6 @@ const Router: FC = () => {
                 <CurrentListProvider>
                   <TodoContainer />
                 </CurrentListProvider>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/planning"
-            element={
-              <PrivateRoute>
-                <Planning />
               </PrivateRoute>
             }
           />

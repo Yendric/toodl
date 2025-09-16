@@ -1,7 +1,7 @@
 import { Box, Button, Modal, Typography } from "@mui/material";
-import { FC } from "react";
-import { useDestroyList } from "../../../api/list/destroyList";
-import { LocalList } from "../../../types/List";
+import { type FC } from "react";
+import { useDestroyList } from "../../api/list/destroyList";
+import { type LocalList } from "../../types/List";
 
 interface Props {
   list: LocalList;
