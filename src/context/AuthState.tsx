@@ -60,7 +60,9 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   }, [online, user]);
 
   async function checkAuth() {
-    if (online) {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    if (await isOnline()) {
       try {
         await api("/auth/user_data");
         setIsAuth(true);
