@@ -1,5 +1,5 @@
 import { Box, Button, Modal, Typography } from "@mui/material";
-import { FC } from "react";
+import { type FC } from "react";
 import { useDeleteUser } from "../../api/user/destroyUser";
 
 interface Props {

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { LocalTodo } from "../../types/Todo";
+import { type LocalTodo } from "../../types/Todo";
 import { updateLocal } from "../offlineHelpers";
 import { sortFn, update } from "./api";
 

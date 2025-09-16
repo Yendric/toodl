@@ -18,8 +18,8 @@ import {
   Typography,
 } from "@mui/material";
 import { useSnackbar } from "notistack";
-import { FC, useState } from "react";
-import { Controller, FieldError, useForm } from "react-hook-form";
+import { useState, type FC } from "react";
+import { Controller, useForm, type FieldError } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { z } from "zod";
 import { useUser } from "../../api/user/getUser";

@@ -1,7 +1,7 @@
 import { Box, Button, Modal, Typography } from "@mui/material";
-import { FC } from "react";
+import { type FC } from "react";
 import { useDestroyTodo } from "../../../api/todo/destroyTodo";
-import { LocalTodo } from "../../../types/Todo";
+import { type LocalTodo } from "../../../types/Todo";
 
 interface Props {
   todo: LocalTodo;

@@ -1,5 +1,5 @@
 import { useSnackbar } from "notistack";
-import { FC, ReactNode, useEffect } from "react";
+import { useEffect, type FC, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthState";
 

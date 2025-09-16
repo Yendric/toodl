@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { LocalList } from "../../types/List";
+import { type LocalList } from "../../types/List";
 import { updateLocal } from "../offlineHelpers";
 import { sortFn, update } from "./api";
 

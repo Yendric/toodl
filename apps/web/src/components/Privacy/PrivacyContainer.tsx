@@ -1,6 +1,6 @@
 import { Container } from "@mui/material";
 import Link from "@mui/material/Link";
-import { FC } from "react";
+import { type FC } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
 const PrivacyContainer: FC = () => {

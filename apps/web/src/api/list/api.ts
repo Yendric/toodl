@@ -1,5 +1,5 @@
 import { queryClient } from "../../queryClient";
-import { List, LocalList, UnstoredList } from "../../types/List";
+import { type List, type LocalList, type UnstoredList } from "../../types/List";
 import api from "../api";
 import { updateLocalId } from "../offlineHelpers";
 

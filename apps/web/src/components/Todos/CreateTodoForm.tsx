@@ -2,7 +2,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { IconButton, InputAdornment } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
-import { FC, KeyboardEvent } from "react";
+import { type FC, type KeyboardEvent } from "react";
 import { useStoreTodo } from "../../api/todo/storeTodo";
 import { useUser } from "../../api/user/getUser";
 import { useCurrentList } from "../../context/CurrentListState";

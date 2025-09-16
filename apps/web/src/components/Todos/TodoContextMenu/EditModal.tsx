@@ -1,11 +1,11 @@
 import { Box, Button, Checkbox, FormLabel, Modal, Stack, TextField, Typography } from "@mui/material";
 import { MobileDateTimePicker } from "@mui/x-date-pickers";
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState, type FC } from "react";
 import { Controller } from "react-hook-form";
 import { useUpdateTodo } from "../../../api/todo/updateTodo";
 import { useZodForm } from "../../../hooks/useZodForm";
 import { updateSchema } from "../../../schemas/todo";
-import { LocalTodo } from "../../../types/Todo";
+import { type LocalTodo } from "../../../types/Todo";
 import DestroyModal from "./DestroyModal";
 
 interface Props {

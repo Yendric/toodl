@@ -1,5 +1,5 @@
 import { Box, Button, Modal, Typography } from "@mui/material";
-import { FC, useState } from "react";
+import { useState, type FC } from "react";
 
 const WelcomeUserModal: FC = () => {
   const [modalVisible, setModalVisible] = useState(window.location.href.includes("?newUser"));

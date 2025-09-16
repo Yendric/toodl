@@ -1,4 +1,4 @@
-import { MouseEvent, useState } from "react";
+import { useState, type MouseEvent } from "react";
 
 export default function useContextMenu() {
   const [contextMenu, setContextMenu] = useState<{

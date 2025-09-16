@@ -1,11 +1,11 @@
 import { MoreVert } from "@mui/icons-material";
 import { Checkbox, IconButton, TableCell, Typography } from "@mui/material";
 import TableRow from "@mui/material/TableRow";
-import { FC } from "react";
+import { type FC } from "react";
 import { useToggleTodo } from "../../api/todo/toggleTodo";
 import { toDateTimeString } from "../../helpers/dateTime";
 import useContextMenu from "../../hooks/useContextMenu";
-import { LocalTodo } from "../../types/Todo";
+import { type LocalTodo } from "../../types/Todo";
 import TodoContextMenu from "./TodoContextMenu/TodoContextMenu";
 
 interface Props {
