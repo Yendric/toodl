@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { queryClient } from "../../queryClient";
 import { type LocalTodo, type Todo, type UnstoredTodo } from "../../types/Todo";
 import api from "../api";

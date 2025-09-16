@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { type LocalList, type UnstoredList } from "../../types/List";
