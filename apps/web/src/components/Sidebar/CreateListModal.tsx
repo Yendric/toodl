@@ -1,8 +1,8 @@
 import { Box, Button, FormLabel, Input, Modal, TextField, Typography } from "@mui/material";
-import { FC } from "react";
-import { useStoreList } from "../../../api/list/storeList";
-import { useZodForm } from "../../../hooks/useZodForm";
-import { storeSchema } from "../../../schemas/list";
+import { type FC } from "react";
+import { useStoreList } from "../../api/list/storeList";
+import { useZodForm } from "../../hooks/useZodForm";
+import { storeSchema } from "../../schemas/list";
 
 interface Props {
   visible: boolean;
