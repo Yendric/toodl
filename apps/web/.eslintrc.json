@@ -15,6 +15,7 @@
   },
   "plugins": ["react", "react-hooks", "@typescript-eslint", "prettier"],
   "rules": {
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-uses-react": "off"
   }
 }

@@ -3,17 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
     "@fontsource/roboto": "^5.0.8",
     "@hookform/resolvers": "^3.3.0",
-    "@mui/icons-material": "^5.14.3",
-    "@mui/material": "^5.14.5",
+    "@mui/icons-material": "^5.15.17",
+    "@mui/material": "^5.15.17",
     "@mui/x-date-pickers": "^6.11.2",
     "@react-oauth/google": "^0.11.1",
-    "@syncfusion/ej2-base": "^22.2.5",
-    "@syncfusion/ej2-locale": "^22.2.5",
-    "@syncfusion/ej2-react-schedule": "^22.2.5",
     "@tanstack/react-query": "^4.33.0",
     "@tanstack/react-query-persist-client": "^4.33.0",
     "@vitejs/plugin-react": "^4.0.4",
@@ -21,11 +18,10 @@
     "cldr-data": "^36.0.1",
     "date-fns": "^2.30.0",
     "i18next": "^23.4.4",
-    "ical.js": "^1.5.0",
     "idb-keyval": "^6.2.1",
     "notistack": "^3.0.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
     "react-hook-form": "^7.45.4",
     "react-router-dom": "^6.15.0",
     "typescript": "^5.1.6",
@@ -40,11 +36,6 @@
     "lint:fix": "eslint --fix src/**/*.{js,jsx,ts,tsx,json}",
     "format": "prettier --write src/**/*.{js,jsx,ts,tsx,css,md,json} --config ./.prettierrc.json"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ]
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -57,10 +48,11 @@
       "last 1 safari version"
     ]
   },
+  "type": "module",
   "devDependencies": {
     "@types/node": "^20.5.2",
-    "@types/react": "^18.2.20",
-    "@types/react-dom": "^18.2.7",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^6.4.1",
     "@typescript-eslint/parser": "^6.4.1",
     "eslint": "^8.47.0",
@@ -72,5 +64,6 @@
     "prettier-plugin-organize-imports": "^3.2.3",
     "sass": "^1.66.1",
     "vite-plugin-pwa": "^0.16.4"
-  }
+  },
+  "packageManager": "yarn@1.22.21+sha1.1959a18351b811cdeedbd484a8f86c3cc3bbaf72"
 }
