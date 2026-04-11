@@ -1,15 +1,36 @@
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { IconButton, InputAdornment } from "@mui/material";
+import { FormControl, IconButton, InputAdornment, MenuItem, Select } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
-import { type FC, type KeyboardEvent } from "react";
-import { useTodoStore, useUserInfoSuspense } from "../../api/generated/toodl";
+import { Suspense, type FC, type KeyboardEvent } from "react";
+import { useCategoryIndexSuspense, useTodoStore, useUserInfoSuspense } from "../../api/generated/toodl";
 import { useCurrentList } from "../../context/CurrentListState";
 import { useZodForm } from "../../hooks/useZodForm";
 import { storeSchema } from "../../schemas/todo";
 
+const CategorySelect: FC<{ register: any }> = ({ register }) => {
+  const { data: categories } = useCategoryIndexSuspense();
+
+  return (
+    <FormControl variant="standard" sx={{ minWidth: 120, ml: 2 }}>
+      <Select {...register("categoryId")} defaultValue="" displayEmpty>
+        <MenuItem value="">
+          <em>Geen categorie</em>
+        </MenuItem>
+        {categories.map((cat) => (
+          <MenuItem key={cat.id} value={cat.id}>
+            {cat.name}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
+};
+
 const CreateTodoForm: FC<{ disabled?: boolean }> = ({ disabled = false }) => {
   const { data: user } = useUserInfoSuspense();
+  const currentList = useCurrentList();
+  const isShoppingList = currentList.list?.type === "SHOPPING";
 
   const {
     handleSubmit,
@@ -23,10 +44,10 @@ const CreateTodoForm: FC<{ disabled?: boolean }> = ({ disabled = false }) => {
       done: false,
       subject: "",
       startTime: new Date(),
+      categoryId: null,
     },
   });
 
-  const currentList = useCurrentList();
   const createTodoMutation = useTodoStore();
 
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
@@ -47,13 +68,14 @@ const CreateTodoForm: FC<{ disabled?: boolean }> = ({ disabled = false }) => {
         listId: currentList.list?.id,
         startTime: new Date().toISOString(),
         endTime: todo.endTime?.toISOString(),
+        categoryId: todo.categoryId || null,
       },
     });
   });
 
   return (
     <form onSubmit={onSubmit}>
-      <Grid container sx={{ mb: 2, justifyContent: "center" }}>
+      <Grid container sx={{ mb: 2, justifyContent: "center", alignItems: "flex-end" }}>
         <TextField
           {...register("subject")}
           multiline={true}
@@ -63,8 +85,7 @@ const CreateTodoForm: FC<{ disabled?: boolean }> = ({ disabled = false }) => {
           variant="standard"
           label={`Wat moet er gebeuren, ${user.username}?`}
           onKeyDown={handleKeyDown}
-          fullWidth
-          sx={{ maxWidth: "25rem" }}
+          sx={{ maxWidth: "25rem", flexGrow: 1 }}
           slotProps={{
             input: {
               endAdornment: (
@@ -76,8 +97,12 @@ const CreateTodoForm: FC<{ disabled?: boolean }> = ({ disabled = false }) => {
               ),
             }
           }}
-
         />
+        {isShoppingList && (
+          <Suspense fallback={null}>
+            <CategorySelect register={register} />
+          </Suspense>
+        )}
       </Grid>
     </form>
   );

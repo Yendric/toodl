@@ -1,4 +1,15 @@
-import { Box, Button, FormLabel, Input, Modal, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  MenuItem,
+  Modal,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useState, type FC } from "react";
 import { type ListResponse } from "../../api/generated/model";
 import { useListUpdate } from "../../api/generated/toodl";
@@ -55,17 +66,28 @@ const EditListModal: FC<Props> = ({ visible, onDismissed, list }) => {
           </Typography>
 
           <form onSubmit={onSubmit} noValidate>
-            <FormLabel>Naam</FormLabel>
-            <TextField
-              {...register("name")}
-              error={!!errors.name}
-              helperText={errors.name?.message}
-              variant="outlined"
-              fullWidth
-            />
-            <FormLabel>Kleur</FormLabel>
-            <Input defaultValue={list.color} {...register("color")} type="color" fullWidth />
-            <Box sx={{ textAlign: "center", mt: 1 }}>
+            <FormControl fullWidth sx={{ mt: 1 }}>
+              <FormLabel>Naam</FormLabel>
+              <TextField
+                {...register("name")}
+                error={!!errors.name}
+                helperText={errors.name?.message}
+                variant="outlined"
+                fullWidth
+              />
+            </FormControl>
+            <FormControl fullWidth sx={{ mt: 1 }}>
+              <FormLabel>Kleur</FormLabel>
+              <Input defaultValue={list.color} {...register("color")} type="color" fullWidth />
+            </FormControl>
+            <FormControl fullWidth sx={{ mt: 1 }}>
+              <FormLabel>Type</FormLabel>
+              <Select {...register("type")} defaultValue={list.type} fullWidth>
+                <MenuItem value="REGULAR">Normaal</MenuItem>
+                <MenuItem value="SHOPPING">Winkel</MenuItem>
+              </Select>
+            </FormControl>
+            <Box sx={{ textAlign: "center", mt: 2 }}>
               <Button type="submit" sx={{ mr: 1 }} variant="contained" color="primary">
                 Opslaan
               </Button>

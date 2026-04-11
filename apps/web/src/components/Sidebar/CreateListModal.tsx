@@ -1,4 +1,15 @@
-import { Box, Button, FormLabel, Input, Modal, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  MenuItem,
+  Modal,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { type FC } from "react";
 import { useListStore } from "../../api/generated/toodl";
 import { useZodForm } from "../../hooks/useZodForm";
@@ -15,7 +26,7 @@ const CreateListModal: FC<Props> = ({ visible, onDismissed }) => {
     register,
     reset,
     formState: { errors },
-  } = useZodForm({ schema: storeSchema });
+  } = useZodForm({ schema: storeSchema, defaultValues: { type: "REGULAR", color: "#33AAFF" } });
 
   const createListMutation = useListStore();
 
@@ -50,17 +61,28 @@ const CreateListModal: FC<Props> = ({ visible, onDismissed }) => {
         </Typography>
 
         <form onSubmit={onSubmit} noValidate>
-          <FormLabel>Naam</FormLabel>
-          <TextField
-            {...register("name")}
-            error={!!errors.name}
-            helperText={errors.name?.message}
-            variant="outlined"
-            fullWidth
-          />
-          <FormLabel>Kleur</FormLabel>
-          <Input defaultValue="#33AAFF" {...register("color")} type="color" fullWidth />
-          <Box sx={{ textAlign: "center", mt: 1 }}>
+          <FormControl fullWidth sx={{ mt: 1 }}>
+            <FormLabel>Naam</FormLabel>
+            <TextField
+              {...register("name")}
+              error={!!errors.name}
+              helperText={errors.name?.message}
+              variant="outlined"
+              fullWidth
+            />
+          </FormControl>
+          <FormControl fullWidth sx={{ mt: 1 }}>
+            <FormLabel>Kleur</FormLabel>
+            <Input {...register("color")} type="color" fullWidth />
+          </FormControl>
+          <FormControl fullWidth sx={{ mt: 1 }}>
+            <FormLabel>Type</FormLabel>
+            <Select {...register("type")} defaultValue="REGULAR" fullWidth>
+              <MenuItem value="REGULAR">Normaal</MenuItem>
+              <MenuItem value="SHOPPING">Winkel</MenuItem>
+            </Select>
+          </FormControl>
+          <Box sx={{ textAlign: "center", mt: 2 }}>
             <Button type="submit" variant="contained" color="primary">
               Maken
             </Button>

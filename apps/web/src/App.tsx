@@ -29,6 +29,8 @@ import RegisterPage from "./routes/register/page";
 import Root from "./routes/root";
 import SettingsLoading from "./routes/settings/loading";
 import SettingsPage from "./routes/settings/page";
+import ShoppingSettingsLoading from "./routes/shopping-settings/loading";
+import ShoppingSettingsPage from "./routes/shopping-settings/page";
 import TodosLoading from "./routes/todos/loading";
 import TodosPage from "./routes/todos/page";
 import VoorwaardenLoading from "./routes/voorwaarden/loading";
@@ -86,6 +88,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<SettingsLoading />}>
             <SettingsPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "shopping-settings",
+        element: (
+          <Suspense fallback={<ShoppingSettingsLoading />}>
+            <ShoppingSettingsPage />
           </Suspense>
         ),
       },

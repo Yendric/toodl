@@ -3,6 +3,7 @@ import { z } from "zod";
 export const storeSchema = z.object({
   name: z.string().min(1).max(20),
   color: z.string().length(7),
+  type: z.enum(["REGULAR", "SHOPPING"]).default("REGULAR"),
 });
 
 export const updateSchema = storeSchema.extend({

@@ -14,6 +14,7 @@ export const storeSchema = z.object({
   startTime: z.date().default(new Date()),
   endTime: z.date().nullish(),
   listId: z.number().nullable().default(null).nullish(),
+  categoryId: z.number().nullable().default(null).nullish(),
 });
 
 export const updateSchema = storeSchema.extend({
