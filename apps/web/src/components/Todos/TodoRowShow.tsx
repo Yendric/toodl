@@ -1,4 +1,5 @@
-import { MoreVert } from "@mui/icons-material";
+import { type DraggableProvided } from "@hello-pangea/dnd";
+import { DragIndicator, MoreVert } from "@mui/icons-material";
 import { Checkbox, IconButton, TableCell, Typography } from "@mui/material";
 import TableRow from "@mui/material/TableRow";
 import { type FC } from "react";
@@ -11,9 +12,11 @@ import TodoContextMenu from "./TodoContextMenu/TodoContextMenu";
 interface Props {
   todo: TodoResponse;
   toggleEditing: () => void;
+  provided?: DraggableProvided;
+  isDragging?: boolean;
 }
 
-const TodoShowRow: FC<Props> = ({ todo, toggleEditing }) => {
+const TodoShowRow: FC<Props> = ({ todo, toggleEditing, provided, isDragging }) => {
   const toggleTodoMutation = useTodoUpdate();
 
   const { handleContextMenu, contextMenu, handleClose } = useContextMenu();
@@ -21,7 +24,22 @@ const TodoShowRow: FC<Props> = ({ todo, toggleEditing }) => {
   return (
     <>
       <TodoContextMenu todo={todo} contextMenu={contextMenu} handleClose={handleClose} />
-      <TableRow onContextMenu={handleContextMenu}>
+      <TableRow
+        ref={provided?.innerRef}
+        {...provided?.draggableProps}
+        onContextMenu={handleContextMenu}
+        sx={{
+          backgroundColor: isDragging ? "action.hover" : "inherit",
+          display: provided ? "table-row" : "inherit",
+        }}
+      >
+        <TableCell sx={{ padding: "0 !important", width: 0 }}>
+          {provided && (
+            <div {...provided.dragHandleProps} style={{ display: "flex", alignItems: "center", paddingLeft: 8 }}>
+              <DragIndicator fontSize="small" color="disabled" />
+            </div>
+          )}
+        </TableCell>
         <TableCell padding="checkbox" sx={{ padding: "0 !important" }}>
           <div>
             <Checkbox
@@ -29,11 +47,14 @@ const TodoShowRow: FC<Props> = ({ todo, toggleEditing }) => {
               onChange={() =>
                 toggleTodoMutation.mutate({
                   todoId: todo.id,
-                  data: { ...todo, done: !todo.done },
+                  data: {
+                    subject: todo.subject,
+                    done: !todo.done,
+                    startTime: todo.startTime || new Date().toISOString(),
+                  },
                 })
               }
               value="primary"
-              inputProps={{ "aria-label": "primary checkbox" }}
             />
           </div>
         </TableCell>

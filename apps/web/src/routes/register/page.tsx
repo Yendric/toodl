@@ -10,43 +10,44 @@ import Typography from "@mui/material/Typography";
 import { GoogleLogin } from "@react-oauth/google";
 import { useEffect, type FC } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router";
 import { z } from "zod";
 import { useAuth } from "../../context/AuthState";
 
 type FormData = {
+  username: string;
   email: string;
   password: string;
 };
 
 const schema = z.object({
+  username: z.string().min(1).max(50),
   email: z.string().email().min(3).max(50),
   password: z.string().min(8).max(50),
 });
 
-const LoginContainer: FC = () => {
+const Register: FC = () => {
   const {
     handleSubmit,
     setError,
     register,
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
-  const { googleLogin, isAuth, login } = useAuth();
+  const { googleLogin, isAuth, register: registerUser } = useAuth();
   const navigate = useNavigate();
   const theme = useTheme();
 
   useEffect(() => {
     if (isAuth) {
-      navigate("/todos");
+      navigate("/todos?newUser=true");
     }
-  }, [isAuth]);
+  }, [isAuth, navigate]);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await login(data);
+      await registerUser(data);
     } catch {
-      setError("email", { message: "Foutief wachtwoord of email adres" });
-      setError("password", { message: "Foutief wachtwoord of email adres" });
+      setError("email", { message: "Dit e-mail adres is al in gebruik" });
     }
   });
 
@@ -59,18 +60,28 @@ const LoginContainer: FC = () => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        minHeight: "100vh"
+        minHeight: "100vh",
       }}
     >
       <Avatar sx={{ m: 1, bgcolor: theme.palette.primary.main }}>
         <LockOutlinedIcon />
       </Avatar>
       <Typography component="h1" variant="h5">
-        Log in
+        Registreer
       </Typography>
       <form onSubmit={onSubmit} noValidate>
         <TextField
-          inputProps={register("email")}
+          {...register("username")}
+          error={!!errors.username}
+          helperText={errors.username?.message}
+          margin="dense"
+          variant="outlined"
+          label="Gebruikersnaam"
+          autoComplete="username"
+          fullWidth
+        />
+        <TextField
+          {...register("email")}
           error={!!errors.email}
           helperText={errors.email?.message}
           margin="dense"
@@ -80,7 +91,7 @@ const LoginContainer: FC = () => {
           fullWidth
         />
         <TextField
-          inputProps={register("password")}
+          {...register("password")}
           error={!!errors.password}
           helperText={errors.password?.message}
           margin="dense"
@@ -91,12 +102,12 @@ const LoginContainer: FC = () => {
           fullWidth
         />
         <Button sx={{ mt: 2 }} type="submit" fullWidth variant="contained" color="primary">
-          Log in
+          Registreer
         </Button>
 
         <Grid container sx={{ mt: 1 }}>
-          <Grid item>
-            <Link to="/register">Geen account? Registreer</Link>
+          <Grid>
+            <Link to="/login">Reeds een account? Log in</Link>
           </Grid>
         </Grid>
         <hr />
@@ -108,4 +119,4 @@ const LoginContainer: FC = () => {
   );
 };
 
-export default LoginContainer;
+export default Register;

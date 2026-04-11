@@ -1,10 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Security from "@mui/icons-material/Security";
-import { Button, Card, CardContent, Divider, FormControl, Skeleton, TextField, Typography } from "@mui/material";
+import { Button, Card, CardContent, Divider, FormControl, TextField, Typography } from "@mui/material";
 import { type FC } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useUserInfo, useUserUpdatePassword } from "../../api/generated/toodl";
+import { useUserInfoSuspense, useUserUpdatePassword } from "../../api/generated/toodl";
 
 const schema = z.object({
   newPassword: z.string().min(8).max(50),
@@ -19,8 +19,7 @@ const PasswordForm: FC = () => {
     register,
     formState: { errors },
   } = useForm<z.infer<typeof schema>>({ resolver: zodResolver(schema) });
-  const { data: userResult, isSuccess } = useUserInfo();
-  const user = userResult?.data;
+  const { data: user } = useUserInfoSuspense();
   const updatePasswordMutation = useUserUpdatePassword();
 
   const onSubmit = handleSubmit(async (data) => {
@@ -33,32 +32,6 @@ const PasswordForm: FC = () => {
       },
     });
   });
-
-  if (!isSuccess || !user) {
-    return (
-      <Card sx={{ mt: 2 }}>
-        <CardContent>
-          <Typography variant="h5" component="h2">
-            Wachtwoord veranderen
-          </Typography>
-          <Typography variant="subtitle1" color="text.secondary">
-            Verander je wachtwoord
-          </Typography>
-        </CardContent>
-        <Divider />
-        <CardContent>
-          <FormControl component="fieldset" fullWidth sx={{ mt: -2 }}>
-            <Skeleton height={90} />
-            <Skeleton height={90} />
-            <Skeleton height={90} />
-          </FormControl>
-          <Button variant="contained" color="primary" disabled startIcon={<Security />} sx={{ mt: 1 }}>
-            Wachtwoord veranderen
-          </Button>
-        </CardContent>
-      </Card>
-    );
-  }
 
   return (
     <Card sx={{ mt: 2 }}>
@@ -79,7 +52,7 @@ const PasswordForm: FC = () => {
           <FormControl component="fieldset" fullWidth sx={{ mt: -2 }}>
             {!user.onlyLinked && (
               <TextField
-                inputProps={register("oldPassword")}
+                {...register("oldPassword")}
                 error={!!errors.oldPassword}
                 helperText={errors.oldPassword?.message}
                 margin="dense"
@@ -91,7 +64,7 @@ const PasswordForm: FC = () => {
               />
             )}
             <TextField
-              inputProps={register("newPassword")}
+              {...register("newPassword")}
               error={!!errors.newPassword}
               helperText={errors.newPassword?.message}
               margin="dense"
@@ -102,7 +75,7 @@ const PasswordForm: FC = () => {
               fullWidth
             />
             <TextField
-              inputProps={register("confirmPassword")}
+              {...register("confirmPassword")}
               error={!!errors.confirmPassword}
               helperText={errors.confirmPassword?.message}
               margin="dense"

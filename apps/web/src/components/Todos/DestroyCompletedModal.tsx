@@ -1,14 +1,13 @@
 import { Box, Button, Modal, Typography } from "@mui/material";
 import { type FC } from "react";
-import { useCurrentList } from "../../context/CurrentListState";
 
 interface Props {
   visible: boolean;
   onDismissed: () => void;
+  destroyCompleted: () => void;
 }
 
-const DestroyCompletedModal: FC<Props> = ({ visible, onDismissed }) => {
-  const { destroyCompleted } = useCurrentList();
+const DestroyCompletedModal: FC<Props> = ({ visible, onDismissed, destroyCompleted }) => {
 
   return (
     <Modal

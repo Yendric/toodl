@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Delete from "@mui/icons-material/Delete";
 import Save from "@mui/icons-material/Save";
 import {
-  Box,
   Button,
   Card,
   CardContent,
@@ -13,16 +12,15 @@ import {
   FormGroup,
   FormLabel,
   Grid,
-  Skeleton,
   TextField,
-  Typography,
+  Typography
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useState, type FC } from "react";
 import { Controller, useForm, type FieldError } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { z } from "zod";
-import { useUserInfo, useUserUpdate } from "../../api/generated/toodl";
+import { useUserInfoSuspense, useUserUpdate } from "../../api/generated/toodl";
 import DeleteAccountModal from "./DeleteAccountModal";
 import IcalInput from "./IcalInput";
 
@@ -36,8 +34,7 @@ const schema = z.object({
 });
 
 const ProfileForm: FC = () => {
-  const { data: userResult, isSuccess } = useUserInfo();
-  const user = userResult?.data;
+  const { data: user } = useUserInfoSuspense();
   const updateUserMutation = useUserUpdate();
   const {
     handleSubmit,
@@ -49,70 +46,8 @@ const ProfileForm: FC = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const onSubmit = handleSubmit((data) => {
-    if (!isSuccess || !user) return enqueueSnackbar("Er is iets foutgegaan", { variant: "error" });
     updateUserMutation.mutate({ data });
   });
-
-  if (!isSuccess || !user) {
-    return (
-      <Card>
-        <CardContent>
-          <Typography variant="h5" component="h2">
-            Jouw profiel
-            <Link to="/">
-              <Button variant="outlined" sx={{ ml: 1 }}>
-                Keer terug
-              </Button>
-            </Link>
-          </Typography>
-        </CardContent>
-        <Divider />
-        <CardContent>
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
-              <FormControl component="fieldset" fullWidth>
-                <FormLabel component="legend">Account</FormLabel>
-                <Skeleton height={80} />
-                <Skeleton height={80} />
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend">Notificaties</FormLabel>
-                <FormGroup>
-                  <Skeleton height={50} width={100} />
-                  <Skeleton height={50} width={200} />
-                  <Skeleton height={50} width={150} />
-                </FormGroup>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={12}>
-              <Box sx={{ mb: 2, mt: -2 }}>
-                <FormLabel component="legend" sx={{ mb: 1 }}>
-                  iCal-kalenders van derden importeren
-                  <Button variant="contained" size="small" sx={{ ml: 1 }} disabled>
-                    iCal-URL Toevoegen
-                  </Button>
-                </FormLabel>
-
-                <FormGroup>
-                  <Skeleton height={50} />
-                  <Skeleton height={50} />
-                  <Skeleton height={50} />
-                </FormGroup>
-              </Box>
-            </Grid>
-          </Grid>
-          <Button variant="contained" color="primary" disabled startIcon={<Save />}>
-            Opslaan
-          </Button>
-          <Button variant="contained" sx={{ float: "right" }} color="error" startIcon={<Delete />} disabled>
-            Verwijder
-          </Button>
-        </CardContent>
-      </Card>
-    );
-  }
 
   return (
     <Card>
@@ -130,11 +65,11 @@ const ProfileForm: FC = () => {
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <FormControl component="fieldset" fullWidth>
                 <FormLabel component="legend">Account</FormLabel>
                 <TextField
-                  inputProps={register("username")}
+                  {...register("username")}
                   error={!!errors.username}
                   helperText={errors.username?.message}
                   margin="normal"
@@ -143,7 +78,7 @@ const ProfileForm: FC = () => {
                   fullWidth
                 />
                 <TextField
-                  inputProps={register("email")}
+                  {...register("email")}
                   error={!!errors.email}
                   helperText={errors.email?.message}
                   margin="normal"
@@ -153,7 +88,7 @@ const ProfileForm: FC = () => {
                 />
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <FormControl component="fieldset">
                 <FormLabel component="legend">Notificaties</FormLabel>
                 <FormGroup>
@@ -174,7 +109,7 @@ const ProfileForm: FC = () => {
                 </FormGroup>
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={12}>
+            <Grid size={{ xs: 12, sm: 12 }}>
               <Controller
                 name="icalUrls"
                 control={control}

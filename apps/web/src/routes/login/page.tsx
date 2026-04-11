@@ -10,44 +10,43 @@ import Typography from "@mui/material/Typography";
 import { GoogleLogin } from "@react-oauth/google";
 import { useEffect, type FC } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router";
 import { z } from "zod";
 import { useAuth } from "../../context/AuthState";
 
 type FormData = {
-  username: string;
   email: string;
   password: string;
 };
 
 const schema = z.object({
-  username: z.string().min(1).max(50),
   email: z.string().email().min(3).max(50),
   password: z.string().min(8).max(50),
 });
 
-const RegisterContainer: FC = () => {
+const Login: FC = () => {
   const {
     handleSubmit,
     setError,
     register,
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
-  const { googleLogin, isAuth, register: registerUser } = useAuth();
+  const { googleLogin, isAuth, login } = useAuth();
   const navigate = useNavigate();
   const theme = useTheme();
 
   useEffect(() => {
     if (isAuth) {
-      navigate("/todos?newUser=true");
+      navigate("/todos");
     }
-  }, [isAuth]);
+  }, [isAuth, navigate]);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await registerUser(data);
+      await login(data);
     } catch {
-      setError("email", { message: "Dit e-mail adres is al in gebruik" });
+      setError("email", { message: "Foutief wachtwoord of email adres" });
+      setError("password", { message: "Foutief wachtwoord of email adres" });
     }
   });
 
@@ -60,28 +59,18 @@ const RegisterContainer: FC = () => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        minHeight: "100vh"
+        minHeight: "100vh",
       }}
     >
       <Avatar sx={{ m: 1, bgcolor: theme.palette.primary.main }}>
         <LockOutlinedIcon />
       </Avatar>
       <Typography component="h1" variant="h5">
-        Registreer
+        Log in
       </Typography>
       <form onSubmit={onSubmit} noValidate>
         <TextField
-          inputProps={register("username")}
-          error={!!errors.username}
-          helperText={errors.username?.message}
-          margin="dense"
-          variant="outlined"
-          label="Gebruikersnaam"
-          autoComplete="username"
-          fullWidth
-        />
-        <TextField
-          inputProps={register("email")}
+          {...register("email")}
           error={!!errors.email}
           helperText={errors.email?.message}
           margin="dense"
@@ -91,7 +80,7 @@ const RegisterContainer: FC = () => {
           fullWidth
         />
         <TextField
-          inputProps={register("password")}
+          {...register("password")}
           error={!!errors.password}
           helperText={errors.password?.message}
           margin="dense"
@@ -102,22 +91,21 @@ const RegisterContainer: FC = () => {
           fullWidth
         />
         <Button sx={{ mt: 2 }} type="submit" fullWidth variant="contained" color="primary">
-          Registreer
+          Log in
         </Button>
 
         <Grid container sx={{ mt: 1 }}>
-          <Grid item>
-            <Link to="/login">Reeds een account? Log in</Link>
+          <Grid >
+            <Link to="/register">Geen account? Registreer</Link>
           </Grid>
         </Grid>
         <hr />
         <div className="google-login-button">
           <GoogleLogin theme="filled_blue" onSuccess={googleLogin} />
         </div>
-
       </form>
     </Container>
   );
 };
 
-export default RegisterContainer;
+export default Login;

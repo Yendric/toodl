@@ -1,3 +1,5 @@
+import { type DraggableProvided } from "@hello-pangea/dnd";
+import { DragIndicator } from "@mui/icons-material";
 import SaveIcon from "@mui/icons-material/Save";
 import { Checkbox, IconButton, TableCell, TextField, Typography } from "@mui/material";
 import TableRow from "@mui/material/TableRow";
@@ -11,9 +13,11 @@ import { updateSchema } from "../../schemas/todo";
 interface Props {
   todo: TodoResponse;
   toggleEditing: () => void;
+  provided?: DraggableProvided;
+  isDragging?: boolean;
 }
 
-const TodoEditRow: FC<Props> = ({ todo, toggleEditing }) => {
+const TodoEditRow: FC<Props> = ({ todo, toggleEditing, provided, isDragging }) => {
   const {
     handleSubmit,
     register,
@@ -38,7 +42,7 @@ const TodoEditRow: FC<Props> = ({ todo, toggleEditing }) => {
       todoId: todo.id,
       data: {
         ...data,
-        startTime: data.startTime.toISOString(),
+        startTime: data.startTime?.toISOString() || new Date().toISOString(),
         endTime: data.endTime?.toISOString(),
       },
     });
@@ -46,7 +50,22 @@ const TodoEditRow: FC<Props> = ({ todo, toggleEditing }) => {
   });
 
   return (
-    <TableRow style={{ transition: "height 2s" }}>
+    <TableRow
+      ref={provided?.innerRef}
+      {...provided?.draggableProps}
+      style={{ transition: "height 2s", ...provided?.draggableProps.style }}
+      sx={{
+        backgroundColor: isDragging ? "action.hover" : "inherit",
+        display: provided ? "table-row" : "inherit",
+      }}
+    >
+      <TableCell sx={{ padding: "0 !important", width: 0 }}>
+        {provided && (
+          <div {...provided.dragHandleProps} style={{ display: "flex", alignItems: "center", paddingLeft: 8 }}>
+            <DragIndicator fontSize="small" color="disabled" />
+          </div>
+        )}
+      </TableCell>
       <TableCell padding="checkbox" sx={{ padding: "0 !important" }}>
         <div>
           <Checkbox
@@ -54,11 +73,14 @@ const TodoEditRow: FC<Props> = ({ todo, toggleEditing }) => {
             onChange={() =>
               updateTodoMutation.mutate({
                 todoId: todo.id,
-                data: { ...todo, done: !todo.done },
+                data: {
+                  subject: todo.subject,
+                  done: !todo.done,
+                  startTime: todo.startTime || new Date().toISOString(),
+                },
               })
             }
             value="primary"
-            inputProps={{ "aria-label": "primary checkbox" }}
           />
         </div>
       </TableCell>
@@ -66,7 +88,7 @@ const TodoEditRow: FC<Props> = ({ todo, toggleEditing }) => {
         <div>
           <TextField
             multiline={true}
-            inputProps={register("subject")}
+            {...register("subject")}
             error={!!errors.subject}
             helperText={errors.subject?.message}
             onKeyDown={(e) => handleKeyDown(e)}

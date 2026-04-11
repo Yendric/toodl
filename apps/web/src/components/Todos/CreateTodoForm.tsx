@@ -3,14 +3,13 @@ import { IconButton, InputAdornment } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import { type FC, type KeyboardEvent } from "react";
-import { useTodoStore, useUserInfo } from "../../api/generated/toodl";
+import { useTodoStore, useUserInfoSuspense } from "../../api/generated/toodl";
 import { useCurrentList } from "../../context/CurrentListState";
 import { useZodForm } from "../../hooks/useZodForm";
 import { storeSchema } from "../../schemas/todo";
 
 const CreateTodoForm: FC<{ disabled?: boolean }> = ({ disabled = false }) => {
-  const { data: userResult } = useUserInfo();
-  const user = userResult?.data;
+  const { data: user } = useUserInfoSuspense();
 
   const {
     handleSubmit,
@@ -52,13 +51,11 @@ const CreateTodoForm: FC<{ disabled?: boolean }> = ({ disabled = false }) => {
     });
   });
 
-  if (!user) return null;
-
   return (
     <form onSubmit={onSubmit}>
-      <Grid sx={{ mb: 2 }} container justifyContent="center">
+      <Grid container sx={{ mb: 2, justifyContent: "center" }}>
         <TextField
-          inputProps={register("subject")}
+          {...register("subject")}
           multiline={true}
           error={!!errors.subject}
           disabled={disabled}
@@ -68,15 +65,18 @@ const CreateTodoForm: FC<{ disabled?: boolean }> = ({ disabled = false }) => {
           onKeyDown={handleKeyDown}
           fullWidth
           sx={{ maxWidth: "25rem" }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton type="submit" edge="start" color="default">
-                  <AddCircleIcon />
-                </IconButton>
-              </InputAdornment>
-            ),
+          slotProps={{
+            input: {
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton type="submit" edge="start" color="default">
+                    <AddCircleIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }
           }}
+
         />
       </Grid>
     </form>

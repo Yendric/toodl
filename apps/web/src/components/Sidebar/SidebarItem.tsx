@@ -1,7 +1,7 @@
 import CircleIcon from "@mui/icons-material/Circle";
 import { ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import { useState, type FC, type MouseEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import type { ListResponse } from "../../api/generated/model";
 import { useCurrentList } from "../../context/CurrentListState";
 import EditListModal from "./EditListModal";

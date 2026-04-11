@@ -5,11 +5,10 @@ export const queryClient = new QueryClient({
     queries: {
       refetchOnWindowFocus: "always",
     },
-  },
-  logger: {
-    // Anders wordt de console volgespammed met 401 unauthorized errors, welke worden gebruikt om te weten of de gebruiker ingelogd is
-    log: () => {},
-    warn: () => {},
-    error: () => {},
+    mutations: {
+      onSuccess: () => {
+        queryClient.invalidateQueries();
+      },
+    },
   },
 });
