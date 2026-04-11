@@ -35,14 +35,23 @@ const schema = z.object({
 
 const ProfileForm: FC = () => {
   const { data: user } = useUserInfoSuspense();
-  const updateUserMutation = useUserUpdate();
+  const { enqueueSnackbar } = useSnackbar();
+  const updateUserMutation = useUserUpdate({
+    mutation: {
+      onSuccess: () => {
+        enqueueSnackbar("Profiel opgeslagen", { variant: "success" });
+      },
+      onError: () => {
+        enqueueSnackbar("Opslaan mislukt", { variant: "error" });
+      },
+    },
+  });
   const {
     handleSubmit,
     register,
     control,
     formState: { errors },
   } = useForm<z.infer<typeof schema>>({ values: user, resolver: zodResolver(schema) });
-  const { enqueueSnackbar } = useSnackbar();
   const [modalVisible, setModalVisible] = useState(false);
 
   const onSubmit = handleSubmit((data) => {

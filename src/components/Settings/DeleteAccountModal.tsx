@@ -1,4 +1,5 @@
 import { Box, Button, Modal, Typography } from "@mui/material";
+import { useSnackbar } from "notistack";
 import { type FC } from "react";
 import { useUserDestroy } from "../../api/generated/toodl";
 
@@ -8,7 +9,14 @@ interface Props {
 }
 
 const DeleteAccountModal: FC<Props> = ({ visible, onDismissed }) => {
-  const deleteUserMutation = useUserDestroy();
+  const { enqueueSnackbar } = useSnackbar();
+  const deleteUserMutation = useUserDestroy({
+    mutation: {
+      onError: () => {
+        enqueueSnackbar("Account verwijderen mislukt", { variant: "error" });
+      },
+    },
+  });
 
   return (
     <Modal
