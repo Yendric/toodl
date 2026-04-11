@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Security from "@mui/icons-material/Security";
 import { Button, Card, CardContent, Divider, FormControl, TextField, Typography } from "@mui/material";
+import { useSnackbar } from "notistack";
 import { type FC } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -20,10 +21,20 @@ const PasswordForm: FC = () => {
     formState: { errors },
   } = useForm<z.infer<typeof schema>>({ resolver: zodResolver(schema) });
   const { data: user } = useUserInfoSuspense();
-  const updatePasswordMutation = useUserUpdatePassword();
+  const { enqueueSnackbar } = useSnackbar();
+  const updatePasswordMutation = useUserUpdatePassword({
+    mutation: {
+      onSuccess: () => {
+        enqueueSnackbar("Wachtwoord aangepast", { variant: "success" });
+        reset();
+      },
+      onError: () => {
+        enqueueSnackbar("Wachtwoord aanpassen mislukt", { variant: "error" });
+      },
+    },
+  });
 
   const onSubmit = handleSubmit(async (data) => {
-    reset();
     updatePasswordMutation.mutate({
       data: {
         newPassword: data.newPassword,
