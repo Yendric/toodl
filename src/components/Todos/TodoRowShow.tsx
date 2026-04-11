@@ -2,19 +2,19 @@ import { MoreVert } from "@mui/icons-material";
 import { Checkbox, IconButton, TableCell, Typography } from "@mui/material";
 import TableRow from "@mui/material/TableRow";
 import { type FC } from "react";
-import { useToggleTodo } from "../../api/todo/toggleTodo";
+import type { TodoResponse } from "../../api/generated/model";
+import { useTodoUpdate } from "../../api/generated/toodl";
 import { toDateTimeString } from "../../helpers/dateTime";
 import useContextMenu from "../../hooks/useContextMenu";
-import { type LocalTodo } from "../../types/Todo";
 import TodoContextMenu from "./TodoContextMenu/TodoContextMenu";
 
 interface Props {
-  todo: LocalTodo;
+  todo: TodoResponse;
   toggleEditing: () => void;
 }
 
 const TodoShowRow: FC<Props> = ({ todo, toggleEditing }) => {
-  const toggleTodoMutation = useToggleTodo();
+  const toggleTodoMutation = useTodoUpdate();
 
   const { handleContextMenu, contextMenu, handleClose } = useContextMenu();
 
@@ -26,7 +26,12 @@ const TodoShowRow: FC<Props> = ({ todo, toggleEditing }) => {
           <div>
             <Checkbox
               checked={todo.done}
-              onChange={() => toggleTodoMutation.mutate(todo)}
+              onChange={() =>
+                toggleTodoMutation.mutate({
+                  todoId: todo.id,
+                  data: { ...todo, done: !todo.done },
+                })
+              }
               value="primary"
               inputProps={{ "aria-label": "primary checkbox" }}
             />
@@ -37,13 +42,13 @@ const TodoShowRow: FC<Props> = ({ todo, toggleEditing }) => {
             <Typography onClick={toggleEditing} style={{ textDecoration: todo.done ? "line-through" : "none" }}>
               {todo.subject}
             </Typography>
-            {todo.enableDeadline && (
+            {todo.enableDeadline && todo.startTime && (
               <Typography
                 onClick={toggleEditing}
                 sx={{ color: "text.secondary", fontSize: "0.75rem" }}
                 style={{ textDecoration: todo.done ? "line-through" : "none" }}
               >
-                {toDateTimeString(todo.startTime)}
+                {toDateTimeString(new Date(todo.startTime))}
               </Typography>
             )}
           </div>

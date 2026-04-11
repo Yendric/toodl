@@ -22,8 +22,7 @@ import { useState, type FC } from "react";
 import { Controller, useForm, type FieldError } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { z } from "zod";
-import { useUser } from "../../api/user/getUser";
-import { useUpdateUser } from "../../api/user/updateUser";
+import { useUserInfo, useUserUpdate } from "../../api/generated/toodl";
 import DeleteAccountModal from "./DeleteAccountModal";
 import IcalInput from "./IcalInput";
 
@@ -37,8 +36,9 @@ const schema = z.object({
 });
 
 const ProfileForm: FC = () => {
-  const { data: user, isSuccess } = useUser();
-  const updateUserMutation = useUpdateUser();
+  const { data: userResult, isSuccess } = useUserInfo();
+  const user = userResult?.data;
+  const updateUserMutation = useUserUpdate();
   const {
     handleSubmit,
     register,
@@ -49,11 +49,11 @@ const ProfileForm: FC = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const onSubmit = handleSubmit((data) => {
-    if (!isSuccess) return enqueueSnackbar("Er is iets foutgegaan", { variant: "error" });
-    updateUserMutation.mutate({ ...user, ...data });
+    if (!isSuccess || !user) return enqueueSnackbar("Er is iets foutgegaan", { variant: "error" });
+    updateUserMutation.mutate({ data });
   });
 
-  if (!isSuccess || !navigator.onLine) {
+  if (!isSuccess || !user) {
     return (
       <Card>
         <CardContent>

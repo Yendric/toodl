@@ -3,37 +3,54 @@ import { StaticDateTimePicker } from "@mui/x-date-pickers";
 import { add } from "date-fns";
 import { useEffect, useState, type FC } from "react";
 import { Controller } from "react-hook-form";
-import { useUpdateTodo } from "../../../api/todo/updateTodo";
+import type { TodoResponse } from "../../../api/generated/model";
+import { useTodoUpdate } from "../../../api/generated/toodl";
 import { useZodForm } from "../../../hooks/useZodForm";
 import { updateSchema } from "../../../schemas/todo";
-import { type LocalTodo } from "../../../types/Todo";
 import DestroyModal from "./DestroyModal";
 
 interface Props {
-  todo: LocalTodo;
+  todo: TodoResponse;
   visible: boolean;
   onDismissed: () => void;
 }
 
 const DeadlineModal: FC<Props> = ({ visible, onDismissed, todo }) => {
-  const { handleSubmit, control, reset } = useZodForm({ schema: updateSchema, defaultValues: todo });
+  const { handleSubmit, control, reset } = useZodForm({
+    schema: updateSchema,
+    defaultValues: {
+      ...todo,
+      startTime: todo.startTime ? new Date(todo.startTime) : new Date(),
+      endTime: todo.endTime ? new Date(todo.endTime) : undefined,
+    },
+  });
 
   useEffect(() => {
-    reset(todo);
-  }, [todo]);
+    reset({
+      ...todo,
+      startTime: todo.startTime ? new Date(todo.startTime) : new Date(),
+      endTime: todo.endTime ? new Date(todo.endTime) : undefined,
+    });
+  }, [todo, reset]);
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const smallScreen = window.screen.width < 1280;
 
-  const updateTodoMutation = useUpdateTodo();
+  const updateTodoMutation = useTodoUpdate();
 
   const onSubmit = handleSubmit((data) => {
     onDismissed();
+    const startTime = data.startTime ?? new Date();
+    const endTime = add(startTime, { hours: 1 });
+
     updateTodoMutation.mutate({
-      ...todo,
-      ...data,
-      enableDeadline: true,
-      endTime: add(data.startTime ?? new Date(), { hours: 1 }),
+      todoId: todo.id,
+      data: {
+        ...data,
+        enableDeadline: true,
+        startTime: startTime.toISOString(),
+        endTime: endTime.toISOString(),
+      },
     });
   });
 

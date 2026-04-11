@@ -1,10 +1,9 @@
 import { GoogleOAuthProvider, type CredentialResponse } from "@react-oauth/google";
-import { onlineManager, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { createContext, useContext, useEffect, useState, type FC, type ReactNode } from "react";
-import api from "../api/api";
-import { useUser } from "../api/user/getUser";
-import { isOnline } from "../helpers/isOnline";
+import axiosInstance from "../api/api";
+import { useUserInfo } from "../api/generated/toodl";
 
 type AuthState = {
   logout: () => Promise<void>;
@@ -22,92 +21,38 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [isAuth, setIsAuth] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { enqueueSnackbar } = useSnackbar();
-  const { data: user } = useUser();
+  const { data: user, isLoading: isUserLoading, isError: isUserError } = useUserInfo();
   const queryClient = useQueryClient();
-  const [online, setOnlineState] = useState(false);
-
-  function setOnline(online: boolean) {
-    setOnlineState(online);
-    onlineManager.setOnline(online);
-  }
 
   useEffect(() => {
-    onlineManager.setOnline(false);
-    window.addEventListener("online", () => {
-      (async () => {
-        setOnline(await isOnline());
-      })();
-    });
-    window.addEventListener("offline", () => {
-      (async () => {
-        setOnline(await isOnline());
-      })();
-    });
-
-    const interval = setInterval(() => {
-      (async () => {
-        setOnline(await isOnline());
-      })();
-    }, 5000);
-    (async () => {
-      setOnline(await isOnline());
-    })();
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    checkAuth();
-  }, [online, user]);
+    if (!isUserLoading) {
+      if (user && !isUserError) {
+        setIsAuth(true);
+      } else {
+        setIsAuth(false);
+      }
+      setIsLoading(false);
+    }
+  }, [user, isUserLoading, isUserError]);
 
   async function checkAuth() {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
-    if (await isOnline()) {
-      try {
-        await api("/auth/user_data");
-        setIsAuth(true);
-      } catch {
-        // Er was een error bij het fetchen van de gebruiker, wat impliceert dat deze niet meer ingelogd is
-        setIsAuth(false);
-        // Invalidate queries zodat geen offline todos bij een andere gebruiker terecht zouden komen
-        queryClient.clear();
-      }
-      await Promise.all(
-        queryClient
-          .getMutationCache()
-          .getAll()
-          .map(async (mutation) => {
-            await mutation.continue();
-          }),
-      );
-      queryClient.invalidateQueries();
-    } else {
-      // Er is geen internet, indien er een gebruiker gecachet is door React Query wordt auth op true gezet, anders false
-      setIsAuth(!!user);
-    }
-
-    setIsLoading(false);
+    queryClient.invalidateQueries();
   }
 
-  /* Enkele helper methods voor authenticatie */
-
   async function register(data: { username: string; email: string; password: string }) {
-    await api.post("/auth/register", data);
+    await axiosInstance.post("/auth/register", data);
     checkAuth();
   }
 
   async function login(data: { email: string; password: string }) {
-    await api.post("/auth/login", data);
-
+    await axiosInstance.post("/auth/login", data);
     checkAuth();
     enqueueSnackbar("Succesvol ingelogd");
   }
 
   async function logout() {
-    await api("auth/logout");
-
-    checkAuth();
-    // Invalidate queries zodat geen offline todos bij een andere gebruiker terecht zouden komen
+    await axiosInstance.get("auth/logout");
+    setIsAuth(false);
     queryClient.clear();
     enqueueSnackbar("Succesvol uitgelogd.");
   }
@@ -115,7 +60,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   async function googleLogin(credentialResponse: CredentialResponse) {
     if (!("credential" in credentialResponse)) return;
 
-    await api.post("/auth/google", {
+    await axiosInstance.post("/auth/google", {
       token: credentialResponse.credential,
     });
     checkAuth();

@@ -1,13 +1,13 @@
 import { Box, Button, FormLabel, Input, Modal, TextField, Typography } from "@mui/material";
 import { useState, type FC } from "react";
-import { useUpdateList } from "../../api/list/updateList";
+import { useListUpdate } from "../../api/generated/toodl";
+import { type ListResponse } from "../../api/generated/model";
 import { useZodForm } from "../../hooks/useZodForm";
 import { updateSchema } from "../../schemas/list";
-import { type LocalList } from "../../types/List";
 import DestroyListModal from "./DestroyListModal";
 
 interface Props {
-  list: LocalList;
+  list: ListResponse;
   visible: boolean;
   onDismissed: () => void;
 }
@@ -21,11 +21,11 @@ const EditListModal: FC<Props> = ({ visible, onDismissed, list }) => {
 
   const [destroyModalOpen, setDestroyModalOpen] = useState(false);
 
-  const updateListMutation = useUpdateList();
+  const updateListMutation = useListUpdate();
 
   const onSubmit = handleSubmit((data) => {
     onDismissed();
-    updateListMutation.mutate({ ...list, ...data });
+    updateListMutation.mutate({ listId: list.id, data });
   });
 
   return (

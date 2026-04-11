@@ -2,14 +2,14 @@ import { Box, Button, Checkbox, FormLabel, Modal, Stack, TextField, Typography }
 import { MobileDateTimePicker } from "@mui/x-date-pickers";
 import { useEffect, useState, type FC } from "react";
 import { Controller } from "react-hook-form";
-import { useUpdateTodo } from "../../../api/todo/updateTodo";
+import type { TodoResponse } from "../../../api/generated/model";
+import { useTodoUpdate } from "../../../api/generated/toodl";
 import { useZodForm } from "../../../hooks/useZodForm";
 import { updateSchema } from "../../../schemas/todo";
-import { type LocalTodo } from "../../../types/Todo";
 import DestroyModal from "./DestroyModal";
 
 interface Props {
-  todo: LocalTodo;
+  todo: TodoResponse;
   visible: boolean;
   onDismissed: () => void;
 }
@@ -22,19 +22,37 @@ const EditModal: FC<Props> = ({ visible, onDismissed, todo }) => {
     reset,
     watch,
     formState: { errors },
-  } = useZodForm({ schema: updateSchema, defaultValues: todo });
+  } = useZodForm({
+    schema: updateSchema,
+    defaultValues: {
+      ...todo,
+      startTime: todo.startTime ? new Date(todo.startTime) : new Date(),
+      endTime: todo.endTime ? new Date(todo.endTime) : undefined,
+    },
+  });
 
   useEffect(() => {
-    reset(todo);
-  }, [todo]);
+    reset({
+      ...todo,
+      startTime: todo.startTime ? new Date(todo.startTime) : new Date(),
+      endTime: todo.endTime ? new Date(todo.endTime) : undefined,
+    });
+  }, [todo, reset]);
 
   const [destroyModalOpen, setDestroyModalOpen] = useState(false);
 
-  const updateTodoMutation = useUpdateTodo();
+  const updateTodoMutation = useTodoUpdate();
 
   const onSubmit = handleSubmit((data) => {
     onDismissed();
-    updateTodoMutation.mutate({ ...todo, ...data });
+    updateTodoMutation.mutate({
+      todoId: todo.id,
+      data: {
+        ...data,
+        startTime: data.startTime.toISOString(),
+        endTime: data.endTime?.toISOString(),
+      },
+    });
   });
 
   return (

@@ -1,6 +1,6 @@
 import { Box, Button, Modal, Typography } from "@mui/material";
 import { type FC } from "react";
-import { useDeleteUser } from "../../api/user/destroyUser";
+import { useUserDestroy } from "../../api/generated/toodl";
 
 interface Props {
   visible: boolean;
@@ -8,7 +8,7 @@ interface Props {
 }
 
 const DeleteAccountModal: FC<Props> = ({ visible, onDismissed }) => {
-  const deleteUserMutation = useDeleteUser();
+  const deleteUserMutation = useUserDestroy();
 
   return (
     <Modal

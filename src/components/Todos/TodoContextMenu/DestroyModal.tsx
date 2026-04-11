@@ -1,16 +1,16 @@
 import { Box, Button, Modal, Typography } from "@mui/material";
 import { type FC } from "react";
-import { useDestroyTodo } from "../../../api/todo/destroyTodo";
-import { type LocalTodo } from "../../../types/Todo";
+import type { TodoResponse } from "../../../api/generated/model";
+import { useTodoDestroy } from "../../../api/generated/toodl";
 
 interface Props {
-  todo: LocalTodo;
+  todo: TodoResponse;
   visible: boolean;
   onDismissed: () => void;
 }
 
 const DestroyModal: FC<Props> = ({ todo, visible, onDismissed }) => {
-  const destroyTodoMutation = useDestroyTodo();
+  const destroyTodoMutation = useTodoDestroy();
 
   return (
     <Modal
@@ -42,7 +42,7 @@ const DestroyModal: FC<Props> = ({ todo, visible, onDismissed }) => {
             sx={{ mr: 1 }}
             color="error"
             onClick={() => {
-              destroyTodoMutation.mutate(todo);
+              destroyTodoMutation.mutate({ todoId: todo.id });
               onDismissed();
             }}
           >

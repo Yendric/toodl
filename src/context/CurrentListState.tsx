@@ -1,14 +1,11 @@
 import { createContext, useContext, useEffect, useMemo, type FC, type ReactNode } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
-import { useLists } from "../api/list/getLists";
-import { useDestroyTodo } from "../api/todo/destroyTodo";
-import { useTodos } from "../api/todo/getTodos";
-import type { LocalList } from "../types/List";
-import type { LocalTodo } from "../types/Todo";
+import type { ListResponse, TodoResponse } from "../api/generated/model";
+import { useListIndex, useTodoDestroy, useTodoGetByList } from "../api/generated/toodl";
 
 type CurrentList = {
-  list: LocalList | undefined;
-  listTodos: LocalTodo[];
+  list: ListResponse | undefined;
+  listTodos: TodoResponse[];
   destroyCompleted: () => void;
 };
 
@@ -21,39 +18,42 @@ export const CurrentListProvider: FC<{ children: ReactNode }> = ({ children }) =
 
   const currentListId = Number(searchParams.get("list"));
 
-  const { data: lists, isSuccess: isListSuccess } = useLists();
-  const { data: todos, isSuccess: isTodoSuccess } = useTodos();
-  const deleteTodoMutation = useDestroyTodo();
+  const { data: listsResult, isSuccess: isListSuccess } = useListIndex();
+  const lists = listsResult?.data || [];
+
+  const { data: todosResult, isSuccess: isTodoSuccess } = useTodoGetByList(currentListId, undefined, {
+    query: {
+      enabled: !!currentListId && isListSuccess,
+    },
+  });
+  const listTodos = todosResult?.data || [];
+
+  const deleteTodoMutation = useTodoDestroy();
 
   const list = useMemo(() => {
-    if (!isListSuccess || !isTodoSuccess) return;
-
-    const list = lists.find((find) => find.id === currentListId);
-
-    if (!list) return undefined;
-    return {
-      id: currentListId,
-      list,
-      todos: todos.filter((todo) => todo.listId === list.id),
-    };
-  }, [lists, todos, currentListId]);
+    if (!isListSuccess) return undefined;
+    return lists.find((l) => l.id === currentListId);
+  }, [lists, currentListId, isListSuccess]);
 
   function destroyCompleted() {
-    if (isTodoSuccess && list != undefined)
-      list.todos.filter((todo) => todo.done).map((todo) => deleteTodoMutation.mutate(todo));
+    if (isTodoSuccess && list != undefined) {
+      listTodos
+        .filter((todo) => todo.done)
+        .forEach((todo) => deleteTodoMutation.mutate({ todoId: todo.id }));
+    }
   }
 
   useEffect(() => {
-    if (isListSuccess && searchParams.get("list") == undefined && isTodosRoute) {
+    if (isListSuccess && searchParams.get("list") === null && isTodosRoute && lists.length > 0) {
       setSearchParams({ list: lists[0]!.id.toString() });
     }
-  }, [lists, currentListId]);
+  }, [lists, isListSuccess, searchParams, isTodosRoute, setSearchParams]);
 
   return (
     <CurrentListContext.Provider
       value={{
-        list: list?.list,
-        listTodos: list?.todos || [],
+        list,
+        listTodos,
         destroyCompleted,
       }}
     >

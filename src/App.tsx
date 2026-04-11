@@ -5,18 +5,16 @@ import "@fontsource/roboto/700.css";
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { QueryClientProvider } from "@tanstack/react-query";
 import i18next from "i18next";
 import { useMemo, type FC } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { z } from "zod";
 import { zodI18nMap } from "zod-i18n-map";
 import translation from "zod-i18n-map/locales/nl/zod.json";
-import { setMutationDefaults } from "./api/mutationDefaults";
 import "./App.scss";
 import Router from "./components/Router";
 import { AppStateProvider } from "./context/AppState";
-import { createIDBPersister } from "./helpers/createIDBPersister";
 import { queryClient } from "./queryClient";
 
 /* Zod i18n */
@@ -27,11 +25,6 @@ i18next.init({
   },
 });
 z.setErrorMap(zodI18nMap);
-
-/* React query client */
-
-const persister = createIDBPersister();
-setMutationDefaults();
 
 const App: FC = () => {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -67,13 +60,13 @@ const App: FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <PersistQueryClientProvider client={queryClient} persistOptions={{ persister, maxAge: Infinity }}>
+      <QueryClientProvider client={queryClient}>
         <AppStateProvider>
           <BrowserRouter>
             <Router />
           </BrowserRouter>
         </AppStateProvider>
-      </PersistQueryClientProvider>
+      </QueryClientProvider>
     </ThemeProvider>
   );
 };

@@ -2,15 +2,14 @@ import SaveIcon from "@mui/icons-material/Save";
 import { Checkbox, IconButton, TableCell, TextField, Typography } from "@mui/material";
 import TableRow from "@mui/material/TableRow";
 import { type FC, type KeyboardEvent } from "react";
-import { useToggleTodo } from "../../api/todo/toggleTodo";
-import { useUpdateTodo } from "../../api/todo/updateTodo";
+import type { TodoResponse } from "../../api/generated/model";
+import { useTodoUpdate } from "../../api/generated/toodl";
 import { toDateTimeString } from "../../helpers/dateTime";
 import { useZodForm } from "../../hooks/useZodForm";
 import { updateSchema } from "../../schemas/todo";
-import { type LocalTodo } from "../../types/Todo";
 
 interface Props {
-  todo: LocalTodo;
+  todo: TodoResponse;
   toggleEditing: () => void;
 }
 
@@ -19,17 +18,30 @@ const TodoEditRow: FC<Props> = ({ todo, toggleEditing }) => {
     handleSubmit,
     register,
     formState: { errors },
-  } = useZodForm({ schema: updateSchema, defaultValues: todo });
+  } = useZodForm({
+    schema: updateSchema,
+    defaultValues: {
+      ...todo,
+      startTime: todo.startTime ? new Date(todo.startTime) : new Date(),
+      endTime: todo.endTime ? new Date(todo.endTime) : undefined,
+    },
+  });
 
-  const updateTodoMutation = useUpdateTodo();
-  const toggleTodoMutation = useToggleTodo();
+  const updateTodoMutation = useTodoUpdate();
 
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     if (event.key === "Enter" || event.key === "Escape") onSubmit();
   }
 
   const onSubmit = handleSubmit((data) => {
-    updateTodoMutation.mutate({ ...todo, ...data });
+    updateTodoMutation.mutate({
+      todoId: todo.id,
+      data: {
+        ...data,
+        startTime: data.startTime.toISOString(),
+        endTime: data.endTime?.toISOString(),
+      },
+    });
     toggleEditing();
   });
 
@@ -39,7 +51,12 @@ const TodoEditRow: FC<Props> = ({ todo, toggleEditing }) => {
         <div>
           <Checkbox
             checked={todo.done}
-            onChange={() => toggleTodoMutation.mutate(todo)}
+            onChange={() =>
+              updateTodoMutation.mutate({
+                todoId: todo.id,
+                data: { ...todo, done: !todo.done },
+              })
+            }
             value="primary"
             inputProps={{ "aria-label": "primary checkbox" }}
           />
@@ -58,13 +75,13 @@ const TodoEditRow: FC<Props> = ({ todo, toggleEditing }) => {
             autoFocus
             onBlur={onSubmit}
           />
-          {todo.enableDeadline && (
+          {todo.enableDeadline && todo.startTime && (
             <Typography
               onClick={toggleEditing}
               sx={{ color: "text.secondary", fontSize: "0.75rem" }}
               style={{ textDecoration: todo.done ? "line-through" : "none" }}
             >
-              {toDateTimeString(todo.startTime)}
+              {toDateTimeString(new Date(todo.startTime))}
             </Typography>
           )}
         </div>

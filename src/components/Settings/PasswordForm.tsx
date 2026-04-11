@@ -4,8 +4,7 @@ import { Button, Card, CardContent, Divider, FormControl, Skeleton, TextField, T
 import { type FC } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useUser } from "../../api/user/getUser";
-import { useUpdatePassword } from "../../api/user/updatePassword";
+import { useUserInfo, useUserUpdatePassword } from "../../api/generated/toodl";
 
 const schema = z.object({
   newPassword: z.string().min(8).max(50),
@@ -20,14 +19,22 @@ const PasswordForm: FC = () => {
     register,
     formState: { errors },
   } = useForm<z.infer<typeof schema>>({ resolver: zodResolver(schema) });
-  const { data: user, isSuccess } = useUser();
-  const updatePasswordMutation = useUpdatePassword();
+  const { data: userResult, isSuccess } = useUserInfo();
+  const user = userResult?.data;
+  const updatePasswordMutation = useUserUpdatePassword();
+
   const onSubmit = handleSubmit(async (data) => {
     reset();
-    updatePasswordMutation.mutate({ ...data, ...user });
+    updatePasswordMutation.mutate({
+      data: {
+        newPassword: data.newPassword,
+        confirmPassword: data.confirmPassword,
+        oldPassword: data.oldPassword,
+      },
+    });
   });
 
-  if (!isSuccess || !navigator.onLine) {
+  if (!isSuccess || !user) {
     return (
       <Card sx={{ mt: 2 }}>
         <CardContent>

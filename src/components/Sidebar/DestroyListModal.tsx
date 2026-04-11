@@ -1,16 +1,16 @@
 import { Box, Button, Modal, Typography } from "@mui/material";
 import { type FC } from "react";
-import { useDestroyList } from "../../api/list/destroyList";
-import { type LocalList } from "../../types/List";
+import { useListDestroy } from "../../api/generated/toodl";
+import { type ListResponse } from "../../api/generated/model";
 
 interface Props {
-  list: LocalList;
+  list: ListResponse;
   visible: boolean;
   onDismissed: () => void;
 }
 
 const DestroyListModal: FC<Props> = ({ list, visible, onDismissed }) => {
-  const destroyListMutation = useDestroyList();
+  const destroyListMutation = useListDestroy();
 
   return (
     <Modal
@@ -42,7 +42,7 @@ const DestroyListModal: FC<Props> = ({ list, visible, onDismissed }) => {
             sx={{ mr: 1 }}
             color="error"
             onClick={() => {
-              destroyListMutation.mutate(list);
+              destroyListMutation.mutate({ listId: list.id });
               onDismissed();
             }}
           >
