@@ -7,7 +7,7 @@ import { Box, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemTex
 import Drawer from "@mui/material/Drawer";
 import { useState, type FC } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useLists } from "../../api/list/getLists";
+import { useListIndex } from "../../api/generated/toodl";
 import { useAuth } from "../../context/AuthState";
 import CreateListModal from "./CreateListModal";
 import SidebarItem from "./SidebarItem";
@@ -15,7 +15,8 @@ import SidebarItem from "./SidebarItem";
 const Sidebar: FC = () => {
   const { logout } = useAuth();
 
-  const { data: lists, isSuccess } = useLists();
+  const { data: listsResult, isSuccess } = useListIndex();
+  const lists = listsResult?.data || [];
   const [modalVisible, setModalVisible] = useState(false);
 
   const [open, setOpen] = useState(window.screen.width >= 1280);
@@ -112,7 +113,7 @@ const Sidebar: FC = () => {
         <Divider />
         <List>
           {lists.map((list) => (
-            <SidebarItem key={list.localId} list={list} />
+            <SidebarItem key={list.id} list={list} />
           ))}
         </List>
         <Divider />

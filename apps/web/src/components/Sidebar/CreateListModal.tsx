@@ -1,6 +1,6 @@
 import { Box, Button, FormLabel, Input, Modal, TextField, Typography } from "@mui/material";
 import { type FC } from "react";
-import { useStoreList } from "../../api/list/storeList";
+import { useListStore } from "../../api/generated/toodl";
 import { useZodForm } from "../../hooks/useZodForm";
 import { storeSchema } from "../../schemas/list";
 
@@ -17,12 +17,12 @@ const CreateListModal: FC<Props> = ({ visible, onDismissed }) => {
     formState: { errors },
   } = useZodForm({ schema: storeSchema });
 
-  const createListMutation = useStoreList();
+  const createListMutation = useListStore();
 
   const onSubmit = handleSubmit((list) => {
     onDismissed();
     reset();
-    createListMutation.mutate(list);
+    createListMutation.mutate({ data: list });
   });
 
   return (

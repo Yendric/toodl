@@ -62,15 +62,11 @@ const TodoTable: FC = () => {
                 <caption>Zo te zien heb je nog geen todos in deze lijst, maak er één bovenaan!</caption>
               )}
               <TableBody>
-                {/* <TransitionGroup appear={false} component={null} className="todo-list"> */}
                 {listTodos
                   .filter((todo) => !todo.done)
                   .map((todo) => (
-                    // <CSSTransition key={todo.localId} timeout={200} classNames="todo">
-                    <TodoRow key={todo.localId} todo={todo} />
-                    // </CSSTransition>
+                    <TodoRow key={todo.id} todo={todo} />
                   ))}
-                {/* </TransitionGroup> */}
               </TableBody>
             </Table>
           </TableContainer>
@@ -78,15 +74,11 @@ const TodoTable: FC = () => {
           <TableContainer component={Paper}>
             <Table size="small" aria-label="voltooide todos">
               <TableBody>
-                {/* <TransitionGroup appear={false} component={null} className="todo-list"> */}
                 {listTodos
                   .filter((todo) => todo.done)
                   .map((todo) => (
-                    // <CSSTransition key={todo.localId} timeout={200} classNames="todo">
-                    <TodoRow key={todo.localId} todo={todo} />
-                    // </CSSTransition>
+                    <TodoRow key={todo.id} todo={todo} />
                   ))}
-                {/* </TransitionGroup> */}
               </TableBody>
             </Table>
           </TableContainer>

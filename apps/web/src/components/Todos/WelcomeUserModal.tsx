@@ -33,15 +33,11 @@ const WelcomeUserModal: FC = () => {
         </Typography>
         <Typography sx={{ mb: 2 }}>
           Links zie je een zijbalk met al je lijstjes. Je kan ze kleurtjes en een naam geven, en je kan kiezen of de
-          todos in die lijst een deadline moeten hebben of niet (data).
+          todos in die lijst een deadline moeten hebben of niet.
         </Typography>
         <Typography sx={{ mb: 2 }}>
           In het planningstabblad vind je een overzicht van al je todos, in kalenderformaat. Je kan ook andere deadlines
           integreren door je agenda-ical link in te voeren bij instellingen (rechtsboven).
-        </Typography>
-        <Typography sx={{ mb: 2 }}>
-          Tenslotte is het handig om te weten dat de app ook offline werkt en alle wijzigingen worden gesynchroniseerd
-          zodra u weer online bent.
         </Typography>
         <Typography variant="h6" sx={{ mb: 2 }}>
           Veel plezier!

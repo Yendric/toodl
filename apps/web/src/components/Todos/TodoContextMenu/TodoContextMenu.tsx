@@ -1,12 +1,12 @@
 import { Menu, MenuItem } from "@mui/material";
 import { useState, type FC } from "react";
-import { type LocalTodo } from "../../../types/Todo";
+import type { TodoResponse } from "../../../api/generated/model";
 import DeadlineModal from "./DeadlineModal";
 import DestroyModal from "./DestroyModal";
 import EditModal from "./EditModal";
 
 interface Props {
-  todo: LocalTodo;
+  todo: TodoResponse;
   contextMenu: { mouseX: number; mouseY: number } | null;
   handleClose: () => void;
 }

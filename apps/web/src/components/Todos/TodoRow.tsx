@@ -1,10 +1,10 @@
 import { useState, type FC } from "react";
-import { type LocalTodo } from "../../types/Todo";
+import type { TodoResponse } from "../../api/generated/model";
 import TodoEditRow from "./TodoRowEdit";
 import TodoShowRow from "./TodoRowShow";
 
 interface Props {
-  todo: LocalTodo;
+  todo: TodoResponse;
 }
 
 const TodoRow: FC<Props> = ({ todo }) => {
