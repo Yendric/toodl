@@ -30,7 +30,7 @@ const TodoShowRow: FC<Props> = ({ todo, toggleEditing, provided, isDragging }) =
         onContextMenu={handleContextMenu}
         sx={{
           backgroundColor: isDragging ? "action.hover" : "inherit",
-          display: provided ? "table-row" : "inherit",
+          display: "table-row",
         }}
       >
         <TableCell sx={{ padding: "0 !important", width: 0 }}>

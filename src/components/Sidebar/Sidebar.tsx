@@ -3,6 +3,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsIcon from "@mui/icons-material/Settings";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Box, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import { useState, type FC } from "react";
@@ -27,6 +28,7 @@ const Sidebar: FC = () => {
 
   const location = useLocation();
   const isSettingsRoute = location.pathname === "/settings";
+  const isShoppingSettingsRoute = location.pathname === "/shopping-settings";
 
   const drawerWidth = open ? "16rem" : "56px";
 
@@ -83,6 +85,14 @@ const Sidebar: FC = () => {
         </List>
         <Divider />
         <List>
+          <Link to="/shopping-settings">
+            <ListItemButton selected={isShoppingSettingsRoute}>
+              <ListItemIcon>
+                <ShoppingCartIcon />
+              </ListItemIcon>
+              <ListItemText primary="Winkelinstellingen" />
+            </ListItemButton>
+          </Link>
           <Link to="/settings">
             <ListItemButton selected={isSettingsRoute}>
               <ListItemIcon>
