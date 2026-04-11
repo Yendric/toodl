@@ -1,7 +1,7 @@
 import { GoogleOAuthProvider, type CredentialResponse } from "@react-oauth/google";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { createContext, useContext, useEffect, useState, type FC, type ReactNode } from "react";
+import { createContext, useContext, type FC, type ReactNode } from "react";
 import axiosInstance from "../api/api";
 import { useUserInfo } from "../api/generated/toodl";
 
@@ -18,22 +18,11 @@ type AuthState = {
 export const AuthContext = createContext<AuthState | undefined>(undefined);
 
 export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const [isAuth, setIsAuth] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const { enqueueSnackbar } = useSnackbar();
-  const { data: user, isLoading: isUserLoading, isError: isUserError } = useUserInfo();
+  const { data: user, isSuccess, isLoading } = useUserInfo();
   const queryClient = useQueryClient();
 
-  useEffect(() => {
-    if (!isUserLoading) {
-      if (user && !isUserError) {
-        setIsAuth(true);
-      } else {
-        setIsAuth(false);
-      }
-      setIsLoading(false);
-    }
-  }, [user, isUserLoading, isUserError]);
+  const isAuth = isSuccess && !!user;
 
   async function checkAuth() {
     queryClient.invalidateQueries();
@@ -52,7 +41,6 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   async function logout() {
     await axiosInstance.get("auth/logout");
-    setIsAuth(false);
     queryClient.clear();
     enqueueSnackbar("Succesvol uitgelogd.");
   }

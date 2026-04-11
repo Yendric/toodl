@@ -1,9 +1,9 @@
 import { Button, Card, CardActions, CardContent, Typography } from "@mui/material";
 import { useEffect, type FC } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router";
 import { useAuth } from "../../context/AuthState";
 
-const LandingContainer: FC = () => {
+const Landing: FC = () => {
   const { isAuth } = useAuth();
   const navigate = useNavigate();
 
@@ -11,7 +11,7 @@ const LandingContainer: FC = () => {
     if (isAuth) {
       navigate("/todos");
     }
-  }, [isAuth]);
+  }, [isAuth, navigate]);
 
   const images = [
     "https://unsplash.com/photos/2JknzBYDu6k/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjY0NzI2OTc3&force=true&w=2400",
@@ -60,4 +60,4 @@ const LandingContainer: FC = () => {
   );
 };
 
-export default LandingContainer;
+export default Landing;

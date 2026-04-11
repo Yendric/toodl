@@ -1,11 +1,11 @@
 import { Container } from "@mui/material";
 import Link from "@mui/material/Link";
 import { type FC } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink } from "react-router";
 
-const PrivacyContainer: FC = () => {
+const Privacy: FC = () => {
   return (
-    <Container>
+    <Container sx={{ py: 4 }}>
       <h1>Privacybeleid</h1>
       <p>
         Yendric Van Roey bouwde de Toodl app als een Open Source app. Deze DIENST wordt gratis ter beschikking gesteld
@@ -41,7 +41,7 @@ const PrivacyContainer: FC = () => {
         <strong>Log Gegevens</strong>
       </p>
       <p>
-        Ik wil u informeren dat wanneer u gebruik maakt van mijn Dienst, in een geval van een fout in de app ik gegevens
+        Ik wilt u informeren dat wanneer u gebruik maakt van mijn Dienst, in een geval van een fout in de app ik gegevens
         en informatie verzamel (via producten van derden) op uw telefoon genaamd Log Data. Deze Logdata kunnen
         informatie bevatten zoals het Internet Protocol (&quot;IP&quot;) adres van uw toestel, de naam van uw toestel,
         de versie van uw besturingssysteem, de configuratie van de app bij het gebruik van mijn Service, de tijd en
@@ -72,7 +72,7 @@ const PrivacyContainer: FC = () => {
         <li>Om ons te helpen bij het analyseren van hoe onze Service wordt gebruikt.</li>
       </ul>
       <p>
-        Ik wil gebruikers van deze Dienst informeren dat deze derden toegang hebben tot hun Persoonlijke Gegevens. De
+        Ik wilt gebruikers van deze Dienst informeren dat deze derden toegang hebben tot hun Persoonlijke Gegevens. De
         reden hiervoor is om de taken uit te voeren die hen namens ons zijn toegewezen. Zij zijn echter verplicht de
         informatie niet voor andere doeleinden openbaar te maken of te gebruiken.
       </p>
@@ -129,4 +129,4 @@ const PrivacyContainer: FC = () => {
   );
 };
 
-export default PrivacyContainer;
+export default Privacy;

@@ -1,7 +1,7 @@
 import { Box, Button, FormLabel, Input, Modal, TextField, Typography } from "@mui/material";
 import { useState, type FC } from "react";
-import { useListUpdate } from "../../api/generated/toodl";
 import { type ListResponse } from "../../api/generated/model";
+import { useListUpdate } from "../../api/generated/toodl";
 import { useZodForm } from "../../hooks/useZodForm";
 import { updateSchema } from "../../schemas/list";
 import DestroyListModal from "./DestroyListModal";
@@ -57,7 +57,7 @@ const EditListModal: FC<Props> = ({ visible, onDismissed, list }) => {
           <form onSubmit={onSubmit} noValidate>
             <FormLabel>Naam</FormLabel>
             <TextField
-              inputProps={register("name")}
+              {...register("name")}
               error={!!errors.name}
               helperText={errors.name?.message}
               variant="outlined"

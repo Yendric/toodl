@@ -52,7 +52,7 @@ const CreateListModal: FC<Props> = ({ visible, onDismissed }) => {
         <form onSubmit={onSubmit} noValidate>
           <FormLabel>Naam</FormLabel>
           <TextField
-            inputProps={register("name")}
+            {...register("name")}
             error={!!errors.name}
             helperText={errors.name?.message}
             variant="outlined"

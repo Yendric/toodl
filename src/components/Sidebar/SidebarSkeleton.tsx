@@ -3,31 +3,12 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { Box, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
+import { Box, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Skeleton, Typography } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
-import { useState, type FC } from "react";
-import { Link, useLocation } from "react-router";
-import type { ListResponse } from "../../api/generated/model";
-import { useListIndexSuspense } from "../../api/generated/toodl";
-import { useAuth } from "../../context/AuthState";
-import CreateListModal from "./CreateListModal";
-import SidebarItem from "./SidebarItem";
+import { type FC } from "react";
 
-const Sidebar: FC = () => {
-  const { logout } = useAuth();
-
-  const { data: lists } = useListIndexSuspense();
-  const [modalVisible, setModalVisible] = useState(false);
-
-  const [open, setOpen] = useState(window.screen.width >= 1280);
-
-  const handleDrawerToggle = () => {
-    setOpen(!open);
-  };
-
-  const location = useLocation();
-  const isSettingsRoute = location.pathname === "/settings";
-
+const SidebarSkeleton: FC = () => {
+  const open = window.screen.width >= 1280;
   const drawerWidth = open ? "16rem" : "56px";
 
   return (
@@ -50,8 +31,8 @@ const Sidebar: FC = () => {
         open={open}
       >
         <List>
-          <ListItem  >
-            <ListItemButton onClick={handleDrawerToggle}>
+          <ListItem >
+            <ListItemButton>
               <ListItemIcon>
                 {open ? (
                   <>
@@ -68,13 +49,20 @@ const Sidebar: FC = () => {
         <Divider />
         <Divider />
         <List>
-          {lists.map((list: ListResponse) => (
-            <SidebarItem key={list.id} list={list} />
+          {[1, 2, 3].map((i) => (
+            <ListItem key={i}>
+              <ListItemIcon>
+                <Skeleton variant="circular" width={24} height={24} />
+              </ListItemIcon>
+              <ListItemText>
+                <Skeleton height={24} width={100} />
+              </ListItemText>
+            </ListItem>
           ))}
         </List>
         <Divider />
         <List>
-          <ListItemButton onClick={() => setModalVisible(true)}>
+          <ListItemButton disabled>
             <ListItemIcon>
               <AddCircleIcon />
             </ListItemIcon>
@@ -83,16 +71,14 @@ const Sidebar: FC = () => {
         </List>
         <Divider />
         <List>
-          <Link to="/settings">
-            <ListItemButton selected={isSettingsRoute}>
-              <ListItemIcon>
-                <SettingsIcon />
-              </ListItemIcon>
-              <ListItemText primary="Instellingen" />
-            </ListItemButton>
-          </Link>
-          <ListItem disablePadding>
-            <ListItemButton onClick={logout}>
+          <ListItemButton disabled>
+            <ListItemIcon>
+              <SettingsIcon />
+            </ListItemIcon>
+            <ListItemText primary="Instellingen" />
+          </ListItemButton>
+          <ListItem >
+            <ListItemButton disabled>
               <ListItemIcon>
                 <LogoutIcon />
               </ListItemIcon>
@@ -100,10 +86,9 @@ const Sidebar: FC = () => {
             </ListItemButton>
           </ListItem>
         </List>
-        <CreateListModal visible={modalVisible} onDismissed={() => setModalVisible(false)} />
       </Drawer>
     </Box>
   );
 };
 
-export default Sidebar;
+export default SidebarSkeleton;

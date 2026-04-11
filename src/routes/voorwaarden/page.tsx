@@ -1,9 +1,9 @@
 import { Container } from "@mui/material";
 import { type FC } from "react";
 
-const AlgemeneVoorwaardenContainer: FC = () => {
+const Voorwaarden: FC = () => {
   return (
-    <Container>
+    <Container sx={{ py: 4 }}>
       <h1>Algemene voorwaarden</h1>
       <p>
         Door de app te downloaden of te gebruiken, zijn deze voorwaarden automatisch op u van toepassing - u dient er
@@ -61,7 +61,7 @@ const AlgemeneVoorwaardenContainer: FC = () => {
         Het is mogelijk dat we op een bepaald moment de app willen updaten. De app is momenteel beschikbaar op Android
         en iOS (als PWA) - de vereisten voor het systeem (en voor eventuele bijkomende systemen waar we beslissen de
         beschikbaarheid van de app naar uit te breiden) kunnen veranderen, en u zult de updates moeten downloaden als u
-        de app wil blijven gebruiken. Yendric Van Roey belooft niet dat zij de app altijd zal updaten zodat deze
+        de app wilt blijven gebruiken. Yendric Van Roey belooft niet dat zij de app altijd zal updaten zodat deze
         relevant is voor u en/of werkt met de Android of iOS versie die u op uw toestel hebt geïnstalleerd. U belooft
         echter dat u altijd updates van de applicatie aanvaardt wanneer die aan u worden aangeboden, We kunnen ook
         willen stoppen met het aanbieden van de app, en kunnen het gebruik ervan op elk moment beëindigen zonder u
@@ -89,4 +89,4 @@ const AlgemeneVoorwaardenContainer: FC = () => {
   );
 };
 
-export default AlgemeneVoorwaardenContainer;
+export default Voorwaarden;

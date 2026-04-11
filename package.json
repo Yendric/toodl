@@ -1,68 +1,60 @@
 {
-  "name": "toodlv2",
-  "version": "0.1.0",
-  "private": true,
+  "name": "toodl",
+  "version": "2.0.0",
+  "license": "MIT",
+  "author": "Yendric Van Roey",
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@fontsource/roboto": "^5.0.8",
+    "@hello-pangea/dnd": "^18.0.1",
     "@hookform/resolvers": "^3.3.0",
-    "@mui/icons-material": "^5.15.17",
-    "@mui/material": "^5.15.17",
-    "@mui/x-date-pickers": "^6.11.2",
+    "@mui/icons-material": "^9.0.0",
+    "@mui/material": "^9.0.0",
+    "@mui/x-date-pickers": "^9.0.0",
     "@react-oauth/google": "^0.11.1",
-    "@tanstack/react-query": "^4.33.0",
-    "@vitejs/plugin-react": "^4.0.4",
+    "@tanstack/react-query": "^5.99.0",
     "axios": "^1.6.0",
-    "cldr-data": "^36.0.1",
-    "date-fns": "^2.30.0",
+    "date-fns": "^4.1.0",
+    "fractional-indexing": "^3.2.0",
     "i18next": "^23.4.4",
     "notistack": "^3.0.1",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
     "react-hook-form": "^7.45.4",
-    "react-router-dom": "^6.15.0",
-    "typescript": "^5.1.6",
-    "vite": "^4.4.9",
+    "react-router": "^7.14.0",
+    "workbox-window": "^7.4.0",
     "zod": "^3.22.3",
     "zod-i18n-map": "^2.15.0"
   },
   "scripts": {
     "dev": "vite --open --port=3000 --host=localhost",
-    "build": "tsc && vite build",
-    "lint": "eslint src/**/*.{js,jsx,ts,tsx,json}",
-    "lint:fix": "eslint --fix src/**/*.{js,jsx,ts,tsx,json}",
-    "format": "prettier --write src/**/*.{js,jsx,ts,tsx,css,md,json} --config ./.prettierrc.json"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "build": "vite build",
+    "lint": "eslint .",
+    "format:check": "prettier --check .",
+    "format:fix": "prettier --write ."
   },
   "type": "module",
   "devDependencies": {
-    "@types/node": "^20.5.2",
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.4.1",
-    "@typescript-eslint/parser": "^6.4.1",
-    "eslint": "^8.47.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.0.0",
-    "eslint-plugin-react": "^7.33.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.12.2",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "eslint": "^10.2.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^17.4.0",
     "orval": "^8.7.0",
     "prettier": "^3.0.2",
-    "prettier-plugin-organize-imports": "^3.2.3",
     "sass": "^1.66.1",
-    "vite-plugin-pwa": "^0.16.4"
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.58.1",
+    "vite": "^8.0.8",
+    "vite-plugin-pwa": "^1.2.0"
   },
-  "packageManager": "yarn@1.22.21+sha1.1959a18351b811cdeedbd484a8f86c3cc3bbaf72"
+  "imports": {
+    "#/*": "./src/*"
+  },
+  "packageManager": "pnpm@10.33.0+sha512.10568bb4a6afb58c9eb3630da90cc9516417abebd3fabbe6739f0ae795728da1491e9db5a544c76ad8eb7570f5c4bb3d6c637b2cb41bfdcdb47fa823c8649319"
 }

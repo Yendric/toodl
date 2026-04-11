@@ -49,7 +49,7 @@ const EditModal: FC<Props> = ({ visible, onDismissed, todo }) => {
       todoId: todo.id,
       data: {
         ...data,
-        startTime: data.startTime.toISOString(),
+        startTime: data.startTime?.toISOString() || new Date().toISOString(),
         endTime: data.endTime?.toISOString(),
       },
     });
@@ -87,7 +87,7 @@ const EditModal: FC<Props> = ({ visible, onDismissed, todo }) => {
                 <FormLabel>Onderwerp</FormLabel>
                 <TextField
                   multiline={true}
-                  inputProps={register("subject")}
+                  {...register("subject")}
                   error={!!errors.subject}
                   helperText={errors.subject?.message}
                   variant="outlined"
@@ -99,7 +99,7 @@ const EditModal: FC<Props> = ({ visible, onDismissed, todo }) => {
                 <FormLabel>Omschrijving</FormLabel>
                 <TextField
                   multiline={true}
-                  inputProps={register("description")}
+                  {...register("description")}
                   error={!!errors.description}
                   helperText={errors.description?.message}
                   variant="outlined"
@@ -111,7 +111,7 @@ const EditModal: FC<Props> = ({ visible, onDismissed, todo }) => {
               <div>
                 <FormLabel>Locatie</FormLabel>
                 <TextField
-                  inputProps={register("location")}
+                  {...register("location")}
                   error={!!errors.location}
                   helperText={errors.location?.message}
                   variant="outlined"

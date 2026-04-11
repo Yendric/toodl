@@ -8,6 +8,7 @@ export default defineConfig({
       target: './src/api/generated/toodl.ts',
       schemas: './src/api/generated/model',
       client: 'react-query',
+      httpClient: 'axios',
       override: {
         operationName: (operation, route, verb) => {
           const tag = (operation.tags?.[0] || '').toLowerCase();
@@ -20,6 +21,7 @@ export default defineConfig({
         },
         query: {
           useQuery: true,
+          useSuspenseQuery: true,
           useInfinite: false,
         },
       },
