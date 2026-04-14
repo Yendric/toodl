@@ -8,7 +8,6 @@ interface Props {
 }
 
 const DestroyCompletedModal: FC<Props> = ({ visible, onDismissed, destroyCompleted }) => {
-
   return (
     <Modal
       open={visible}

@@ -15,7 +15,7 @@ const TodosLoading: FC = () => {
             <Skeleton width={100} />
           </Typography>
         </Box>
-        <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center' }}>
+        <Box sx={{ mb: 2, display: "flex", justifyContent: "center" }}>
           <Skeleton width="25rem" height={40} />
         </Box>
         <Container sx={{ p: 0 }} maxWidth="md">

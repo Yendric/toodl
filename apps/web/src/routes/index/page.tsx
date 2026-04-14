@@ -9,7 +9,7 @@ const Landing: FC = () => {
 
   useEffect(() => {
     if (isAuth) {
-      navigate("/todos");
+      void navigate("/todos", { viewTransition: true });
     }
   }, [isAuth, navigate]);
 
@@ -51,7 +51,7 @@ const Landing: FC = () => {
           </Typography>
         </CardContent>
         <CardActions>
-          <Link to="/login">
+          <Link to="/login" viewTransition>
             <Button>Aan de slag!</Button>
           </Link>
         </CardActions>

@@ -6,73 +6,57 @@ import {
   FormHelperText,
   IconButton,
   InputAdornment,
-  OutlinedInput
+  OutlinedInput,
+  Button,
 } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import { type FC } from "react";
-import { type FieldError } from "react-hook-form";
 
 interface Props {
   value: string[] | undefined;
-  onChange: (event: { target: { value: string[] } }) => void;
-  error: FieldError[] | undefined;
+  onChange: (value: string[]) => void;
+  errors?: string[];
 }
 
-const IcalInput: FC<Props> = ({ value, onChange, error }) => {
-  function setIcals(icals: string[]) {
-    onChange({ target: { value: icals } });
-  }
-
+const IcalInput: FC<Props> = ({ value = [], onChange, errors }) => {
   function addIcal() {
-    if (value === undefined) return;
-    setIcals([...value, ""]);
+    onChange([...value, ""]);
   }
 
   function deleteIcal(removeIndex: number) {
-    if (value === undefined) return;
-    setIcals(value.filter((_, index) => index != removeIndex));
+    onChange(value.filter((_, index) => index !== removeIndex));
   }
 
   function setIcal(editIndex: number, newValue: string) {
-    if (value === undefined) return;
-    setIcals(
-      value.map((old, index) => {
-        if (index === editIndex) {
-          return newValue;
-        } else {
-          return old;
-        }
-      }),
-    );
+    onChange(value.map((old, index) => (index === editIndex ? newValue : old)));
   }
 
   return (
-    <Box sx={{ mb: 2, mt: -2 }}>
+    <Box sx={{ mb: 2 }}>
       <FormGroup>
-        {value &&
-          value.map((ical, index) => (
-            <FormControl fullWidth key={index} sx={{ mb: 0.5 }}>
-              <OutlinedInput
-                sx={{ mr: 1 }}
-                size="small"
-                value={ical}
-                onChange={(event) => setIcal(index, event.target.value)}
-                error={error && !!error[index]}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton aria-label="Verwijder rij" edge="end" onClick={() => deleteIcal(index)}>
-                      <DeleteIcon fontSize="small" />
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-              {error && error[index] && (
-                <FormHelperText color="red" error={true} component="p">
-                  {error[index].message}
-                </FormHelperText>
-              )}
-            </FormControl>
-          ))}
+        {value.map((ical, index) => (
+          <FormControl fullWidth key={index} sx={{ mb: 1 }}>
+            <OutlinedInput
+              size="small"
+              placeholder="https://example.com/calendar.ics"
+              value={ical}
+              onChange={(event) => setIcal(index, event.target.value)}
+              error={!!errors?.[index]}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton aria-label="Verwijder rij" edge="end" onClick={() => deleteIcal(index)}>
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+            {errors?.[index] && <FormHelperText error={true}>{errors[index]}</FormHelperText>}
+          </FormControl>
+        ))}
       </FormGroup>
+      <Button startIcon={<AddIcon />} onClick={addIcal} size="small" variant="outlined" sx={{ mt: 1 }}>
+        iCal toevoegen
+      </Button>
     </Box>
   );
 };

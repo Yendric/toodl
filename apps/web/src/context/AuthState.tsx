@@ -1,9 +1,9 @@
+import { Box, Typography } from "@mui/material";
 import { GoogleOAuthProvider, type CredentialResponse } from "@react-oauth/google";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { createContext, useContext, type FC, type ReactNode } from "react";
-import axiosInstance from "../api/api";
-import { useUserInfo } from "../api/generated/toodl";
+import { createContext, useCallback, useContext, useMemo, type FC, type ReactNode } from "react";
+import { authGoogle, authLogin, authLogout, authRegister, useUserInfo } from "../api/generated/toodl";
 
 type AuthState = {
   logout: () => Promise<void>;
@@ -19,54 +19,72 @@ export const AuthContext = createContext<AuthState | undefined>(undefined);
 
 export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const { enqueueSnackbar } = useSnackbar();
-  const { data: user, isSuccess, isLoading } = useUserInfo();
+  const { data: user, isSuccess, isLoading } = useUserInfo({ query: { retry: false } });
   const queryClient = useQueryClient();
 
-  const isAuth = isSuccess && !!user;
+  const isAuth: boolean = isSuccess && !!user;
 
-  async function checkAuth() {
-    queryClient.invalidateQueries();
-  }
+  const checkAuth = useCallback(() => {
+    void queryClient.invalidateQueries();
+  }, [queryClient]);
 
-  async function register(data: { username: string; email: string; password: string }) {
-    await axiosInstance.post("/auth/register", data);
-    checkAuth();
-  }
+  const register = useCallback(
+    async (data: { username: string; email: string; password: string }) => {
+      await authRegister(data);
+      checkAuth();
+    },
+    [checkAuth],
+  );
 
-  async function login(data: { email: string; password: string }) {
-    await axiosInstance.post("/auth/login", data);
-    checkAuth();
-    enqueueSnackbar("Succesvol ingelogd");
-  }
+  const login = useCallback(
+    async (data: { email: string; password: string }) => {
+      await authLogin(data);
+      checkAuth();
+      enqueueSnackbar("Succesvol ingelogd");
+    },
+    [checkAuth, enqueueSnackbar],
+  );
 
-  async function logout() {
-    await axiosInstance.get("auth/logout");
+  const logout = useCallback(async () => {
+    await authLogout();
     queryClient.clear();
     enqueueSnackbar("Succesvol uitgelogd.");
-  }
+  }, [queryClient, enqueueSnackbar]);
 
-  async function googleLogin(credentialResponse: CredentialResponse) {
-    if (!("credential" in credentialResponse)) return;
+  const googleLogin = useCallback(
+    async (credentialResponse: CredentialResponse) => {
+      if (!("credential" in credentialResponse) || !credentialResponse.credential) return;
 
-    await axiosInstance.post("/auth/google", {
-      token: credentialResponse.credential,
-    });
-    checkAuth();
-  }
+      await authGoogle({
+        token: credentialResponse.credential,
+      });
+      checkAuth();
+    },
+    [checkAuth],
+  );
+
+  const value: AuthState = useMemo(
+    () => ({ isAuth, isLoading, logout, googleLogin, checkAuth, register, login }),
+    [isAuth, isLoading, logout, googleLogin, checkAuth, register, login],
+  );
 
   if (!import.meta.env.VITE_GOOGLE_CLIENT_ID) {
-    return "Geen GOOGLE_CLIENT_ID ingesteld in .env";
+    return (
+      <Box sx={{ p: 4, textAlign: "center" }}>
+        <Typography color="error">Geen GOOGLE_CLIENT_ID ingesteld in .env</Typography>
+      </Box>
+    );
   }
 
   return (
-    <AuthContext.Provider value={{ isAuth, isLoading, logout, googleLogin, checkAuth, register, login }}>
-      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>{children}</GoogleOAuthProvider>
+    <AuthContext.Provider value={value}>
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID as string}>{children}</GoogleOAuthProvider>
     </AuthContext.Provider>
   );
 };
 
 export function useAuth(): AuthState {
   const context = useContext(AuthContext);
-  if (context === undefined) throw new Error("Context gebruikt zonder contextprovider.");
+  if (!context) throw new Error("Context gebruikt zonder contextprovider.");
   return context;
 }

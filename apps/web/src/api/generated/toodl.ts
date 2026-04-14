@@ -29,6 +29,8 @@ import type {
 
 import type {
   AuthResponse,
+  CategoryPredictRequest,
+  CategoryPredictResponse,
   CategoryRequest,
   CategoryResponse,
   GoogleLoginRequest,
@@ -1660,6 +1662,64 @@ const {mutation: mutationOptions} = options ?
         TContext
       > => {
       return useMutation(getListDestroyMutationOptions(options), queryClient);
+    }
+
+export const categoryPredict = (
+    categoryPredictRequest: CategoryPredictRequest,
+ signal?: AbortSignal
+) => {
+
+
+      return api<CategoryPredictResponse>(
+      {url: `/categories/predict`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: categoryPredictRequest, signal
+    },
+      );
+    }
+
+
+
+export const getCategoryPredictMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof categoryPredict>>, TError,{data: CategoryPredictRequest}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof categoryPredict>>, TError,{data: CategoryPredictRequest}, TContext> => {
+
+const mutationKey = ['categoryPredict'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof categoryPredict>>, {data: CategoryPredictRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  categoryPredict(data,)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CategoryPredictMutationResult = NonNullable<Awaited<ReturnType<typeof categoryPredict>>>
+    export type CategoryPredictMutationBody = CategoryPredictRequest
+    export type CategoryPredictMutationError = unknown
+
+    export const useCategoryPredict = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof categoryPredict>>, TError,{data: CategoryPredictRequest}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof categoryPredict>>,
+        TError,
+        {data: CategoryPredictRequest},
+        TContext
+      > => {
+      return useMutation(getCategoryPredictMutationOptions(options), queryClient);
     }
 
 export const categoryIndex = (

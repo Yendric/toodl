@@ -1,63 +1,45 @@
-import { Box, Button, Checkbox, FormLabel, Modal, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, FormLabel, Modal, Stack, Typography } from "@mui/material";
 import { MobileDateTimePicker } from "@mui/x-date-pickers";
-import { useEffect, useState, type FC } from "react";
-import { Controller } from "react-hook-form";
+import { type FC } from "react";
 import type { TodoResponse } from "../../../api/generated/model";
 import { useTodoUpdate } from "../../../api/generated/toodl";
+import { TodoUpdateBody } from "../../../api/generated/toodlApi.zod";
 import { useZodForm } from "../../../hooks/useZodForm";
-import { updateSchema } from "../../../schemas/todo";
-import DestroyModal from "./DestroyModal";
+import { ZodCheckbox } from "../../Form/ZodCheckbox";
+import { ZodTextField } from "../../Form/ZodTextField";
 
 interface Props {
   todo: TodoResponse;
   visible: boolean;
   onDismissed: () => void;
+  onDeleteClicked: () => void;
 }
 
-const EditModal: FC<Props> = ({ visible, onDismissed, todo }) => {
-  const {
-    handleSubmit,
-    register,
-    control,
-    reset,
-    watch,
-    formState: { errors },
-  } = useZodForm({
-    schema: updateSchema,
-    defaultValues: {
-      ...todo,
-      startTime: todo.startTime ? new Date(todo.startTime) : new Date(),
-      endTime: todo.endTime ? new Date(todo.endTime) : undefined,
-    },
-  });
-
-  useEffect(() => {
-    reset({
-      ...todo,
-      startTime: todo.startTime ? new Date(todo.startTime) : new Date(),
-      endTime: todo.endTime ? new Date(todo.endTime) : undefined,
-    });
-  }, [todo, reset]);
-
-  const [destroyModalOpen, setDestroyModalOpen] = useState(false);
-
+const EditModal: FC<Props> = ({ visible, onDismissed, onDeleteClicked, todo }) => {
   const updateTodoMutation = useTodoUpdate();
 
-  const onSubmit = handleSubmit((data) => {
-    onDismissed();
-    updateTodoMutation.mutate({
-      todoId: todo.id,
-      data: {
-        ...data,
-        startTime: data.startTime?.toISOString() || new Date().toISOString(),
-        endTime: data.endTime?.toISOString(),
-      },
-    });
+  const form = useZodForm(TodoUpdateBody, {
+    defaultValues: {
+      ...todo,
+      startTime: todo.startTime ?? new Date().toISOString(),
+      endTime: todo.endTime,
+      categoryId: todo.categoryId || null,
+    },
+    onSubmit: ({ value }) => {
+      onDismissed();
+      updateTodoMutation.mutate({
+        todoId: todo.id,
+        data: {
+          ...value,
+          startTime: value.startTime,
+          endTime: value.endTime,
+        },
+      });
+    },
   });
 
   return (
     <>
-      <DestroyModal todo={todo} visible={destroyModalOpen} onDismissed={() => setDestroyModalOpen(false)} />
       <Modal
         open={visible}
         onClose={onDismissed}
@@ -81,93 +63,90 @@ const EditModal: FC<Props> = ({ visible, onDismissed, todo }) => {
             Todo bewerken
           </Typography>
 
-          <form onSubmit={onSubmit} noValidate>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              void form.handleSubmit();
+            }}
+            noValidate
+          >
             <Stack sx={{ marginTop: "1rem", marginBottom: "1rem" }} spacing={1}>
               <div>
                 <FormLabel>Onderwerp</FormLabel>
-                <TextField
-                  multiline={true}
-                  {...register("subject")}
-                  error={!!errors.subject}
-                  helperText={errors.subject?.message}
-                  variant="outlined"
-                  size="small"
-                  fullWidth
-                />
+                <form.Field name="subject">
+                  {(field) => <ZodTextField field={field} multiline={true} variant="outlined" size="small" fullWidth />}
+                </form.Field>
               </div>
               <div>
                 <FormLabel>Omschrijving</FormLabel>
-                <TextField
-                  multiline={true}
-                  {...register("description")}
-                  error={!!errors.description}
-                  helperText={errors.description?.message}
-                  variant="outlined"
-                  size="small"
-                  fullWidth
-                  rows={2}
-                />
+                <form.Field name="description">
+                  {(field) => (
+                    <ZodTextField field={field} multiline={true} variant="outlined" size="small" fullWidth rows={2} />
+                  )}
+                </form.Field>
               </div>
               <div>
                 <FormLabel>Locatie</FormLabel>
-                <TextField
-                  {...register("location")}
-                  error={!!errors.location}
-                  helperText={errors.location?.message}
-                  variant="outlined"
-                  size="small"
-                  fullWidth
-                />
+                <form.Field name="location">
+                  {(field) => <ZodTextField field={field} variant="outlined" size="small" fullWidth />}
+                </form.Field>
               </div>
               <div>
                 <FormLabel>Deadline inschakelen</FormLabel>
-                <Checkbox {...register("enableDeadline")} defaultChecked={todo.enableDeadline ?? false} />
+                <form.Field name="enableDeadline">
+                  {(field) => (
+                    <ZodCheckbox field={field} />
+                  )}
+                </form.Field>
               </div>
-              {watch("enableDeadline") && (
-                <div>
-                  <FormLabel>Start & eindtijd</FormLabel>
-                  <div>
-                    <Controller
-                      control={control}
-                      name="startTime"
-                      render={({ field: { onChange, value } }) => (
-                        <MobileDateTimePicker
-                          value={value}
-                          onChange={onChange}
-                          slotProps={{ textField: { size: "small", variant: "outlined" } }}
-                          format="dd/MM/yy HH:mm"
-                        />
-                      )}
-                    />
-                    <Controller
-                      control={control}
-                      name="endTime"
-                      render={({ field: { onChange, value } }) => (
-                        <MobileDateTimePicker
-                          value={value}
-                          onChange={onChange}
-                          slotProps={{ textField: { size: "small", variant: "outlined" } }}
-                          format="dd/MM/yy HH:mm"
-                        />
-                      )}
-                    />
-                  </div>
-                </div>
-              )}
+              <form.Subscribe selector={(state) => [state.values.enableDeadline]}>
+                {([enableDeadline]) =>
+                  enableDeadline ? (
+                    <div>
+                      <FormLabel>Start & eindtijd</FormLabel>
+                      <Stack direction="row" spacing={1}>
+                        <form.Field name="startTime">
+                          {(field) => (
+                            <MobileDateTimePicker
+                              value={new Date(field.state.value ?? new Date())}
+                              onChange={(val) => field.handleChange(val?.toISOString() ?? new Date().toISOString())}
+                              slotProps={{ textField: { size: "small", variant: "outlined" } }}
+                              format="dd/MM/yy HH:mm"
+                            />
+                          )}
+                        </form.Field>
+                        <form.Field name="endTime">
+                          {(field) => (
+                            <MobileDateTimePicker
+                              value={field.state.value ? new Date(field.state.value) : null}
+                              onChange={(val) => field.handleChange(val?.toISOString() ?? new Date().toISOString())}
+                              slotProps={{ textField: { size: "small", variant: "outlined" } }}
+                              format="dd/MM/yy HH:mm"
+                            />
+                          )}
+                        </form.Field>
+                      </Stack>
+                    </div>
+                  ) : null
+                }
+              </form.Subscribe>
             </Stack>
             <Box sx={{ mt: 1 }}>
-              <Button type="submit" sx={{ mr: 1 }} variant="contained" color="primary">
-                Opslaan
-              </Button>
-              <Button
-                type="button"
-                onClick={() => {
-                  setDestroyModalOpen(true);
-                  onDismissed();
-                }}
-                variant="contained"
-                color="error"
-              >
+              <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
+                {([canSubmit, isSubmitting]) => (
+                  <Button
+                    type="submit"
+                    sx={{ mr: 1 }}
+                    variant="contained"
+                    color="primary"
+                    disabled={!canSubmit || isSubmitting}
+                  >
+                    {isSubmitting ? "Laden..." : "Opslaan"}
+                  </Button>
+                )}
+              </form.Subscribe>
+              <Button type="button" onClick={onDeleteClicked} variant="contained" color="error">
                 Verwijderen
               </Button>
             </Box>

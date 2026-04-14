@@ -6,6 +6,10 @@
  * OpenAPI spec version: 2.0.0
  */
 
-export type IndexParams = {
-  storeId?: number;
-};
+export interface CategoryPredictRequest {
+  /**
+     * @minLength 1
+     * @maxLength 300
+     */
+  itemName: string;
+}

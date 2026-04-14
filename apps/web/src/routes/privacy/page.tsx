@@ -41,8 +41,8 @@ const Privacy: FC = () => {
         <strong>Log Gegevens</strong>
       </p>
       <p>
-        Ik wilt u informeren dat wanneer u gebruik maakt van mijn Dienst, in een geval van een fout in de app ik gegevens
-        en informatie verzamel (via producten van derden) op uw telefoon genaamd Log Data. Deze Logdata kunnen
+        Ik wilt u informeren dat wanneer u gebruik maakt van mijn Dienst, in een geval van een fout in de app ik
+        gegevens en informatie verzamel (via producten van derden) op uw telefoon genaamd Log Data. Deze Logdata kunnen
         informatie bevatten zoals het Internet Protocol (&quot;IP&quot;) adres van uw toestel, de naam van uw toestel,
         de versie van uw besturingssysteem, de configuratie van de app bij het gebruik van mijn Service, de tijd en
         datum van uw gebruik van de Service, en andere statistieken.

@@ -4,6 +4,7 @@ import { useState, type FC, type MouseEvent } from "react";
 import { Link } from "react-router";
 import type { ListResponse } from "../../api/generated/model";
 import { useCurrentList } from "../../context/CurrentListState";
+import DestroyListModal from "./DestroyListModal";
 import EditListModal from "./EditListModal";
 
 type Props = {
@@ -12,18 +13,18 @@ type Props = {
 
 const SidebarItem: FC<Props> = ({ list }) => {
   const currentList = useCurrentList();
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMode, setModalMode] = useState<"hidden" | "edit" | "delete">("hidden");
 
   return (
     <>
-      <Link to={`/todos?${new URLSearchParams({ list: list.id.toString() })}`}>
+      <Link to={`/todos?${new URLSearchParams({ list: list.id.toString() })}`} viewTransition>
         <ListItemButton
           selected={currentList.list?.id === list.id}
           key={list.id}
-          onDoubleClick={() => setModalVisible(true)}
+          onDoubleClick={() => setModalMode("edit")}
           onContextMenu={(e: MouseEvent) => {
             e.preventDefault();
-            setModalVisible(true);
+            setModalMode("edit");
           }}
         >
           <ListItemIcon>
@@ -52,7 +53,14 @@ const SidebarItem: FC<Props> = ({ list }) => {
           <ListItemText primary={list.name} />
         </ListItemButton>
       </Link>
-      <EditListModal visible={modalVisible} onDismissed={() => setModalVisible(false)} list={list} />
+      <EditListModal
+        key={list.id}
+        list={list}
+        visible={modalMode === "edit"}
+        onDismissed={() => setModalMode("hidden")}
+        onDeleteRequest={() => setModalMode("delete")}
+      />
+      <DestroyListModal list={list} visible={modalMode === "delete"} onDismissed={() => setModalMode("hidden")} />
     </>
   );
 };

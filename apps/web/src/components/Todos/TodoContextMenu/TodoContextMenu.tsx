@@ -47,9 +47,15 @@ const TodoContextMenu: FC<Props> = ({ todo, contextMenu, handleClose }) => {
           Verwijderen
         </MenuItem>
       </Menu>
-      <EditModal todo={todo} visible={openModal === "edit"} onDismissed={() => setOpenModal(null)} />
-      <DeadlineModal todo={todo} visible={openModal === "deadline"} onDismissed={() => setOpenModal(null)} />
-      <DestroyModal todo={todo} visible={openModal === "delete"} onDismissed={() => setOpenModal(null)} />
+      <EditModal
+        key={`edit-${todo.id}`}
+        todo={todo}
+        visible={openModal === "edit"}
+        onDismissed={() => setOpenModal(null)}
+        onDeleteClicked={() => setOpenModal("delete")}
+      />
+      <DeadlineModal key={`deadline-${todo.id}`} todo={todo} visible={openModal === "deadline"} onDismissed={() => setOpenModal(null)} />
+      <DestroyModal key={`delete-${todo.id}`} todo={todo} visible={openModal === "delete"} onDismissed={() => setOpenModal(null)} />
     </>
   );
 };

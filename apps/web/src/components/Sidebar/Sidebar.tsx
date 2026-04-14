@@ -4,7 +4,18 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { Box, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
+import {
+  Box,
+  Divider,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import { useState, type FC } from "react";
 import { Link, useLocation } from "react-router";
@@ -16,14 +27,17 @@ import SidebarItem from "./SidebarItem";
 
 const Sidebar: FC = () => {
   const { logout } = useAuth();
+  const theme = useTheme();
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up("lg"));
 
   const { data: lists } = useListIndexSuspense();
   const [modalVisible, setModalVisible] = useState(false);
+  const [userControlledOpen, setUserControlledOpen] = useState<boolean | null>(null);
 
-  const [open, setOpen] = useState(window.screen.width >= 1280);
+  const open = userControlledOpen ?? isLargeScreen;
 
   const handleDrawerToggle = () => {
-    setOpen(!open);
+    setUserControlledOpen(!open);
   };
 
   const location = useLocation();
@@ -36,40 +50,41 @@ const Sidebar: FC = () => {
     <Box component="nav">
       <Drawer
         sx={{
-          width: window.screen.width < 1280 ? "56px" : drawerWidth,
-          transition: "width 225ms cubic-bezier(0, 0, 0.2, 1) 0ms",
+          width: drawerWidth,
+          transition: theme.transitions.create("width", {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+          }),
           whiteSpace: "nowrap",
-        }}
-        slotProps={{
-          paper: {
-            sx: {
-              width: drawerWidth,
-              transition: "width 225ms cubic-bezier(0, 0, 0.2, 1) 0ms",
+          "& .MuiDrawer-paper": {
+            width: drawerWidth,
+            transition: theme.transitions.create("width", {
+              easing: theme.transitions.easing.sharp,
+              duration: theme.transitions.duration.enteringScreen,
+            }),
+            overflowX: "hidden",
+            "& .MuiListItemText-root": {
+              opacity: open ? 1 : 0,
             },
-          }
+          },
         }}
         variant="permanent"
         open={open}
       >
         <List>
-          <ListItem  >
-            <ListItemButton onClick={handleDrawerToggle}>
-              <ListItemIcon>
-                {open ? (
-                  <>
-                    <ChevronLeftIcon />
-                    <Typography sx={{ marginLeft: "1rem" }}>Toodl</Typography>
-                  </>
-                ) : (
-                  <MenuIcon />
-                )}
-              </ListItemIcon>
+          <ListItem disablePadding>
+            <ListItemButton onClick={handleDrawerToggle} sx={{ height: 48 }}>
+              <ListItemIcon sx={{ minWidth: open ? 40 : 24 }}>{open ? <ChevronLeftIcon /> : <MenuIcon />}</ListItemIcon>
+              {open && (
+                <Typography variant="h6" sx={{ ml: 1 }}>
+                  Toodl
+                </Typography>
+              )}
             </ListItemButton>
           </ListItem>
         </List>
         <Divider />
-        <Divider />
-        <List>
+        <List sx={{ flexGrow: 1, overflowY: "auto", overflowX: "hidden" }}>
           {lists.map((list: ListResponse) => (
             <SidebarItem key={list.id} list={list} />
           ))}
@@ -85,7 +100,7 @@ const Sidebar: FC = () => {
         </List>
         <Divider />
         <List>
-          <Link to="/shopping-settings">
+          <Link to="/shopping-settings" viewTransition style={{ textDecoration: "none", color: "inherit" }}>
             <ListItemButton selected={isShoppingSettingsRoute}>
               <ListItemIcon>
                 <ShoppingCartIcon />
@@ -93,7 +108,7 @@ const Sidebar: FC = () => {
               <ListItemText primary="Winkelinstellingen" />
             </ListItemButton>
           </Link>
-          <Link to="/settings">
+          <Link to="/settings" viewTransition style={{ textDecoration: "none", color: "inherit" }}>
             <ListItemButton selected={isSettingsRoute}>
               <ListItemIcon>
                 <SettingsIcon />
@@ -102,7 +117,11 @@ const Sidebar: FC = () => {
             </ListItemButton>
           </Link>
           <ListItem disablePadding>
-            <ListItemButton onClick={logout}>
+            <ListItemButton
+              onClick={() => {
+                void logout();
+              }}
+            >
               <ListItemIcon>
                 <LogoutIcon />
               </ListItemIcon>

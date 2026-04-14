@@ -6,13 +6,11 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { QueryClientProvider } from "@tanstack/react-query";
-import i18next from "i18next";
 import { Suspense, useMemo, type FC } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { z } from "zod";
-import { zodI18nMap } from "zod-i18n-map";
-import translation from "zod-i18n-map/locales/nl/zod.json";
 import "./App.scss";
+import DashboardLayout from "./components/DashboardLayout";
 import Error404 from "./components/Errors/Error404";
 import { AppStateProvider } from "./context/AppState";
 import { AuthProvider } from "./context/AuthState";
@@ -22,8 +20,6 @@ import LandingLoading from "./routes/index/loading";
 import LandingPage from "./routes/index/page";
 import LoginLoading from "./routes/login/loading";
 import LoginPage from "./routes/login/page";
-import PrivacyLoading from "./routes/privacy/loading";
-import PrivacyPage from "./routes/privacy/page";
 import RegisterLoading from "./routes/register/loading";
 import RegisterPage from "./routes/register/page";
 import Root from "./routes/root";
@@ -36,14 +32,7 @@ import TodosPage from "./routes/todos/page";
 import VoorwaardenLoading from "./routes/voorwaarden/loading";
 import VoorwaardenPage from "./routes/voorwaarden/page";
 
-/* Zod i18n */
-i18next.init({
-  lng: "nl",
-  resources: {
-    nl: { zod: translation },
-  },
-});
-z.setErrorMap(zodI18nMap);
+z.config(z.locales.nl());
 
 const router = createBrowserRouter([
   {
@@ -76,44 +65,41 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "todos",
-        element: (
-          <Suspense fallback={<TodosLoading />}>
-            <TodosPage />
-          </Suspense>
-        ),
-      },
-      {
-        path: "settings",
-        element: (
-          <Suspense fallback={<SettingsLoading />}>
-            <SettingsPage />
-          </Suspense>
-        ),
-      },
-      {
-        path: "shopping-settings",
-        element: (
-          <Suspense fallback={<ShoppingSettingsLoading />}>
-            <ShoppingSettingsPage />
-          </Suspense>
-        ),
-      },
-      {
-        path: "privacy",
-        element: (
-          <Suspense fallback={<PrivacyLoading />}>
-            <PrivacyPage />
-          </Suspense>
-        ),
-      },
-      {
         path: "voorwaarden",
         element: (
           <Suspense fallback={<VoorwaardenLoading />}>
             <VoorwaardenPage />
           </Suspense>
         ),
+      },
+      {
+        element: <DashboardLayout />,
+        children: [
+          {
+            path: "todos",
+            element: (
+              <Suspense fallback={<TodosLoading />}>
+                <TodosPage />
+              </Suspense>
+            ),
+          },
+          {
+            path: "settings",
+            element: (
+              <Suspense fallback={<SettingsLoading />}>
+                <SettingsPage />
+              </Suspense>
+            ),
+          },
+          {
+            path: "shopping-settings",
+            element: (
+              <Suspense fallback={<ShoppingSettingsLoading />}>
+                <ShoppingSettingsPage />
+              </Suspense>
+            ),
+          },
+        ],
       },
       {
         path: "*",

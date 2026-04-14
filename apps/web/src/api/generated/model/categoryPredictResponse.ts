@@ -6,6 +6,7 @@
  * OpenAPI spec version: 2.0.0
  */
 
-export type IndexParams = {
-  storeId?: number;
-};
+export interface CategoryPredictResponse {
+  /** @nullable */
+  categoryName: string | null;
+}

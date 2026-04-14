@@ -9,7 +9,7 @@
 export interface CategoryRequest {
   /**
      * @minLength 1
-     * @maxLength 50
+     * @maxLength 300
      */
   name: string;
 }
