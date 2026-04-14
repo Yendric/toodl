@@ -1,1610 +1,1551 @@
 {
-	"openapi": "3.0.0",
-	"components": {
-		"examples": {},
-		"headers": {},
-		"parameters": {},
-		"requestBodies": {},
-		"responses": {},
-		"schemas": {
-			"UserInfoResponse": {
-				"properties": {
-					"email": {
-						"type": "string"
-					},
-					"username": {
-						"type": "string"
-					},
-					"onlyLinked": {
-						"type": "boolean"
-					},
-					"dailyNotification": {
-						"type": "boolean"
-					},
-					"reminderNotification": {
-						"type": "boolean"
-					},
-					"nowNotification": {
-						"type": "boolean"
-					},
-					"icalUrls": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"email",
-					"username",
-					"onlyLinked",
-					"dailyNotification",
-					"reminderNotification",
-					"nowNotification",
-					"icalUrls"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"MessageResponse": {
-				"properties": {
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"UserUpdateRequest": {
-				"properties": {
-					"email": {
-						"type": "string",
-						"format": "email",
-						"minLength": 3,
-						"maxLength": 50
-					},
-					"username": {
-						"type": "string",
-						"minLength": 1,
-						"maxLength": 50
-					},
-					"icalUrls": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array",
-						"maxItems": 10
-					},
-					"dailyNotification": {
-						"type": "boolean"
-					},
-					"reminderNotification": {
-						"type": "boolean"
-					},
-					"nowNotification": {
-						"type": "boolean"
-					}
-				},
-				"required": [
-					"email",
-					"username",
-					"icalUrls",
-					"dailyNotification",
-					"reminderNotification",
-					"nowNotification"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"PasswordUpdateRequest": {
-				"properties": {
-					"newPassword": {
-						"type": "string",
-						"minLength": 8,
-						"maxLength": 50
-					},
-					"confirmPassword": {
-						"type": "string",
-						"minLength": 8,
-						"maxLength": 50
-					},
-					"oldPassword": {
-						"type": "string",
-						"minLength": 8,
-						"maxLength": 50
-					}
-				},
-				"required": [
-					"newPassword",
-					"confirmPassword"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"TodoResponse": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"subject": {
-						"type": "string"
-					},
-					"description": {
-						"type": "string",
-						"nullable": true
-					},
-					"enableDeadline": {
-						"type": "boolean",
-						"nullable": true
-					},
-					"isAllDay": {
-						"type": "boolean",
-						"nullable": true
-					},
-					"location": {
-						"type": "string",
-						"nullable": true
-					},
-					"recurrenceRule": {
-						"type": "string",
-						"nullable": true
-					},
-					"startTimezone": {
-						"type": "string",
-						"nullable": true
-					},
-					"endTimezone": {
-						"type": "string",
-						"nullable": true
-					},
-					"startTime": {
-						"type": "string",
-						"format": "date-time",
-						"nullable": true
-					},
-					"endTime": {
-						"type": "string",
-						"format": "date-time",
-						"nullable": true
-					},
-					"recurrenceException": {
-						"type": "string",
-						"nullable": true
-					},
-					"position": {
-						"type": "string"
-					},
-					"done": {
-						"type": "boolean"
-					},
-					"listId": {
-						"type": "number",
-						"format": "double",
-						"nullable": true
-					},
-					"userId": {
-						"type": "number",
-						"format": "double"
-					},
-					"categoryId": {
-						"type": "number",
-						"format": "double",
-						"nullable": true
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"updatedAt": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"id",
-					"subject",
-					"description",
-					"enableDeadline",
-					"isAllDay",
-					"location",
-					"recurrenceRule",
-					"startTimezone",
-					"endTimezone",
-					"startTime",
-					"endTime",
-					"recurrenceException",
-					"position",
-					"done",
-					"listId",
-					"userId",
-					"categoryId",
-					"createdAt",
-					"updatedAt"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"TodoCreateRequest": {
-				"properties": {
-					"done": {
-						"type": "boolean"
-					},
-					"subject": {
-						"type": "string",
-						"minLength": 1,
-						"maxLength": 255
-					},
-					"enableDeadline": {
-						"type": "boolean",
-						"nullable": true
-					},
-					"description": {
-						"type": "string",
-						"nullable": true,
-						"maxLength": 255
-					},
-					"isAllDay": {
-						"type": "boolean",
-						"nullable": true
-					},
-					"location": {
-						"type": "string",
-						"nullable": true,
-						"maxLength": 255
-					},
-					"recurrenceRule": {
-						"type": "string",
-						"nullable": true,
-						"maxLength": 255
-					},
-					"recurrenceException": {
-						"type": "string",
-						"nullable": true,
-						"maxLength": 255
-					},
-					"startTimezone": {
-						"type": "string",
-						"nullable": true,
-						"maxLength": 255
-					},
-					"endTimezone": {
-						"type": "string",
-						"nullable": true,
-						"maxLength": 255
-					},
-					"startTime": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "string",
-								"format": "date-time"
-							}
-						]
-					},
-					"endTime": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "string",
-								"format": "date-time"
-							}
-						],
-						"nullable": true
-					},
-					"listId": {
-						"type": "number",
-						"format": "double",
-						"nullable": true
-					},
-					"position": {
-						"type": "string",
-						"maxLength": 255
-					},
-					"categoryId": {
-						"type": "number",
-						"format": "double",
-						"nullable": true
-					}
-				},
-				"required": [
-					"subject"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"StoreResponse": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"name": {
-						"type": "string"
-					},
-					"userId": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"updatedAt": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"id",
-					"name",
-					"userId",
-					"createdAt",
-					"updatedAt"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"StoreRequest": {
-				"properties": {
-					"name": {
-						"type": "string",
-						"minLength": 1,
-						"maxLength": 50
-					}
-				},
-				"required": [
-					"name"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"StoreCategoryOrderResponse": {
-				"properties": {
-					"storeId": {
-						"type": "number",
-						"format": "double"
-					},
-					"categoryId": {
-						"type": "number",
-						"format": "double"
-					},
-					"position": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"storeId",
-					"categoryId",
-					"position"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"StoreCategoryOrderRequest": {
-				"properties": {
-					"categoryId": {
-						"type": "number",
-						"format": "double"
-					},
-					"position": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"categoryId",
-					"position"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"_36_Enums.ListType": {
-				"type": "string",
-				"enum": [
-					"REGULAR",
-					"SHOPPING"
-				]
-			},
-			"ListType": {
-				"$ref": "#/components/schemas/_36_Enums.ListType"
-			},
-			"ListResponse": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"name": {
-						"type": "string"
-					},
-					"color": {
-						"type": "string"
-					},
-					"type": {
-						"$ref": "#/components/schemas/ListType"
-					},
-					"userId": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"updatedAt": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"id",
-					"name",
-					"color",
-					"type",
-					"userId",
-					"createdAt",
-					"updatedAt"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ListRequest": {
-				"properties": {
-					"name": {
-						"type": "string",
-						"minLength": 1,
-						"maxLength": 20
-					},
-					"color": {
-						"type": "string",
-						"pattern": "^#[0-9A-Fa-f]{6}$"
-					},
-					"type": {
-						"$ref": "#/components/schemas/ListType"
-					}
-				},
-				"required": [
-					"name",
-					"color"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CategoryResponse": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"name": {
-						"type": "string"
-					},
-					"userId": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"updatedAt": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"id",
-					"name",
-					"userId",
-					"createdAt",
-					"updatedAt"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CategoryRequest": {
-				"properties": {
-					"name": {
-						"type": "string",
-						"minLength": 1,
-						"maxLength": 50
-					}
-				},
-				"required": [
-					"name"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"AuthResponse": {
-				"properties": {
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"LoginRequest": {
-				"properties": {
-					"email": {
-						"type": "string",
-						"format": "email",
-						"minLength": 3,
-						"maxLength": 50
-					},
-					"password": {
-						"type": "string",
-						"minLength": 8,
-						"maxLength": 50
-					}
-				},
-				"required": [
-					"email",
-					"password"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"RegisterRequest": {
-				"properties": {
-					"username": {
-						"type": "string",
-						"minLength": 1,
-						"maxLength": 50
-					},
-					"email": {
-						"type": "string",
-						"format": "email",
-						"minLength": 3,
-						"maxLength": 50
-					},
-					"password": {
-						"type": "string",
-						"minLength": 8,
-						"maxLength": 50
-					}
-				},
-				"required": [
-					"username",
-					"email",
-					"password"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"GoogleLoginRequest": {
-				"properties": {
-					"token": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"token"
-				],
-				"type": "object",
-				"additionalProperties": false
-			}
-		},
-		"securitySchemes": {
-			"session": {
-				"type": "apiKey",
-				"name": "toodl_session",
-				"in": "cookie"
-			}
-		}
-	},
-	"info": {
-		"title": "toodl-api",
-		"version": "2.0.0",
-		"description": "Toodl Api",
-		"license": {
-			"name": "MIT"
-		},
-		"contact": {
-			"name": "Yendric Van Roey"
-		}
-	},
-	"paths": {
-		"/auth/user_data": {
-			"get": {
-				"operationId": "Info",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/UserInfoResponse"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"User"
-				],
-				"security": [
-					{
-						"session": []
-					}
-				],
-				"parameters": []
-			},
-			"post": {
-				"operationId": "Update",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/MessageResponse"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"User"
-				],
-				"security": [
-					{
-						"session": []
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/UserUpdateRequest"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/auth/user_data/destroy": {
-			"post": {
-				"operationId": "Destroy",
-				"responses": {
-					"200": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/MessageResponse"
-								}
-							}
-						}
-					},
-					"204": {
-						"description": "No content"
-					},
-					"500": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/MessageResponse"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"User"
-				],
-				"security": [
-					{
-						"session": []
-					}
-				],
-				"parameters": []
-			}
-		},
-		"/auth/user_data/update_password": {
-			"post": {
-				"operationId": "UpdatePassword",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/MessageResponse"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"User"
-				],
-				"security": [
-					{
-						"session": []
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/PasswordUpdateRequest"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/todos": {
-			"get": {
-				"operationId": "Index",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/TodoResponse"
-									},
-									"type": "array"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Todo"
-				],
-				"deprecated": true,
-				"security": [
-					{
-						"session": []
-					}
-				],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "storeId",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			},
-			"post": {
-				"operationId": "Store",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/TodoResponse"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Todo"
-				],
-				"security": [
-					{
-						"session": []
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/TodoCreateRequest"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/todos/list/{listId}": {
-			"get": {
-				"operationId": "GetByList",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/TodoResponse"
-									},
-									"type": "array"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Todo"
-				],
-				"security": [
-					{
-						"session": []
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "listId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "storeId",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			}
-		},
-		"/todos/{todoId}": {
-			"post": {
-				"operationId": "Update",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/TodoResponse"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Todo"
-				],
-				"security": [
-					{
-						"session": []
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "todoId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/TodoCreateRequest"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "Destroy",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "boolean"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Todo"
-				],
-				"security": [
-					{
-						"session": []
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "todoId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			}
-		},
-		"/stores": {
-			"get": {
-				"operationId": "Index",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/StoreResponse"
-									},
-									"type": "array"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Store"
-				],
-				"security": [
-					{
-						"session": []
-					}
-				],
-				"parameters": []
-			},
-			"post": {
-				"operationId": "Store",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/StoreResponse"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Store"
-				],
-				"security": [
-					{
-						"session": []
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/StoreRequest"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/stores/{storeId}": {
-			"post": {
-				"operationId": "Update",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/StoreResponse"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Store"
-				],
-				"security": [
-					{
-						"session": []
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "storeId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/StoreRequest"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "Destroy",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "boolean"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Store"
-				],
-				"security": [
-					{
-						"session": []
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "storeId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			}
-		},
-		"/stores/{storeId}/order": {
-			"get": {
-				"operationId": "GetOrder",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/StoreCategoryOrderResponse"
-									},
-									"type": "array"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Store"
-				],
-				"security": [
-					{
-						"session": []
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "storeId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			},
-			"post": {
-				"operationId": "UpdateOrder",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "boolean"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Store"
-				],
-				"security": [
-					{
-						"session": []
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "storeId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"items": {
-									"$ref": "#/components/schemas/StoreCategoryOrderRequest"
-								},
-								"type": "array"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/lists": {
-			"get": {
-				"operationId": "Index",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/ListResponse"
-									},
-									"type": "array"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"List"
-				],
-				"security": [
-					{
-						"session": []
-					}
-				],
-				"parameters": []
-			},
-			"post": {
-				"operationId": "Store",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ListResponse"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"List"
-				],
-				"security": [
-					{
-						"session": []
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/ListRequest"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/lists/{listId}": {
-			"post": {
-				"operationId": "Update",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ListResponse"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"List"
-				],
-				"security": [
-					{
-						"session": []
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "listId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/ListRequest"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "Destroy",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "boolean"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"List"
-				],
-				"security": [
-					{
-						"session": []
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "listId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			}
-		},
-		"/categories": {
-			"get": {
-				"operationId": "Index",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/CategoryResponse"
-									},
-									"type": "array"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Category"
-				],
-				"security": [
-					{
-						"session": []
-					}
-				],
-				"parameters": []
-			},
-			"post": {
-				"operationId": "Store",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/CategoryResponse"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Category"
-				],
-				"security": [
-					{
-						"session": []
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/CategoryRequest"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/categories/{categoryId}": {
-			"post": {
-				"operationId": "Update",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/CategoryResponse"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Category"
-				],
-				"security": [
-					{
-						"session": []
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "categoryId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/CategoryRequest"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "Destroy",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "boolean"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Category"
-				],
-				"security": [
-					{
-						"session": []
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "categoryId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			}
-		},
-		"/auth/login": {
-			"post": {
-				"operationId": "Login",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/AuthResponse"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Auth"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/LoginRequest"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/auth/register": {
-			"post": {
-				"operationId": "Register",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/AuthResponse"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Auth"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/RegisterRequest"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/auth/logout": {
-			"get": {
-				"operationId": "Logout",
-				"responses": {
-					"200": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/AuthResponse"
-								}
-							}
-						}
-					},
-					"204": {
-						"description": "No content"
-					},
-					"500": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/AuthResponse"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Auth"
-				],
-				"security": [],
-				"parameters": []
-			}
-		},
-		"/auth/google": {
-			"post": {
-				"operationId": "Google",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/AuthResponse"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Auth"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/GoogleLoginRequest"
-							}
-						}
-					}
-				}
-			}
-		}
-	},
-	"servers": [
-		{
-			"url": "/"
-		}
-	]
+  "openapi": "3.0.0",
+  "components": {
+    "examples": {},
+    "headers": {},
+    "parameters": {},
+    "requestBodies": {},
+    "responses": {},
+    "schemas": {
+      "UserInfoResponse": {
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "onlyLinked": {
+            "type": "boolean"
+          },
+          "dailyNotification": {
+            "type": "boolean"
+          },
+          "reminderNotification": {
+            "type": "boolean"
+          },
+          "nowNotification": {
+            "type": "boolean"
+          },
+          "icalUrls": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "email",
+          "username",
+          "onlyLinked",
+          "dailyNotification",
+          "reminderNotification",
+          "nowNotification",
+          "icalUrls"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "MessageResponse": {
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": ["message"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "UserUpdateRequest": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 3,
+            "maxLength": 50
+          },
+          "username": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          "icalUrls": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 10
+          },
+          "dailyNotification": {
+            "type": "boolean"
+          },
+          "reminderNotification": {
+            "type": "boolean"
+          },
+          "nowNotification": {
+            "type": "boolean"
+          }
+        },
+        "required": ["email", "username", "icalUrls", "dailyNotification", "reminderNotification", "nowNotification"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "PasswordUpdateRequest": {
+        "properties": {
+          "newPassword": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 50
+          },
+          "confirmPassword": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 50
+          },
+          "oldPassword": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 50
+          }
+        },
+        "required": ["newPassword", "confirmPassword"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "TodoResponse": {
+        "properties": {
+          "id": {
+            "type": "number",
+            "format": "double"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "enableDeadline": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isAllDay": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "location": {
+            "type": "string",
+            "nullable": true
+          },
+          "recurrenceRule": {
+            "type": "string",
+            "nullable": true
+          },
+          "startTimezone": {
+            "type": "string",
+            "nullable": true
+          },
+          "endTimezone": {
+            "type": "string",
+            "nullable": true
+          },
+          "startTime": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "endTime": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "recurrenceException": {
+            "type": "string",
+            "nullable": true
+          },
+          "position": {
+            "type": "string"
+          },
+          "done": {
+            "type": "boolean"
+          },
+          "listId": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "userId": {
+            "type": "number",
+            "format": "double"
+          },
+          "categoryId": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "subject",
+          "description",
+          "enableDeadline",
+          "isAllDay",
+          "location",
+          "recurrenceRule",
+          "startTimezone",
+          "endTimezone",
+          "startTime",
+          "endTime",
+          "recurrenceException",
+          "position",
+          "done",
+          "listId",
+          "userId",
+          "categoryId",
+          "createdAt",
+          "updatedAt"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "TodoCreateRequest": {
+        "properties": {
+          "done": {
+            "type": "boolean"
+          },
+          "subject": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "enableDeadline": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "isAllDay": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "location": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "recurrenceRule": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "recurrenceException": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "startTimezone": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "endTimezone": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "startTime": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string",
+                "format": "date-time"
+              }
+            ]
+          },
+          "endTime": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string",
+                "format": "date-time"
+              }
+            ],
+            "nullable": true
+          },
+          "listId": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "position": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "categoryId": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "required": ["subject"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "StoreResponse": {
+        "properties": {
+          "id": {
+            "type": "number",
+            "format": "double"
+          },
+          "name": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "number",
+            "format": "double"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["id", "name", "userId", "createdAt", "updatedAt"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "StoreRequest": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          }
+        },
+        "required": ["name"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "StoreCategoryOrderResponse": {
+        "properties": {
+          "storeId": {
+            "type": "number",
+            "format": "double"
+          },
+          "categoryId": {
+            "type": "number",
+            "format": "double"
+          },
+          "position": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "required": ["storeId", "categoryId", "position"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "StoreCategoryOrderRequest": {
+        "properties": {
+          "categoryId": {
+            "type": "number",
+            "format": "double"
+          },
+          "position": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "required": ["categoryId", "position"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "_36_Enums.ListType": {
+        "type": "string",
+        "enum": ["REGULAR", "SHOPPING"]
+      },
+      "ListType": {
+        "$ref": "#/components/schemas/_36_Enums.ListType"
+      },
+      "ListResponse": {
+        "properties": {
+          "id": {
+            "type": "number",
+            "format": "double"
+          },
+          "name": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/ListType"
+          },
+          "userId": {
+            "type": "number",
+            "format": "double"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["id", "name", "color", "type", "userId", "createdAt", "updatedAt"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "ListRequest": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9A-Fa-f]{6}$"
+          },
+          "type": {
+            "$ref": "#/components/schemas/ListType"
+          }
+        },
+        "required": ["name", "color"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "CategoryPredictResponse": {
+        "properties": {
+          "categoryName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": ["categoryName"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "CategoryPredictRequest": {
+        "properties": {
+          "itemName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          }
+        },
+        "required": ["itemName"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "CategoryResponse": {
+        "properties": {
+          "id": {
+            "type": "number",
+            "format": "double"
+          },
+          "name": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "number",
+            "format": "double"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["id", "name", "userId", "createdAt", "updatedAt"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "CategoryRequest": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          }
+        },
+        "required": ["name"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "AuthResponse": {
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": ["message"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "LoginRequest": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 3,
+            "maxLength": 50
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 50
+          }
+        },
+        "required": ["email", "password"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "RegisterRequest": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 3,
+            "maxLength": 50
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 50
+          }
+        },
+        "required": ["username", "email", "password"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "GoogleLoginRequest": {
+        "properties": {
+          "token": {
+            "type": "string"
+          }
+        },
+        "required": ["token"],
+        "type": "object",
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "session": {
+        "type": "apiKey",
+        "name": "toodl_session",
+        "in": "cookie"
+      }
+    }
+  },
+  "info": {
+    "title": "toodl-api",
+    "version": "2.0.0",
+    "description": "Toodl Api",
+    "license": {
+      "name": "MIT"
+    },
+    "contact": {
+      "name": "Yendric Van Roey"
+    }
+  },
+  "paths": {
+    "/auth/user_data": {
+      "get": {
+        "operationId": "Info",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInfoResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["User"],
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": []
+      },
+      "post": {
+        "operationId": "Update",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["User"],
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdateRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/user_data/destroy": {
+      "post": {
+        "operationId": "Destroy",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No content"
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["User"],
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": []
+      }
+    },
+    "/auth/user_data/update_password": {
+      "post": {
+        "operationId": "UpdatePassword",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["User"],
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordUpdateRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/todos": {
+      "get": {
+        "operationId": "Index",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/TodoResponse"
+                  },
+                  "type": "array"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Todo"],
+        "deprecated": true,
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "storeId",
+            "required": false,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          }
+        ]
+      },
+      "post": {
+        "operationId": "Store",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TodoResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Todo"],
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TodoCreateRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/todos/list/{listId}": {
+      "get": {
+        "operationId": "GetByList",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/TodoResponse"
+                  },
+                  "type": "array"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Todo"],
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "listId",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "storeId",
+            "required": false,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/todos/{todoId}": {
+      "post": {
+        "operationId": "Update",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TodoResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Todo"],
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "todoId",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TodoCreateRequest"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "Destroy",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Todo"],
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "todoId",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/stores": {
+      "get": {
+        "operationId": "Index",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/StoreResponse"
+                  },
+                  "type": "array"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Store"],
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": []
+      },
+      "post": {
+        "operationId": "Store",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoreResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Store"],
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StoreRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stores/{storeId}": {
+      "post": {
+        "operationId": "Update",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoreResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Store"],
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "storeId",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StoreRequest"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "Destroy",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Store"],
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "storeId",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/stores/{storeId}/order": {
+      "get": {
+        "operationId": "GetOrder",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/StoreCategoryOrderResponse"
+                  },
+                  "type": "array"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Store"],
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "storeId",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          }
+        ]
+      },
+      "post": {
+        "operationId": "UpdateOrder",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Store"],
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "storeId",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "items": {
+                  "$ref": "#/components/schemas/StoreCategoryOrderRequest"
+                },
+                "type": "array"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/lists": {
+      "get": {
+        "operationId": "Index",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ListResponse"
+                  },
+                  "type": "array"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["List"],
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": []
+      },
+      "post": {
+        "operationId": "Store",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["List"],
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ListRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/lists/{listId}": {
+      "post": {
+        "operationId": "Update",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["List"],
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "listId",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ListRequest"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "Destroy",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["List"],
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "listId",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/categories/predict": {
+      "post": {
+        "operationId": "Predict",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryPredictResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Category"],
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CategoryPredictRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categories": {
+      "get": {
+        "operationId": "Index",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/CategoryResponse"
+                  },
+                  "type": "array"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Category"],
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": []
+      },
+      "post": {
+        "operationId": "Store",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Category"],
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CategoryRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categories/{categoryId}": {
+      "post": {
+        "operationId": "Update",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Category"],
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "categoryId",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CategoryRequest"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "Destroy",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Category"],
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "categoryId",
+            "required": true,
+            "schema": {
+              "format": "double",
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "Login",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Auth"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "operationId": "Register",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Auth"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "get": {
+        "operationId": "Logout",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No content"
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Auth"],
+        "security": [],
+        "parameters": []
+      }
+    },
+    "/auth/google": {
+      "post": {
+        "operationId": "Google",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Auth"],
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleLoginRequest"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ]
 }

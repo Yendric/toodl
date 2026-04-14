@@ -1,106 +1,137 @@
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { FormControl, IconButton, InputAdornment, MenuItem, Select } from "@mui/material";
-import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
+import {
+  CircularProgress,
+  FormControl,
+  Grid,
+  IconButton,
+  InputAdornment,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
+import { generateKeyBetween } from "fractional-indexing";
 import { Suspense, type FC, type KeyboardEvent } from "react";
+import type { TodoResponse } from "../../api/generated/model";
 import { useCategoryIndexSuspense, useTodoStore, useUserInfoSuspense } from "../../api/generated/toodl";
+import { TodoStoreBody } from "../../api/generated/toodlApi.zod";
 import { useCurrentList } from "../../context/CurrentListState";
+import { useCategoryPredictor } from "../../hooks/useCategoryPredictor";
 import { useZodForm } from "../../hooks/useZodForm";
-import { storeSchema } from "../../schemas/todo";
 
-const CategorySelect: FC<{ register: any }> = ({ register }) => {
-  const { data: categories } = useCategoryIndexSuspense();
-
-  return (
-    <FormControl variant="standard" sx={{ minWidth: 120, ml: 2 }}>
-      <Select {...register("categoryId")} defaultValue="" displayEmpty>
-        <MenuItem value="">
-          <em>Geen categorie</em>
-        </MenuItem>
-        {categories.map((cat) => (
-          <MenuItem key={cat.id} value={cat.id}>
-            {cat.name}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
-  );
-};
-
-const CreateTodoForm: FC<{ disabled?: boolean }> = ({ disabled = false }) => {
+const CreateTodoForm: FC<{ activeTodos: TodoResponse[]; disabled?: boolean }> = ({ activeTodos, disabled = false }) => {
   const { data: user } = useUserInfoSuspense();
+  const { data: categories } = useCategoryIndexSuspense();
   const currentList = useCurrentList();
   const isShoppingList = currentList.list?.type === "SHOPPING";
 
-  const {
-    handleSubmit,
-    register,
-    setValue,
-    reset,
-    formState: { errors },
-  } = useZodForm({
-    schema: storeSchema,
+  const createTodoMutation = useTodoStore();
+  const { handlePredict, isPredicting } = useCategoryPredictor(isShoppingList, (categoryId) =>
+    form.setFieldValue("categoryId", categoryId),
+  );
+
+  const form = useZodForm(TodoStoreBody, {
     defaultValues: {
       done: false,
       subject: "",
-      startTime: new Date(),
+      startTime: new Date().toISOString(),
       categoryId: null,
+    },
+    onSubmit: ({ value }) => {
+      const firstTodo = activeTodos[0];
+      const newPosition = generateKeyBetween(null, firstTodo?.position || null);
+
+      createTodoMutation.mutate({
+        data: {
+          ...value,
+          done: false,
+          listId: currentList.list?.id,
+          position: newPosition,
+        },
+      });
+      form.reset({
+        done: false,
+        subject: "",
+        startTime: new Date().toISOString(),
+        categoryId: null,
+      });
     },
   });
 
-  const createTodoMutation = useTodoStore();
+  const handleSubjectChange = (value: string) => {
+    form.setFieldValue("subject", value);
+    handlePredict(value);
+  };
 
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     if (event.key === "Enter") {
       event.preventDefault();
-      onSubmit();
+      void form.handleSubmit();
     }
   }
 
-  const onSubmit = handleSubmit((todo) => {
-    reset();
-    setValue("startTime", new Date());
-
-    createTodoMutation.mutate({
-      data: {
-        ...todo,
-        done: false,
-        listId: currentList.list?.id,
-        startTime: new Date().toISOString(),
-        endTime: todo.endTime?.toISOString(),
-        categoryId: todo.categoryId || null,
-      },
-    });
-  });
-
   return (
-    <form onSubmit={onSubmit}>
-      <Grid container sx={{ mb: 2, justifyContent: "center", alignItems: "flex-end" }}>
-        <TextField
-          {...register("subject")}
-          multiline={true}
-          error={!!errors.subject}
-          disabled={disabled}
-          helperText={errors.subject?.message}
-          variant="standard"
-          label={`Wat moet er gebeuren, ${user.username}?`}
-          onKeyDown={handleKeyDown}
-          sx={{ maxWidth: "25rem", flexGrow: 1 }}
-          slotProps={{
-            input: {
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton type="submit" edge="start" color="default">
-                    <AddCircleIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }
-          }}
-        />
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        void form.handleSubmit();
+      }}
+    >
+      <Grid container sx={{ mb: 5, justifyContent: "center", alignItems: "flex-end" }}>
+        <form.Field name="subject">
+          {(field) => (
+            <TextField
+              name={field.name}
+              value={field.state.value}
+              onBlur={field.handleBlur}
+              onChange={(e) => handleSubjectChange(e.target.value)}
+              multiline={true}
+              error={!!field.state.meta.errors.length}
+              disabled={disabled}
+              helperText={field.state.meta.errors.map((e) => e?.message).join(", ")}
+              variant="standard"
+              label={`Wat moet er gebeuren, ${user.username}?`}
+              onKeyDown={handleKeyDown}
+              sx={{ maxWidth: "25rem", flexGrow: 1 }}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      {isPredicting && <CircularProgress size={20} sx={{ mr: 1 }} />}
+                      <IconButton type="submit" edge="start" color="default">
+                        <AddCircleIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
+          )}
+        </form.Field>
         {isShoppingList && (
           <Suspense fallback={null}>
-            <CategorySelect register={register} />
+            <FormControl variant="standard" sx={{ minWidth: 120, ml: 2 }}>
+              <form.Field name="categoryId">
+                {(field) => (
+                  <Select
+                    name={field.name}
+                    value={field.state.value || ""}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value ? Number(e.target.value) : null)}
+                    displayEmpty
+                  >
+                    <MenuItem value="">
+                      <em>Geen categorie</em>
+                    </MenuItem>
+                    {categories.map((cat) => (
+                      <MenuItem key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                )}
+              </form.Field>
+            </FormControl>
           </Suspense>
         )}
       </Grid>

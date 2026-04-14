@@ -4,13 +4,13 @@ Toodl is a React-based todo application designed for simplicity and task plannin
 
 ## Tech Stack
 
-- **Core:** React 18, Vite, TypeScript.
-- **Styling:** Material UI (MUI) 5, Emotion, Sass.
+- **Core:** React 19, Vite 8, TypeScript.
+- **Styling:** Material UI (MUI) 9, Emotion, Sass.
 - **API Client:** [Orval](https://orval.dev/) generated React Query hooks from `swagger.json`.
-- **Data Fetching & State:** [TanStack Query (React Query)](https://tanstack.com/query/v4) v4 for server state management.
+- **Data Fetching & State:** [TanStack Query (React Query)](https://tanstack.com/query/latest) v5 for server state management.
 - **Networking:** Axios with a custom mutator in `src/api/api.ts`.
-- **Forms & Validation:** [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/) (with Dutch i18n support).
-- **Routing:** React Router DOM v6.
+- **Forms & Validation:** [TanStack Form](https://tanstack.com/form/latest) + [Zod](https://zod.dev/) (with Dutch i18n support).
+- **Routing:** React Router v7.
 - **Authentication:** @react-oauth/google.
 - **Utility:** date-fns, notistack (notifications).
 
@@ -36,16 +36,16 @@ Ensure you have a `.env` file based on `.env.example` with the following variabl
 - `VITE_GOOGLE_CLIENT_ID`: Client ID for Google OAuth.
 
 ### Scripts
-- `yarn dev`: Starts the development server.
-- `yarn generate`: `npx orval` to regenerate the API client from `swagger.json`.
-- `yarn build`: Compiles TypeScript and builds production assets.
-- `yarn lint`: Runs ESLint for code quality checks.
-- `yarn format`: Formats all source files using Prettier.
+- `pnpm dev`: Starts the development server.
+- `pnpm exec orval`: Regenerates the API client from `swagger.json`.
+- `pnpm build`: Compiles TypeScript and builds production assets.
+- `pnpm lint`: Runs ESLint for code quality checks.
+- `pnpm format:fix`: Formats all source files using Prettier.
 
 ## Development Conventions
 
-- **API Interaction:** Always use the generated hooks from `src/api/generated/toodl`. If the API changes, update `swagger.json` and run `npx orval`.
+- **API Interaction:** Always use the generated hooks from `src/api/generated/toodl`. If the API changes, update `swagger.json` and run `pnpm exec orval`.
 - **Data Structure:** Todos are fetched per list. Avoid global todo fetching.
 - **TypeScript:** Use the generated models from `src/api/generated/model`.
-- **Forms:** Use `react-hook-form` with `zod` validation.
+- **Forms:** Use `@tanstack/react-form` with `zod` validation via the `useZodForm` hook.
 - **Styling:** Follow Material UI patterns.

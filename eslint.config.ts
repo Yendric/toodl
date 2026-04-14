@@ -1,6 +1,7 @@
 import js from "@eslint/js";
 import eslintConfigPrettier from "eslint-config-prettier/flat";
 import reactPlugin from "eslint-plugin-react";
+import reactCompiler from "eslint-plugin-react-compiler";
 import { defineConfig, globalIgnores } from "eslint/config";
 import globals from "globals";
 import tseslint from "typescript-eslint";
@@ -35,5 +36,13 @@ export default defineConfig([
   },
   reactPlugin.configs.flat.recommended!,
   reactPlugin.configs.flat["jsx-runtime"]!,
+  reactCompiler.configs.recommended,
   eslintConfigPrettier,
+  {
+    settings: {
+      react: {
+        version: "19.2",
+      },
+    },
+  },
 ]);

@@ -7,5 +7,5 @@
  */
 
 export type GetByListParams = {
-storeId?: number;
+  storeId?: number;
 };

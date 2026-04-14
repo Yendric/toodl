@@ -1,34 +1,57 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, type DefaultValues, type FieldValues, type UseFormProps, type UseFormReturn } from "react-hook-form";
+import { useForm, type FormAsyncValidateOrFn, type FormOptions, type FormValidateOrFn } from "@tanstack/react-form";
 import { z } from "zod";
 
-export type UseZodForm<TInput extends FieldValues> = UseFormReturn<TInput> & {
-  id: string;
-};
-export function useZodForm<TSchema extends z.ZodType>(
-  props: Omit<UseFormProps<TSchema["_input"]>, "resolver"> & {
-    schema: TSchema;
-  },
+// Typescript moment
+
+export function useZodForm<
+  TSchema extends z.ZodTypeAny,
+  TOnMount extends FormValidateOrFn<z.input<TSchema>> | undefined = undefined,
+  TOnChangeAsync extends FormAsyncValidateOrFn<z.input<TSchema>> | undefined = undefined,
+  TOnBlur extends FormValidateOrFn<z.input<TSchema>> | undefined = undefined,
+  TOnBlurAsync extends FormAsyncValidateOrFn<z.input<TSchema>> | undefined = undefined,
+  TOnSubmit extends FormValidateOrFn<z.input<TSchema>> | undefined = undefined,
+  TOnSubmitAsync extends FormAsyncValidateOrFn<z.input<TSchema>> | undefined = undefined,
+  TOnDynamic extends FormValidateOrFn<z.input<TSchema>> | undefined = undefined,
+  TOnDynamicAsync extends FormAsyncValidateOrFn<z.input<TSchema>> | undefined = undefined,
+  TOnServer extends FormAsyncValidateOrFn<z.input<TSchema>> | undefined = undefined,
+  TSubmitMeta = unknown,
+>(
+  schema: TSchema,
+  options: Omit<
+    FormOptions<
+      z.input<TSchema>,
+      TOnMount,
+      TSchema,
+      TOnChangeAsync,
+      TOnBlur,
+      TOnBlurAsync,
+      TOnSubmit,
+      TOnSubmitAsync,
+      TOnDynamic,
+      TOnDynamicAsync,
+      TOnServer,
+      TSubmitMeta
+    >,
+    "validators"
+  >,
 ) {
-  const form = useForm<TSchema["_input"]>({
-    ...props,
-    resolver: zodResolver(props.schema, undefined, { raw: true }),
-    defaultValues: {
-      ...(getDefaults<z.infer<typeof props.schema>>(props.schema) as DefaultValues<TSchema["_input"]>),
-      ...props.defaultValues,
+  return useForm<
+    z.input<TSchema>,
+    TOnMount,
+    TSchema,
+    TOnChangeAsync,
+    TOnBlur,
+    TOnBlurAsync,
+    TOnSubmit,
+    TOnSubmitAsync,
+    TOnDynamic,
+    TOnDynamicAsync,
+    TOnServer,
+    TSubmitMeta
+  >({
+    ...options,
+    validators: {
+      onSubmit: schema as unknown as TOnSubmit,
     },
-  }) as UseZodForm<TSchema["_input"]>;
-
-  // form.id = useId();
-
-  return form;
-}
-
-export function getDefaults<Schema extends z.AnyZodObject>(schema: Schema) {
-  return Object.fromEntries(
-    Object.entries(schema.shape).map(([key, value]) => {
-      if (value instanceof z.ZodDefault) return [key, value._def.defaultValue()];
-      return [key, undefined];
-    }),
-  );
+  });
 }

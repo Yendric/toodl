@@ -1,37 +1,29 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import Delete from "@mui/icons-material/Delete";
 import Save from "@mui/icons-material/Save";
 import {
   Button,
   Card,
   CardContent,
-  Checkbox,
   Divider,
   FormControl,
   FormControlLabel,
   FormGroup,
   FormLabel,
   Grid,
-  TextField,
-  Typography
+  Typography,
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useState, type FC } from "react";
-import { Controller, useForm, type FieldError } from "react-hook-form";
 import { Link } from "react-router";
-import { z } from "zod";
 import { useUserInfoSuspense, useUserUpdate } from "../../api/generated/toodl";
+import { UserUpdateBody } from "../../api/generated/toodlApi.zod";
+import { useZodForm } from "../../hooks/useZodForm";
+import { ZodCheckbox } from "../Form/ZodCheckbox";
+import { ZodTextField } from "../Form/ZodTextField";
 import DeleteAccountModal from "./DeleteAccountModal";
 import IcalInput from "./IcalInput";
 
-const schema = z.object({
-  email: z.string().email().min(3).max(50).toLowerCase(),
-  username: z.string().min(1).max(50),
-  icalUrls: z.array(z.string().url()).max(10),
-  dailyNotification: z.boolean(),
-  reminderNotification: z.boolean(),
-  nowNotification: z.boolean(),
-});
+
 
 const ProfileForm: FC = () => {
   const { data: user } = useUserInfoSuspense();
@@ -39,36 +31,45 @@ const ProfileForm: FC = () => {
   const updateUserMutation = useUserUpdate({
     mutation: {
       onSuccess: () => {
-        enqueueSnackbar("Profiel opgeslagen", { variant: "success" });
+        void enqueueSnackbar("Profiel opgeslagen", { variant: "success" });
       },
       onError: () => {
-        enqueueSnackbar("Opslaan mislukt", { variant: "error" });
+        void enqueueSnackbar("Opslaan mislukt", { variant: "error" });
       },
     },
   });
-  const {
-    handleSubmit,
-    register,
-    control,
-    formState: { errors },
-  } = useForm<z.infer<typeof schema>>({ values: user, resolver: zodResolver(schema) });
-  const [modalVisible, setModalVisible] = useState(false);
 
-  const onSubmit = handleSubmit((data) => {
-    updateUserMutation.mutate({ data });
+  const form = useZodForm(UserUpdateBody, {
+    defaultValues: {
+      email: user.email,
+      username: user.username,
+      icalUrls: user.icalUrls || [],
+      dailyNotification: !!user.dailyNotification,
+      reminderNotification: !!user.reminderNotification,
+      nowNotification: !!user.nowNotification,
+    },
+    onSubmit: ({ value }) => {
+      updateUserMutation.mutate({ data: value });
+    },
   });
+
+  const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <Card>
-      <form onSubmit={onSubmit} noValidate>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          void form.handleSubmit();
+        }}
+        noValidate
+      >
         <CardContent>
           <Typography variant="h5" component="h2">
             Jouw profiel
-            <Link to="/">
-              <Button variant="outlined" sx={{ ml: 1 }}>
-                Keer terug
-              </Button>
-            </Link>
+            <Button component={Link} to="/" variant="outlined" sx={{ ml: 1 }}>
+              Keer terug
+            </Button>
           </Typography>
         </CardContent>
         <Divider />
@@ -77,61 +78,64 @@ const ProfileForm: FC = () => {
             <Grid size={{ xs: 12, sm: 6 }}>
               <FormControl component="fieldset" fullWidth>
                 <FormLabel component="legend">Account</FormLabel>
-                <TextField
-                  {...register("username")}
-                  error={!!errors.username}
-                  helperText={errors.username?.message}
-                  margin="normal"
-                  variant="outlined"
-                  label="Gebruikersnaam"
-                  fullWidth
-                />
-                <TextField
-                  {...register("email")}
-                  error={!!errors.email}
-                  helperText={errors.email?.message}
-                  margin="normal"
-                  variant="outlined"
-                  label="E-mail adres"
-                  fullWidth
-                />
+                <form.Field name="username">
+                  {(field) => (
+                    <ZodTextField field={field} margin="normal" variant="outlined" label="Gebruikersnaam" fullWidth />
+                  )}
+                </form.Field>
+                <form.Field name="email">
+                  {(field) => (
+                    <ZodTextField field={field} margin="normal" variant="outlined" label="E-mail adres" fullWidth />
+                  )}
+                </form.Field>
               </FormControl>
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
               <FormControl component="fieldset">
                 <FormLabel component="legend">Notificaties</FormLabel>
                 <FormGroup>
-                  <FormControlLabel
-                    control={<Checkbox defaultChecked={user.dailyNotification} {...register("dailyNotification")} />}
-                    label="Dagelijks"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox defaultChecked={user.reminderNotification} {...register("reminderNotification")} />
-                    }
-                    label="Herinnering (~15 min op voorhand)"
-                  />
-                  <FormControlLabel
-                    control={<Checkbox defaultChecked={user.nowNotification} {...register("nowNotification")} />}
-                    label="Op het moment zelf"
-                  />
+                  <form.Field name="dailyNotification">
+                    {(field) => <FormControlLabel control={<ZodCheckbox field={field} />} label="Dagelijks" />}
+                  </form.Field>
+                  <form.Field name="reminderNotification">
+                    {(field) => (
+                      <FormControlLabel
+                        control={<ZodCheckbox field={field} />}
+                        label="Herinnering (~15 min op voorhand)"
+                      />
+                    )}
+                  </form.Field>
+                  <form.Field name="nowNotification">
+                    {(field) => <FormControlLabel control={<ZodCheckbox field={field} />} label="Op het moment zelf" />}
+                  </form.Field>
                 </FormGroup>
               </FormControl>
             </Grid>
             <Grid size={{ xs: 12, sm: 12 }}>
-              <Controller
-                name="icalUrls"
-                control={control}
-                rules={{ required: true }}
-                render={({ field: { value, onChange }, fieldState: { error } }) => (
-                  <IcalInput value={value} onChange={onChange} error={error as unknown as FieldError[]} />
+              <form.Field name="icalUrls">
+                {(field) => (
+                  <IcalInput
+                    value={field.state.value}
+                    onChange={(val) => field.handleChange(val)}
+                    errors={field.state.meta.errors.map((e) => e?.message ?? "")}
+                  />
                 )}
-              />
+              </form.Field>
             </Grid>
           </Grid>
-          <Button variant="contained" color="primary" type="submit" startIcon={<Save />}>
-            Opslaan
-          </Button>
+          <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
+            {([canSubmit, isSubmitting]) => (
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                disabled={!canSubmit || isSubmitting}
+                startIcon={<Save />}
+              >
+                {isSubmitting ? "Laden..." : "Opslaan"}
+              </Button>
+            )}
+          </form.Subscribe>
           <Button
             variant="contained"
             sx={{ float: "right" }}

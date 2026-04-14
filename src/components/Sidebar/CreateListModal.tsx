@@ -1,19 +1,11 @@
-import {
-  Box,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  MenuItem,
-  Modal,
-  Select,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, FormControl, FormLabel, MenuItem, Modal, Typography } from "@mui/material";
 import { type FC } from "react";
 import { useListStore } from "../../api/generated/toodl";
+import { ListStoreBody } from "../../api/generated/toodlApi.zod";
 import { useZodForm } from "../../hooks/useZodForm";
-import { storeSchema } from "../../schemas/list";
+import { ZodInput } from "../Form/ZodInput";
+import { ZodSelect } from "../Form/ZodSelect";
+import { ZodTextField } from "../Form/ZodTextField";
 
 interface Props {
   visible: boolean;
@@ -21,19 +13,19 @@ interface Props {
 }
 
 const CreateListModal: FC<Props> = ({ visible, onDismissed }) => {
-  const {
-    handleSubmit,
-    register,
-    reset,
-    formState: { errors },
-  } = useZodForm({ schema: storeSchema, defaultValues: { type: "REGULAR", color: "#33AAFF" } });
-
   const createListMutation = useListStore();
 
-  const onSubmit = handleSubmit((list) => {
-    onDismissed();
-    reset();
-    createListMutation.mutate({ data: list });
+  const form = useZodForm(ListStoreBody, {
+    defaultValues: {
+      name: "",
+      color: "#33AAFF",
+      type: "REGULAR",
+    },
+    onSubmit: ({ value }) => {
+      onDismissed();
+      createListMutation.mutate({ data: value });
+      form.reset();
+    },
   });
 
   return (
@@ -60,32 +52,54 @@ const CreateListModal: FC<Props> = ({ visible, onDismissed }) => {
           Lijst aanmaken
         </Typography>
 
-        <form onSubmit={onSubmit} noValidate>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            void form.handleSubmit();
+          }}
+          noValidate
+        >
           <FormControl fullWidth sx={{ mt: 1 }}>
             <FormLabel>Naam</FormLabel>
-            <TextField
-              {...register("name")}
-              error={!!errors.name}
-              helperText={errors.name?.message}
-              variant="outlined"
-              fullWidth
-            />
+            <form.Field name="name">
+              {(field) => <ZodTextField field={field} variant="outlined" fullWidth />}
+            </form.Field>
           </FormControl>
           <FormControl fullWidth sx={{ mt: 1 }}>
             <FormLabel>Kleur</FormLabel>
-            <Input {...register("color")} type="color" fullWidth />
+            <form.Field name="color">
+              {(field) => (
+                <ZodInput
+                  field={field}
+                  type="color"
+                  fullWidth
+                />
+              )}
+            </form.Field>
           </FormControl>
           <FormControl fullWidth sx={{ mt: 1 }}>
             <FormLabel>Type</FormLabel>
-            <Select {...register("type")} defaultValue="REGULAR" fullWidth>
-              <MenuItem value="REGULAR">Normaal</MenuItem>
-              <MenuItem value="SHOPPING">Winkel</MenuItem>
-            </Select>
+            <form.Field name="type">
+              {(field) => (
+                <ZodSelect
+                  field={field}
+                  fullWidth
+                >
+                  <MenuItem value="REGULAR">Normaal</MenuItem>
+                  <MenuItem value="SHOPPING">Winkel</MenuItem>
+                </ZodSelect>
+              )}
+            </form.Field>
           </FormControl>
           <Box sx={{ textAlign: "center", mt: 2 }}>
-            <Button type="submit" variant="contained" color="primary">
-              Maken
-            </Button>
+            <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
+              {([canSubmit, isSubmitting]) => (
+                <Button type="submit" variant="contained" color="primary" disabled={!canSubmit || isSubmitting}>
+                  {isSubmitting ? "Laden..." : "Maken"}
+                </Button>
+              )}
+            </form.Subscribe>
           </Box>
         </form>
       </Box>

@@ -50,6 +50,7 @@ const TodoShowRow: FC<Props> = ({ todo, toggleEditing, provided, isDragging }) =
                   data: {
                     subject: todo.subject,
                     done: !todo.done,
+                    position: todo.position,
                     startTime: todo.startTime || new Date().toISOString(),
                   },
                 })

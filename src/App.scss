@@ -2,7 +2,18 @@ body {
   margin: 0;
   overflow-y: scroll;
   print-color-adjust: exact !important;
-  touch-action: none;
+  overscroll-behavior-y: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+input,
+textarea,
+.selectable-text {
+  user-select: auto;
+  -webkit-user-select: auto;
 }
 
 a {
@@ -13,9 +24,9 @@ a {
 .google-login-button {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
-  display:flex;
+  display: flex;
   flex-direction: row;
- justify-content:center;
+  justify-content: center;
 }
 
 /* Todo row animaties, veel te moeilijk dankzij MUI :) */

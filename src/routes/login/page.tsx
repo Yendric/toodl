@@ -1,54 +1,55 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useTheme } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { GoogleLogin } from "@react-oauth/google";
 import { useEffect, type FC } from "react";
-import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { z } from "zod";
 import { useAuth } from "../../context/AuthState";
-
-type FormData = {
-  email: string;
-  password: string;
-};
+import { useZodForm } from "../../hooks/useZodForm";
+import { ZodTextField } from "../../components/Form/ZodTextField";
 
 const schema = z.object({
-  email: z.string().email().min(3).max(50),
-  password: z.string().min(8).max(50),
+  email: z.string().email("Ongeldig e-mail adres").min(3).max(50),
+  password: z.string().min(8, "Wachtwoord moet minstens 8 tekens bevatten").max(50),
 });
 
 const Login: FC = () => {
-  const {
-    handleSubmit,
-    setError,
-    register,
-    formState: { errors },
-  } = useForm<FormData>({ resolver: zodResolver(schema) });
   const { googleLogin, isAuth, login } = useAuth();
   const navigate = useNavigate();
   const theme = useTheme();
 
+  const form = useZodForm(schema, {
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    onSubmit: async ({ value }) => {
+      try {
+        await login(value);
+      } catch {
+        // Manual error setting for global auth failure
+        form.setFieldMeta("email", (prev) => ({
+          ...prev,
+          errorMap: { onChange: "Foutief wachtwoord of email adres" },
+        }));
+        form.setFieldMeta("password", (prev) => ({
+          ...prev,
+          errorMap: { onChange: "Foutief wachtwoord of email adres" },
+        }));
+      }
+    },
+  });
+
   useEffect(() => {
     if (isAuth) {
-      navigate("/todos");
+      void navigate("/todos", { viewTransition: true });
     }
   }, [isAuth, navigate]);
-
-  const onSubmit = handleSubmit(async (data) => {
-    try {
-      await login(data);
-    } catch {
-      setError("email", { message: "Foutief wachtwoord of email adres" });
-      setError("password", { message: "Foutief wachtwoord of email adres" });
-    }
-  });
 
   return (
     <Container
@@ -68,40 +69,69 @@ const Login: FC = () => {
       <Typography component="h1" variant="h5">
         Log in
       </Typography>
-      <form onSubmit={onSubmit} noValidate>
-        <TextField
-          {...register("email")}
-          error={!!errors.email}
-          helperText={errors.email?.message}
-          margin="dense"
-          variant="outlined"
-          label="E-mail adres"
-          autoComplete="email"
-          fullWidth
-        />
-        <TextField
-          {...register("password")}
-          error={!!errors.password}
-          helperText={errors.password?.message}
-          margin="dense"
-          variant="outlined"
-          type="password"
-          label="Wachtwoord"
-          autoComplete="current-password"
-          fullWidth
-        />
-        <Button sx={{ mt: 2 }} type="submit" fullWidth variant="contained" color="primary">
-          Log in
-        </Button>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          void form.handleSubmit();
+        }}
+        noValidate
+      >
+        <form.Field name="email">
+          {(field) => (
+            <ZodTextField
+              field={field}
+              margin="dense"
+              variant="outlined"
+              label="E-mail adres"
+              autoComplete="email"
+              fullWidth
+            />
+          )}
+        </form.Field>
+        <form.Field name="password">
+          {(field) => (
+            <ZodTextField
+              field={field}
+              margin="dense"
+              variant="outlined"
+              type="password"
+              label="Wachtwoord"
+              autoComplete="current-password"
+              fullWidth
+            />
+          )}
+        </form.Field>
+        <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
+          {([canSubmit, isSubmitting]) => (
+            <Button
+              sx={{ mt: 2 }}
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              disabled={!canSubmit || isSubmitting}
+            >
+              {isSubmitting ? "Laden..." : "Log in"}
+            </Button>
+          )}
+        </form.Subscribe>
 
         <Grid container sx={{ mt: 1 }}>
-          <Grid >
-            <Link to="/register">Geen account? Registreer</Link>
+          <Grid>
+            <Link to="/register" viewTransition>
+              Geen account? Registreer
+            </Link>
           </Grid>
         </Grid>
         <hr />
         <div className="google-login-button">
-          <GoogleLogin theme="filled_blue" onSuccess={googleLogin} />
+          <GoogleLogin
+            theme="filled_blue"
+            onSuccess={(res) => {
+              void googleLogin(res);
+            }}
+          />
         </div>
       </form>
     </Container>

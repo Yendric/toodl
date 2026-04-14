@@ -11,13 +11,17 @@ const PrivateRoute: FC<{ children?: ReactNode }> = ({ children }) => {
 
   useEffect(() => {
     if (!isLoading && !isAuth) {
-      navigate("/login");
+      void navigate("/login", { viewTransition: true });
       enqueueSnackbar("U bent niet ingelogd", { variant: "warning" });
     }
   }, [isAuth, isLoading, navigate, enqueueSnackbar]);
 
   if (isLoading) {
     return <TodosLoading />;
+  }
+
+  if (!isAuth) {
+    return null;
   }
 
   return children;

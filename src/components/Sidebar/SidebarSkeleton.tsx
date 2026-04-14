@@ -3,60 +3,75 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { Box, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Skeleton, Typography } from "@mui/material";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import {
+  Box,
+  Divider,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Skeleton,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import { type FC } from "react";
 
 const SidebarSkeleton: FC = () => {
-  const open = window.screen.width >= 1280;
+  const theme = useTheme();
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up("lg"));
+  const open = isLargeScreen;
   const drawerWidth = open ? "16rem" : "56px";
 
   return (
     <Box component="nav">
       <Drawer
         sx={{
-          width: window.screen.width < 1280 ? "56px" : drawerWidth,
-          transition: "width 225ms cubic-bezier(0, 0, 0.2, 1) 0ms",
+          width: drawerWidth,
+          transition: theme.transitions.create("width", {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+          }),
           whiteSpace: "nowrap",
-        }}
-        slotProps={{
-          paper: {
-            sx: {
-              width: drawerWidth,
-              transition: "width 225ms cubic-bezier(0, 0, 0.2, 1) 0ms",
-            },
-          }
+          "& .MuiDrawer-paper": {
+            width: drawerWidth,
+            transition: theme.transitions.create("width", {
+              easing: theme.transitions.easing.sharp,
+              duration: theme.transitions.duration.enteringScreen,
+            }),
+            overflowX: "hidden",
+          },
         }}
         variant="permanent"
         open={open}
       >
         <List>
-          <ListItem >
-            <ListItemButton>
-              <ListItemIcon>
-                {open ? (
-                  <>
-                    <ChevronLeftIcon />
-                    <Typography sx={{ marginLeft: "1rem" }}>Toodl</Typography>
-                  </>
-                ) : (
-                  <MenuIcon />
-                )}
-              </ListItemIcon>
+          <ListItem disablePadding>
+            <ListItemButton disabled>
+              <ListItemIcon sx={{ minWidth: open ? 40 : 24 }}>{open ? <ChevronLeftIcon /> : <MenuIcon />}</ListItemIcon>
+              {open && (
+                <Typography variant="h6" sx={{ ml: 1 }}>
+                  Toodl
+                </Typography>
+              )}
             </ListItemButton>
           </ListItem>
         </List>
         <Divider />
-        <Divider />
-        <List>
-          {[1, 2, 3].map((i) => (
-            <ListItem key={i}>
-              <ListItemIcon>
+        <List sx={{ flexGrow: 1, overflowY: "auto", overflowX: "hidden" }}>
+          {[1, 2, 3, 4, 5].map((i) => (
+            <ListItem key={i} sx={{ px: 2, py: 1 }}>
+              <ListItemIcon sx={{ minWidth: open ? 40 : 24 }}>
                 <Skeleton variant="circular" width={24} height={24} />
               </ListItemIcon>
-              <ListItemText>
-                <Skeleton height={24} width={100} />
-              </ListItemText>
+              {open && (
+                <ListItemText>
+                  <Skeleton height={24} width="80%" />
+                </ListItemText>
+              )}
             </ListItem>
           ))}
         </List>
@@ -73,11 +88,17 @@ const SidebarSkeleton: FC = () => {
         <List>
           <ListItemButton disabled>
             <ListItemIcon>
+              <ShoppingCartIcon />
+            </ListItemIcon>
+            <ListItemText primary="Winkelinstellingen" />
+          </ListItemButton>
+          <ListItemButton disabled>
+            <ListItemIcon>
               <SettingsIcon />
             </ListItemIcon>
             <ListItemText primary="Instellingen" />
           </ListItemButton>
-          <ListItem >
+          <ListItem disablePadding>
             <ListItemButton disabled>
               <ListItemIcon>
                 <LogoutIcon />

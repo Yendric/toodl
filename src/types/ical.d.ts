@@ -1,7 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable camelcase */
-/* eslint-disable no-use-before-define */
-/* eslint-disable no-unused-vars */
 // SPDX-FileCopyrightText: © 2019 EteSync Authors
 // SPDX-License-Identifier: MPL-2.0
 

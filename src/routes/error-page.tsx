@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 import { useRouteError } from "react-router";
 
 export default function ErrorPage() {
-  const error = useRouteError() as any;
+  const error = useRouteError();
   console.error(error);
 
   return (
@@ -18,9 +18,6 @@ export default function ErrorPage() {
     >
       <Typography variant="h1">Oeps!</Typography>
       <Typography variant="body1">Sorry, er is een onverwachte fout opgetreden.</Typography>
-      <Typography variant="body2" sx={{ color: "text.secondary", mt: 2 }}>
-        <i>{error.statusText || error.message}</i>
-      </Typography>
     </Box>
   );
 }

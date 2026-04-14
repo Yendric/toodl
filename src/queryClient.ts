@@ -7,7 +7,7 @@ export const queryClient = new QueryClient({
     },
     mutations: {
       onSuccess: () => {
-        queryClient.invalidateQueries();
+        void queryClient.invalidateQueries();
       },
     },
   },

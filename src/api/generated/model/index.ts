@@ -8,6 +8,8 @@
 
 export * from './_36EnumsListType';
 export * from './authResponse';
+export * from './categoryPredictRequest';
+export * from './categoryPredictResponse';
 export * from './categoryRequest';
 export * from './categoryResponse';
 export * from './googleLoginRequest';
