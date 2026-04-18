@@ -25,12 +25,23 @@ const SidebarSkeleton: FC = () => {
   const isLargeScreen = useMediaQuery(theme.breakpoints.up("lg"));
   const open = isLargeScreen;
   const drawerWidth = open ? "16rem" : "56px";
+  const containerWidth = isLargeScreen ? drawerWidth : "56px";
 
   return (
-    <Box component="nav">
+    <Box
+      component="nav"
+      sx={{
+        width: containerWidth,
+        flexShrink: 0,
+        transition: theme.transitions.create("width", {
+          easing: theme.transitions.easing.sharp,
+          duration: theme.transitions.duration.enteringScreen,
+        }),
+      }}
+    >
       <Drawer
         sx={{
-          width: drawerWidth,
+          width: containerWidth,
           transition: theme.transitions.create("width", {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
@@ -43,6 +54,9 @@ const SidebarSkeleton: FC = () => {
               duration: theme.transitions.duration.enteringScreen,
             }),
             overflowX: "hidden",
+            "& .MuiListItemText-root": {
+              opacity: open ? 1 : 0,
+            },
           },
         }}
         variant="permanent"
@@ -50,7 +64,7 @@ const SidebarSkeleton: FC = () => {
       >
         <List>
           <ListItem disablePadding>
-            <ListItemButton disabled>
+            <ListItemButton disabled sx={{ height: 48 }}>
               <ListItemIcon sx={{ minWidth: open ? 40 : 24 }}>{open ? <ChevronLeftIcon /> : <MenuIcon />}</ListItemIcon>
               {open && (
                 <Typography variant="h6" sx={{ ml: 1 }}>
