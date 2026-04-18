@@ -5,7 +5,7 @@ import ProfileForm from "../../components/Settings/ProfileForm";
 
 const Settings: FC = () => {
   return (
-    <Box sx={{ mx: "auto", my: 2, px: 4, width: "90%" }}>
+    <Box sx={{ mx: "auto", my: 2, px: { xs: 2, sm: 4 }, width: { xs: "100%", sm: "90%" } }}>
       <ProfileForm />
       <PasswordForm />
     </Box>

@@ -4,7 +4,6 @@ import {
   Container,
   Paper,
   Skeleton,
-  Stack,
   Table,
   TableBody,
   TableCell,
@@ -21,12 +20,12 @@ const TodoTableSkeleton: FC = () => {
       <Box
         sx={{ mb: 2, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 2 }}
       >
-        <Stack direction="row" spacing={1} sx={{ alignItems: "center" }}>
+        <Box sx={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 1 }}>
           <Button disabled variant="contained" sx={{ height: 40 }}>
             Verwijder voltooid
           </Button>
           <Skeleton variant="rectangular" width={150} height={40} sx={{ borderRadius: 1 }} />
-        </Stack>
+        </Box>
         <Typography variant="body2">
           <Skeleton width={100} />
         </Typography>
@@ -34,7 +33,7 @@ const TodoTableSkeleton: FC = () => {
 
       {/* Create Todo Form Skeleton */}
       <Box sx={{ mb: 5, display: "flex", justifyContent: "center" }}>
-        <Skeleton variant="rounded" width="25rem" height={56} />
+        <Skeleton variant="rounded" sx={{ width: "100%", maxWidth: "25rem", height: 56 }} />
       </Box>
 
       {/* Table Skeleton */}
