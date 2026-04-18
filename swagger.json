@@ -27,6 +27,15 @@
           "nowNotification": {
             "type": "boolean"
           },
+          "dailyPush": {
+            "type": "boolean"
+          },
+          "reminderPush": {
+            "type": "boolean"
+          },
+          "nowPush": {
+            "type": "boolean"
+          },
           "icalUrls": {
             "items": {
               "type": "string"
@@ -41,6 +50,9 @@
           "dailyNotification",
           "reminderNotification",
           "nowNotification",
+          "dailyPush",
+          "reminderPush",
+          "nowPush",
           "icalUrls"
         ],
         "type": "object",
@@ -84,9 +96,28 @@
           },
           "nowNotification": {
             "type": "boolean"
+          },
+          "dailyPush": {
+            "type": "boolean"
+          },
+          "reminderPush": {
+            "type": "boolean"
+          },
+          "nowPush": {
+            "type": "boolean"
           }
         },
-        "required": ["email", "username", "icalUrls", "dailyNotification", "reminderNotification", "nowNotification"],
+        "required": [
+          "email",
+          "username",
+          "icalUrls",
+          "dailyNotification",
+          "reminderNotification",
+          "nowNotification",
+          "dailyPush",
+          "reminderPush",
+          "nowPush"
+        ],
         "type": "object",
         "additionalProperties": false
       },
@@ -378,12 +409,31 @@
         "type": "object",
         "additionalProperties": false
       },
-      "_36_Enums.ListType": {
-        "type": "string",
-        "enum": ["REGULAR", "SHOPPING"]
+      "PushSubscriptionData": {
+        "properties": {
+          "endpoint": {
+            "type": "string"
+          },
+          "keys": {
+            "properties": {
+              "auth": {
+                "type": "string"
+              },
+              "p256dh": {
+                "type": "string"
+              }
+            },
+            "required": ["auth", "p256dh"],
+            "type": "object"
+          }
+        },
+        "required": ["endpoint", "keys"],
+        "type": "object",
+        "additionalProperties": false
       },
       "ListType": {
-        "$ref": "#/components/schemas/_36_Enums.ListType"
+        "type": "string",
+        "enum": ["REGULAR", "SHOPPING"]
       },
       "ListResponse": {
         "properties": {
@@ -1109,6 +1159,92 @@
                   "$ref": "#/components/schemas/StoreCategoryOrderRequest"
                 },
                 "type": "array"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notifications/vapid-public-key": {
+      "get": {
+        "operationId": "GetVapidPublicKey",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "publicKey": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["publicKey"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Notification"],
+        "security": [],
+        "parameters": []
+      }
+    },
+    "/notifications/subscribe": {
+      "post": {
+        "operationId": "Subscribe",
+        "responses": {
+          "204": {
+            "description": "No content"
+          }
+        },
+        "tags": ["Notification"],
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PushSubscriptionData"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notifications/unsubscribe": {
+      "post": {
+        "operationId": "Unsubscribe",
+        "responses": {
+          "204": {
+            "description": "No content"
+          }
+        },
+        "tags": ["Notification"],
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "endpoint": {
+                    "type": "string"
+                  }
+                },
+                "required": ["endpoint"],
+                "type": "object"
               }
             }
           }

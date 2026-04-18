@@ -22,6 +22,7 @@ import { ZodCheckbox } from "../Form/ZodCheckbox";
 import { ZodTextField } from "../Form/ZodTextField";
 import DeleteAccountModal from "./DeleteAccountModal";
 import IcalInput from "./IcalInput";
+import NotificationManager from "./NotificationManager";
 
 
 
@@ -47,6 +48,9 @@ const ProfileForm: FC = () => {
       dailyNotification: !!user.dailyNotification,
       reminderNotification: !!user.reminderNotification,
       nowNotification: !!user.nowNotification,
+      dailyPush: !!user.dailyPush,
+      reminderPush: !!user.reminderPush,
+      nowPush: !!user.nowPush,
     },
     onSubmit: ({ value }) => {
       updateUserMutation.mutate({ data: value });
@@ -92,10 +96,10 @@ const ProfileForm: FC = () => {
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
               <FormControl component="fieldset">
-                <FormLabel component="legend">Notificaties</FormLabel>
+                <FormLabel component="legend">E-mail Notificaties</FormLabel>
                 <FormGroup>
                   <form.Field name="dailyNotification">
-                    {(field) => <FormControlLabel control={<ZodCheckbox field={field} />} label="Dagelijks" />}
+                    {(field) => <FormControlLabel control={<ZodCheckbox field={field} />} label="Dag op voorhand" />}
                   </form.Field>
                   <form.Field name="reminderNotification">
                     {(field) => (
@@ -106,6 +110,27 @@ const ProfileForm: FC = () => {
                     )}
                   </form.Field>
                   <form.Field name="nowNotification">
+                    {(field) => <FormControlLabel control={<ZodCheckbox field={field} />} label="Op het moment zelf" />}
+                  </form.Field>
+                </FormGroup>
+              </FormControl>
+
+              <FormControl component="fieldset" sx={{ mt: 2 }}>
+                <FormLabel component="legend">Browser Push Notificaties</FormLabel>
+                <NotificationManager />
+                <FormGroup sx={{ mt: 1 }}>
+                  <form.Field name="dailyPush">
+                    {(field) => <FormControlLabel control={<ZodCheckbox field={field} />} label="Dag op voorhand" />}
+                  </form.Field>
+                  <form.Field name="reminderPush">
+                    {(field) => (
+                      <FormControlLabel
+                        control={<ZodCheckbox field={field} />}
+                        label="Herinnering (~15 min op voorhand)"
+                      />
+                    )}
+                  </form.Field>
+                  <form.Field name="nowPush">
                     {(field) => <FormControlLabel control={<ZodCheckbox field={field} />} label="Op het moment zelf" />}
                   </form.Field>
                 </FormGroup>
