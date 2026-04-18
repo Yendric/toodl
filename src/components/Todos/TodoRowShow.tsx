@@ -60,7 +60,7 @@ const TodoShowRow: FC<Props> = ({ todo, toggleEditing, provided, isDragging }) =
           </div>
         </TableCell>
         <TableCell sx={{ paddingLeft: "0 !important", paddingRight: "0 !important" }}>
-          <div>
+          <div style={{ wordBreak: "break-word" }}>
             <Typography onClick={toggleEditing} style={{ textDecoration: todo.done ? "line-through" : "none" }}>
               {todo.subject}
             </Typography>

@@ -10,7 +10,7 @@ const ShoppingSettings: FC = () => {
   const [selectedStoreId, setSelectedStoreId] = useState<number | "">(stores.length > 0 ? stores[0]!.id : "");
 
   return (
-    <Box sx={{ mx: "auto", my: 2, px: 4, width: "90%" }}>
+    <Box sx={{ mx: "auto", my: 2, px: { xs: 2, sm: 4 }, width: { xs: "100%", sm: "90%" } }}>
       <Typography variant="h4" sx={{ mb: 3 }}>
         Winkelinstellingen
       </Typography>
