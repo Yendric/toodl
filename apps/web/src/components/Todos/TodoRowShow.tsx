@@ -44,7 +44,10 @@ const TodoShowRow: FC<Props> = ({ todo, toggleEditing, provided, isDragging }) =
           <div>
             <Checkbox
               checked={todo.done}
-              onChange={() =>
+              onChange={() => {
+                if ("vibrate" in navigator) {
+                  navigator.vibrate(50);
+                }
                 toggleTodoMutation.mutate({
                   todoId: todo.id,
                   data: {
@@ -53,8 +56,8 @@ const TodoShowRow: FC<Props> = ({ todo, toggleEditing, provided, isDragging }) =
                     position: todo.position,
                     startTime: todo.startTime || new Date().toISOString(),
                   },
-                })
-              }
+                });
+              }}
               value="primary"
             />
           </div>
