@@ -51,11 +51,7 @@ const ShoppingSettings: FC = () => {
             <CardContent>
               <Typography variant="h6">Selecteer winkel voor volgorde</Typography>
               <FormControl fullWidth sx={{ mt: 1 }}>
-                <Select
-                  value={selectedStoreId}
-                  onChange={(e) => setSelectedStoreId(e.target.value)}
-                  displayEmpty
-                >
+                <Select value={selectedStoreId} onChange={(e) => setSelectedStoreId(e.target.value)} displayEmpty>
                   <MenuItem value="" disabled>
                     Selecteer een winkel
                   </MenuItem>

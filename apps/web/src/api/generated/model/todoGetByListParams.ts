@@ -7,5 +7,5 @@
  */
 
 export type TodoGetByListParams = {
-storeId?: number;
+  storeId?: number;
 };

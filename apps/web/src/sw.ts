@@ -25,7 +25,7 @@ self.addEventListener("push", (event: PushEvent) => {
   try {
     const payload = event.data.json() as PushPayload;
     const title = payload.title ?? "Toodl";
-    
+
     const options: NotificationOptions = {
       body: payload.body,
       icon: "/logo192.png",
@@ -63,6 +63,6 @@ self.addEventListener("notificationclick", (event: NotificationEvent) => {
         if (self.clients.openWindow) {
           return self.clients.openWindow(urlToOpen);
         }
-      })
+      }),
   );
 });

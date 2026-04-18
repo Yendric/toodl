@@ -6,10 +6,9 @@
  * OpenAPI spec version: 2.0.0
  */
 
-export type _36EnumsListType = typeof _36EnumsListType[keyof typeof _36EnumsListType];
-
+export type _36EnumsListType = (typeof _36EnumsListType)[keyof typeof _36EnumsListType];
 
 export const _36EnumsListType = {
-  REGULAR: 'REGULAR',
-  SHOPPING: 'SHOPPING',
+  REGULAR: "REGULAR",
+  SHOPPING: "SHOPPING",
 } as const;

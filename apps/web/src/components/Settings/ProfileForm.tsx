@@ -24,8 +24,6 @@ import DeleteAccountModal from "./DeleteAccountModal";
 import IcalInput from "./IcalInput";
 import NotificationManager from "./NotificationManager";
 
-
-
 const ProfileForm: FC = () => {
   const { data: user } = useUserInfoSuspense();
   const { enqueueSnackbar } = useSnackbar();

@@ -68,24 +68,13 @@ const CreateListModal: FC<Props> = ({ visible, onDismissed }) => {
           </FormControl>
           <FormControl fullWidth sx={{ mt: 1 }}>
             <FormLabel>Kleur</FormLabel>
-            <form.Field name="color">
-              {(field) => (
-                <ZodInput
-                  field={field}
-                  type="color"
-                  fullWidth
-                />
-              )}
-            </form.Field>
+            <form.Field name="color">{(field) => <ZodInput field={field} type="color" fullWidth />}</form.Field>
           </FormControl>
           <FormControl fullWidth sx={{ mt: 1 }}>
             <FormLabel>Type</FormLabel>
             <form.Field name="type">
               {(field) => (
-                <ZodSelect
-                  field={field}
-                  fullWidth
-                >
+                <ZodSelect field={field} fullWidth>
                   <MenuItem value="REGULAR">Normaal</MenuItem>
                   <MenuItem value="SHOPPING">Winkel</MenuItem>
                 </ZodSelect>

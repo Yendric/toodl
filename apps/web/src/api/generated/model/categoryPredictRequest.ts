@@ -8,8 +8,8 @@
 
 export interface CategoryPredictRequest {
   /**
-     * @minLength 1
-     * @maxLength 300
-     */
+   * @minLength 1
+   * @maxLength 300
+   */
   itemName: string;
 }

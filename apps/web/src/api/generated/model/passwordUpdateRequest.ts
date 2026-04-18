@@ -8,18 +8,18 @@
 
 export interface PasswordUpdateRequest {
   /**
-     * @minLength 8
-     * @maxLength 50
-     */
+   * @minLength 8
+   * @maxLength 50
+   */
   newPassword: string;
   /**
-     * @minLength 8
-     * @maxLength 50
-     */
+   * @minLength 8
+   * @maxLength 50
+   */
   confirmPassword: string;
   /**
-     * @minLength 8
-     * @maxLength 50
-     */
+   * @minLength 8
+   * @maxLength 50
+   */
   oldPassword?: string;
 }

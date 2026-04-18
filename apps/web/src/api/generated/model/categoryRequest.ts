@@ -8,8 +8,8 @@
 
 export interface CategoryRequest {
   /**
-     * @minLength 1
-     * @maxLength 300
-     */
+   * @minLength 1
+   * @maxLength 300
+   */
   name: string;
 }

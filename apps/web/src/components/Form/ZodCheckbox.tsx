@@ -12,7 +12,7 @@ export const ZodCheckbox = <
     state: { value: unknown };
     handleBlur: () => void;
     handleChange: (value: FieldValue<TField>) => void;
-  }
+  },
 >({
   field,
   ...props
@@ -22,9 +22,7 @@ export const ZodCheckbox = <
       name={field.name}
       checked={field.state.value as boolean | undefined}
       onBlur={field.handleBlur}
-      onChange={(e) =>
-        field.handleChange(e.target.checked as FieldValue<TField>)
-      }
+      onChange={(e) => field.handleChange(e.target.checked as FieldValue<TField>)}
       {...props}
     />
   );

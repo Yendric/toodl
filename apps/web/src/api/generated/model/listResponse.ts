@@ -5,7 +5,7 @@
  * Toodl Api
  * OpenAPI spec version: 2.0.0
  */
-import type { ListType } from './listType';
+import type { ListType } from "./listType";
 
 export interface ListResponse {
   id: number;

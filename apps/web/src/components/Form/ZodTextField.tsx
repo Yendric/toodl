@@ -6,10 +6,7 @@ type FormError = string | { message?: string } | null | undefined;
 
 type Props<TField> = {
   field: TField;
-} & Omit<
-  TextFieldProps,
-  "name" | "value" | "onBlur" | "onChange" | "error" | "helperText"
->;
+} & Omit<TextFieldProps, "name" | "value" | "onBlur" | "onChange" | "error" | "helperText">;
 
 export const ZodTextField = <
   TField extends {
@@ -22,7 +19,7 @@ export const ZodTextField = <
     };
     handleBlur: () => void;
     handleChange: (value: FieldValue<TField>) => void;
-  }
+  },
 >({
   field,
   ...props
@@ -44,9 +41,7 @@ export const ZodTextField = <
       name={field.name}
       value={field.state.value}
       onBlur={field.handleBlur}
-      onChange={(e) =>
-        field.handleChange(e.target.value as FieldValue<TField>)
-      }
+      onChange={(e) => field.handleChange(e.target.value as FieldValue<TField>)}
       error={field.state.meta.errors.length > 0}
       helperText={errorMessages || undefined}
       {...props}

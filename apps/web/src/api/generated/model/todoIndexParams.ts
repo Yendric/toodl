@@ -7,5 +7,5 @@
  */
 
 export type TodoIndexParams = {
-storeId?: number;
+  storeId?: number;
 };
