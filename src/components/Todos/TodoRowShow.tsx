@@ -9,6 +9,8 @@ import { toDateTimeString } from "../../helpers/dateTime";
 import useContextMenu from "../../hooks/useContextMenu";
 import TodoContextMenu from "./TodoContextMenu/TodoContextMenu";
 
+import { triggerHaptic } from "../../helpers/haptic";
+
 interface Props {
   todo: TodoResponse;
   toggleEditing: () => void;
@@ -45,9 +47,7 @@ const TodoShowRow: FC<Props> = ({ todo, toggleEditing, provided, isDragging }) =
             <Checkbox
               checked={todo.done}
               onChange={() => {
-                if ("vibrate" in navigator) {
-                  navigator.vibrate(50);
-                }
+                triggerHaptic();
                 toggleTodoMutation.mutate({
                   todoId: todo.id,
                   data: {
