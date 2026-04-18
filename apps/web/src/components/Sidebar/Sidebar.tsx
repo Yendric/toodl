@@ -6,6 +6,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import {
   Box,
+  ClickAwayListener,
   Divider,
   List,
   ListItem,
@@ -40,37 +41,55 @@ const Sidebar: FC = () => {
     setUserControlledOpen(!open);
   };
 
+  const handleClickAway = () => {
+    if (!isLargeScreen && open) {
+      setUserControlledOpen(false);
+    }
+  };
+
   const location = useLocation();
   const isSettingsRoute = location.pathname === "/settings";
   const isShoppingSettingsRoute = location.pathname === "/shopping-settings";
 
   const drawerWidth = open ? "16rem" : "56px";
+  const containerWidth = isLargeScreen ? drawerWidth : "56px";
 
   return (
-    <Box component="nav">
-      <Drawer
+    <ClickAwayListener onClickAway={handleClickAway}>
+      <Box
+        component="nav"
         sx={{
-          width: drawerWidth,
+          width: containerWidth,
+          flexShrink: 0,
           transition: theme.transitions.create("width", {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
           }),
-          whiteSpace: "nowrap",
-          "& .MuiDrawer-paper": {
-            width: drawerWidth,
+        }}
+      >
+        <Drawer
+          sx={{
+            width: containerWidth,
             transition: theme.transitions.create("width", {
               easing: theme.transitions.easing.sharp,
               duration: theme.transitions.duration.enteringScreen,
             }),
-            overflowX: "hidden",
-            "& .MuiListItemText-root": {
-              opacity: open ? 1 : 0,
+            whiteSpace: "nowrap",
+            "& .MuiDrawer-paper": {
+              width: drawerWidth,
+              transition: theme.transitions.create("width", {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.enteringScreen,
+              }),
+              overflowX: "hidden",
+              "& .MuiListItemText-root": {
+                opacity: open ? 1 : 0,
+              },
             },
-          },
-        }}
-        variant="permanent"
-        open={open}
-      >
+          }}
+          variant="permanent"
+          open={open}
+        >
         <List>
           <ListItem disablePadding>
             <ListItemButton onClick={handleDrawerToggle} sx={{ height: 48 }}>
@@ -131,7 +150,8 @@ const Sidebar: FC = () => {
         </List>
         <CreateListModal visible={modalVisible} onDismissed={() => setModalVisible(false)} />
       </Drawer>
-    </Box>
+      </Box>
+    </ClickAwayListener>
   );
 };
 
