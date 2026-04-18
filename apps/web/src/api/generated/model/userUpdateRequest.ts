@@ -22,4 +22,7 @@ export interface UserUpdateRequest {
   dailyNotification: boolean;
   reminderNotification: boolean;
   nowNotification: boolean;
+  dailyPush: boolean;
+  reminderPush: boolean;
+  nowPush: boolean;
 }

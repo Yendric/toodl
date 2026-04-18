@@ -5,7 +5,7 @@
  * Toodl Api
  * OpenAPI spec version: 2.0.0
  */
-import type { _36EnumsListType } from './_36EnumsListType';
+import type { ListType } from './listType';
 
 export interface ListRequest {
   /**
@@ -15,5 +15,5 @@ export interface ListRequest {
   name: string;
   /** @pattern ^#[0-9A-Fa-f]{6}$ */
   color: string;
-  type?: _36EnumsListType;
+  type?: ListType;
 }

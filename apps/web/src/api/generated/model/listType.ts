@@ -5,6 +5,11 @@
  * Toodl Api
  * OpenAPI spec version: 2.0.0
  */
-import type { _36EnumsListType } from './_36EnumsListType';
 
-export type ListType = _36EnumsListType;
+export type ListType = typeof ListType[keyof typeof ListType];
+
+
+export const ListType = {
+  REGULAR: 'REGULAR',
+  SHOPPING: 'SHOPPING',
+} as const;

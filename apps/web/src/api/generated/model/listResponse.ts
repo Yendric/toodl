@@ -5,13 +5,13 @@
  * Toodl Api
  * OpenAPI spec version: 2.0.0
  */
-import type { _36EnumsListType } from './_36EnumsListType';
+import type { ListType } from './listType';
 
 export interface ListResponse {
   id: number;
   name: string;
   color: string;
-  type: _36EnumsListType;
+  type: ListType;
   userId: number;
   createdAt: string;
   updatedAt: string;

@@ -8,7 +8,13 @@ export default defineConfig({
     react(),
     babel({ presets: [reactCompilerPreset()] }),
     VitePWA({
+      strategies: "injectManifest",
+      srcDir: "src",
+      filename: "sw.ts",
       registerType: "autoUpdate",
+      devOptions: {
+        enabled: true,
+      },
       includeAssets: ["img/*.jpg", "favicon.ico", "logo192.png", "logo512.png", ".well-known/*"],
       workbox: {
         maximumFileSizeToCacheInBytes: 5000000,

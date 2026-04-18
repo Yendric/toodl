@@ -70,11 +70,8 @@ export function useTodoTableState() {
         subject: movedTodo.subject,
         done: movedTodo.done,
         position: newPosition,
-        startTime:
-          movedTodo.startTime instanceof Date
-            ? movedTodo.startTime.toISOString()
-            : movedTodo.startTime || new Date().toISOString(),
-        endTime: movedTodo.endTime instanceof Date ? movedTodo.endTime.toISOString() : movedTodo.endTime || undefined,
+        startTime: movedTodo.startTime || new Date().toISOString(),
+        endTime: movedTodo.endTime,
         categoryId: movedTodo.categoryId,
         description: movedTodo.description,
         enableDeadline: movedTodo.enableDeadline,

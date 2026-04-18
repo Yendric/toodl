@@ -3,7 +3,14 @@ import { GoogleOAuthProvider, type CredentialResponse } from "@react-oauth/googl
 import { useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { createContext, useCallback, useContext, useMemo, type FC, type ReactNode } from "react";
-import { authGoogle, authLogin, authLogout, authRegister, useUserInfo } from "../api/generated/toodl";
+import {
+  authGoogle,
+  authLogin,
+  authLogout,
+  authRegister,
+  getUserInfoQueryKey,
+  useUserInfo,
+} from "../api/generated/toodl";
 
 type AuthState = {
   logout: () => Promise<void>;
@@ -46,8 +53,13 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   );
 
   const logout = useCallback(async () => {
-    await authLogout();
-    queryClient.clear();
+    try {
+      await authLogout();
+    } catch (e) {
+      console.error("Logout failed on server, clearing local state anyway.", e);
+    }
+    queryClient.setQueryData(getUserInfoQueryKey(), null);
+    queryClient.removeQueries();
     enqueueSnackbar("Succesvol uitgelogd.");
   }, [queryClient, enqueueSnackbar]);
 

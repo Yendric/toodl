@@ -6,7 +6,6 @@
  * OpenAPI spec version: 2.0.0
  */
 
-export * from './_36EnumsListType';
 export * from './authResponse';
 export * from './categoryPredictRequest';
 export * from './categoryPredictResponse';
@@ -18,7 +17,11 @@ export * from './listResponse';
 export * from './listType';
 export * from './loginRequest';
 export * from './messageResponse';
+export * from './notificationGetVapidPublicKey200';
+export * from './notificationUnsubscribeBody';
 export * from './passwordUpdateRequest';
+export * from './pushSubscriptionData';
+export * from './pushSubscriptionDataKeys';
 export * from './registerRequest';
 export * from './storeCategoryOrderRequest';
 export * from './storeCategoryOrderResponse';
