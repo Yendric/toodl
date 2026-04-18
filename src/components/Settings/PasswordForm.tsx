@@ -7,11 +7,10 @@ import { UserUpdatePasswordBody } from "../../api/generated/toodlApi.zod";
 import { useZodForm } from "../../hooks/useZodForm";
 import { ZodTextField } from "../Form/ZodTextField";
 
-const schema = UserUpdatePasswordBody
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    message: "Wachtwoorden komen niet overeen",
-    path: ["confirmPassword"],
-  });
+const schema = UserUpdatePasswordBody.refine((data) => data.newPassword === data.confirmPassword, {
+  message: "Wachtwoorden komen niet overeen",
+  path: ["confirmPassword"],
+});
 
 const PasswordForm: FC = () => {
   const { data: user } = useUserInfoSuspense();

@@ -129,7 +129,7 @@ const TodoEditRow: FC<Props> = ({ todo, toggleEditing, provided, isDragging }) =
                     onBlur={field.handleBlur}
                     onChange={(e) => {
                       const val = e.target.value as number | "";
-                      field.handleChange(val === "" ? null : val)
+                      field.handleChange(val === "" ? null : val);
                     }}
                     displayEmpty
                   >

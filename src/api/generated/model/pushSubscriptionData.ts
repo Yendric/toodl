@@ -5,7 +5,7 @@
  * Toodl Api
  * OpenAPI spec version: 2.0.0
  */
-import type { PushSubscriptionDataKeys } from './pushSubscriptionDataKeys';
+import type { PushSubscriptionDataKeys } from "./pushSubscriptionDataKeys";
 
 export interface PushSubscriptionData {
   endpoint: string;

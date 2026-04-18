@@ -8,14 +8,14 @@
 
 export interface UserUpdateRequest {
   /**
-     * @minLength 3
-     * @maxLength 50
-     */
+   * @minLength 3
+   * @maxLength 50
+   */
   email: string;
   /**
-     * @minLength 1
-     * @maxLength 50
-     */
+   * @minLength 1
+   * @maxLength 50
+   */
   username: string;
   /** @maxItems 10 */
   icalUrls: string[];

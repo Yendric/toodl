@@ -6,10 +6,9 @@
  * OpenAPI spec version: 2.0.0
  */
 
-export type ListType = typeof ListType[keyof typeof ListType];
-
+export type ListType = (typeof ListType)[keyof typeof ListType];
 
 export const ListType = {
-  REGULAR: 'REGULAR',
-  SHOPPING: 'SHOPPING',
+  REGULAR: "REGULAR",
+  SHOPPING: "SHOPPING",
 } as const;

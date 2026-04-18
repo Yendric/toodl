@@ -94,11 +94,7 @@ const EditModal: FC<Props> = ({ visible, onDismissed, onDeleteClicked, todo }) =
               </div>
               <div>
                 <FormLabel>Deadline inschakelen</FormLabel>
-                <form.Field name="enableDeadline">
-                  {(field) => (
-                    <ZodCheckbox field={field} />
-                  )}
-                </form.Field>
+                <form.Field name="enableDeadline">{(field) => <ZodCheckbox field={field} />}</form.Field>
               </div>
               <form.Subscribe selector={(state) => [state.values.enableDeadline]}>
                 {([enableDeadline]) =>

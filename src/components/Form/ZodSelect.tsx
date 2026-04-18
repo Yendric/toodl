@@ -12,7 +12,7 @@ export const ZodSelect = <
     state: { value: unknown };
     handleBlur: () => void;
     handleChange: (value: FieldValue<TField>) => void;
-  }
+  },
 >({
   field,
   ...props
@@ -22,9 +22,7 @@ export const ZodSelect = <
       name={field.name}
       value={field.state.value as FieldValue<TField>}
       onBlur={field.handleBlur}
-      onChange={(e: SelectChangeEvent<FieldValue<TField>>) =>
-        field.handleChange(e.target.value as FieldValue<TField>)
-      }
+      onChange={(e: SelectChangeEvent<FieldValue<TField>>) => field.handleChange(e.target.value as FieldValue<TField>)}
       {...props}
     />
   );

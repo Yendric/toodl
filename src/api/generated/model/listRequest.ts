@@ -5,13 +5,13 @@
  * Toodl Api
  * OpenAPI spec version: 2.0.0
  */
-import type { ListType } from './listType';
+import type { ListType } from "./listType";
 
 export interface ListRequest {
   /**
-     * @minLength 1
-     * @maxLength 20
-     */
+   * @minLength 1
+   * @maxLength 20
+   */
   name: string;
   /** @pattern ^#[0-9A-Fa-f]{6}$ */
   color: string;

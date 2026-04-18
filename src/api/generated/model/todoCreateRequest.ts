@@ -9,43 +9,43 @@
 export interface TodoCreateRequest {
   done?: boolean;
   /**
-     * @minLength 1
-     * @maxLength 255
-     */
+   * @minLength 1
+   * @maxLength 255
+   */
   subject: string;
   /** @nullable */
   enableDeadline?: boolean | null;
   /**
-     * @maxLength 255
-     * @nullable
-     */
+   * @maxLength 255
+   * @nullable
+   */
   description?: string | null;
   /** @nullable */
   isAllDay?: boolean | null;
   /**
-     * @maxLength 255
-     * @nullable
-     */
+   * @maxLength 255
+   * @nullable
+   */
   location?: string | null;
   /**
-     * @maxLength 255
-     * @nullable
-     */
+   * @maxLength 255
+   * @nullable
+   */
   recurrenceRule?: string | null;
   /**
-     * @maxLength 255
-     * @nullable
-     */
+   * @maxLength 255
+   * @nullable
+   */
   recurrenceException?: string | null;
   /**
-     * @maxLength 255
-     * @nullable
-     */
+   * @maxLength 255
+   * @nullable
+   */
   startTimezone?: string | null;
   /**
-     * @maxLength 255
-     * @nullable
-     */
+   * @maxLength 255
+   * @nullable
+   */
   endTimezone?: string | null;
   startTime?: string;
   endTime?: string | null;

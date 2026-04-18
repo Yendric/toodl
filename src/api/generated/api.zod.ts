@@ -5,18 +5,17 @@
  * Yendric Api
  * OpenAPI spec version: 1.0.0
  */
-import * as zod from 'zod';
+import * as zod from "zod";
 
 export const UserInfoResponse = zod.object({
-  "email": zod.string(),
-  "username": zod.string(),
-  "onlyLinked": zod.boolean(),
-  "dailyNotification": zod.boolean(),
-  "reminderNotification": zod.boolean(),
-  "nowNotification": zod.boolean(),
-  "icalUrls": zod.array(zod.string())
-})
-
+  email: zod.string(),
+  username: zod.string(),
+  onlyLinked: zod.boolean(),
+  dailyNotification: zod.boolean(),
+  reminderNotification: zod.boolean(),
+  nowNotification: zod.boolean(),
+  icalUrls: zod.array(zod.string()),
+});
 
 export const userUpdateBodyEmailMin = 3;
 export const userUpdateBodyEmailMax = 50;
@@ -25,26 +24,22 @@ export const userUpdateBodyUsernameMax = 50;
 
 export const userUpdateBodyIcalUrlsMax = 10;
 
-
-
 export const UserUpdateBody = zod.object({
-  "email": zod.email().min(userUpdateBodyEmailMin).max(userUpdateBodyEmailMax),
-  "username": zod.string().min(1).max(userUpdateBodyUsernameMax),
-  "icalUrls": zod.array(zod.string()).max(userUpdateBodyIcalUrlsMax),
-  "dailyNotification": zod.boolean(),
-  "reminderNotification": zod.boolean(),
-  "nowNotification": zod.boolean()
-})
+  email: zod.email().min(userUpdateBodyEmailMin).max(userUpdateBodyEmailMax),
+  username: zod.string().min(1).max(userUpdateBodyUsernameMax),
+  icalUrls: zod.array(zod.string()).max(userUpdateBodyIcalUrlsMax),
+  dailyNotification: zod.boolean(),
+  reminderNotification: zod.boolean(),
+  nowNotification: zod.boolean(),
+});
 
 export const UserUpdateResponse = zod.object({
-  "message": zod.string()
-})
-
+  message: zod.string(),
+});
 
 export const UserDestroyResponse = zod.object({
-  "message": zod.string()
-})
-
+  message: zod.string(),
+});
 
 export const userUpdatePasswordBodyNewPasswordMin = 8;
 export const userUpdatePasswordBodyNewPasswordMax = 50;
@@ -55,41 +50,44 @@ export const userUpdatePasswordBodyConfirmPasswordMax = 50;
 export const userUpdatePasswordBodyOldPasswordMin = 8;
 export const userUpdatePasswordBodyOldPasswordMax = 50;
 
-
-
 export const UserUpdatePasswordBody = zod.object({
-  "newPassword": zod.string().min(userUpdatePasswordBodyNewPasswordMin).max(userUpdatePasswordBodyNewPasswordMax),
-  "confirmPassword": zod.string().min(userUpdatePasswordBodyConfirmPasswordMin).max(userUpdatePasswordBodyConfirmPasswordMax),
-  "oldPassword": zod.string().min(userUpdatePasswordBodyOldPasswordMin).max(userUpdatePasswordBodyOldPasswordMax).optional()
-})
+  newPassword: zod.string().min(userUpdatePasswordBodyNewPasswordMin).max(userUpdatePasswordBodyNewPasswordMax),
+  confirmPassword: zod
+    .string()
+    .min(userUpdatePasswordBodyConfirmPasswordMin)
+    .max(userUpdatePasswordBodyConfirmPasswordMax),
+  oldPassword: zod
+    .string()
+    .min(userUpdatePasswordBodyOldPasswordMin)
+    .max(userUpdatePasswordBodyOldPasswordMax)
+    .optional(),
+});
 
 export const UserUpdatePasswordResponse = zod.object({
-  "message": zod.string()
-})
-
+  message: zod.string(),
+});
 
 export const TodoIndexResponseItem = zod.object({
-  "id": zod.number(),
-  "subject": zod.string(),
-  "description": zod.string().nullable(),
-  "enableDeadline": zod.boolean().nullable(),
-  "isAllDay": zod.boolean().nullable(),
-  "location": zod.string().nullable(),
-  "recurrenceRule": zod.string().nullable(),
-  "startTimezone": zod.string().nullable(),
-  "endTimezone": zod.string().nullable(),
-  "startTime": zod.iso.datetime({}).nullable(),
-  "endTime": zod.iso.datetime({}).nullable(),
-  "recurrenceException": zod.string().nullable(),
-  "position": zod.string(),
-  "done": zod.boolean(),
-  "listId": zod.number().nullable(),
-  "userId": zod.number(),
-  "createdAt": zod.iso.datetime({}),
-  "updatedAt": zod.iso.datetime({})
-})
-export const TodoIndexResponse = zod.array(TodoIndexResponseItem)
-
+  id: zod.number(),
+  subject: zod.string(),
+  description: zod.string().nullable(),
+  enableDeadline: zod.boolean().nullable(),
+  isAllDay: zod.boolean().nullable(),
+  location: zod.string().nullable(),
+  recurrenceRule: zod.string().nullable(),
+  startTimezone: zod.string().nullable(),
+  endTimezone: zod.string().nullable(),
+  startTime: zod.iso.datetime({}).nullable(),
+  endTime: zod.iso.datetime({}).nullable(),
+  recurrenceException: zod.string().nullable(),
+  position: zod.string(),
+  done: zod.boolean(),
+  listId: zod.number().nullable(),
+  userId: zod.number(),
+  createdAt: zod.iso.datetime({}),
+  updatedAt: zod.iso.datetime({}),
+});
+export const TodoIndexResponse = zod.array(TodoIndexResponseItem);
 
 export const todoStoreBodySubjectMax = 255;
 
@@ -107,50 +105,47 @@ export const todoStoreBodyEndTimezoneMax = 255;
 
 export const todoStoreBodyPositionMax = 255;
 
-
-
 export const TodoStoreBody = zod.object({
-  "done": zod.boolean().optional(),
-  "subject": zod.string().min(1).max(todoStoreBodySubjectMax),
-  "enableDeadline": zod.boolean().nullish(),
-  "description": zod.string().max(todoStoreBodyDescriptionMax).nullish(),
-  "isAllDay": zod.boolean().nullish(),
-  "location": zod.string().max(todoStoreBodyLocationMax).nullish(),
-  "recurrenceRule": zod.string().max(todoStoreBodyRecurrenceRuleMax).nullish(),
-  "recurrenceException": zod.string().max(todoStoreBodyRecurrenceExceptionMax).nullish(),
-  "startTimezone": zod.string().max(todoStoreBodyStartTimezoneMax).nullish(),
-  "endTimezone": zod.string().max(todoStoreBodyEndTimezoneMax).nullish(),
-  "startTime": zod.union([zod.string(),zod.iso.datetime({})]).optional(),
-  "endTime": zod.union([zod.string(),zod.iso.datetime({})]).nullish(),
-  "listId": zod.number().nullish(),
-  "position": zod.string().max(todoStoreBodyPositionMax).optional()
-})
+  done: zod.boolean().optional(),
+  subject: zod.string().min(1).max(todoStoreBodySubjectMax),
+  enableDeadline: zod.boolean().nullish(),
+  description: zod.string().max(todoStoreBodyDescriptionMax).nullish(),
+  isAllDay: zod.boolean().nullish(),
+  location: zod.string().max(todoStoreBodyLocationMax).nullish(),
+  recurrenceRule: zod.string().max(todoStoreBodyRecurrenceRuleMax).nullish(),
+  recurrenceException: zod.string().max(todoStoreBodyRecurrenceExceptionMax).nullish(),
+  startTimezone: zod.string().max(todoStoreBodyStartTimezoneMax).nullish(),
+  endTimezone: zod.string().max(todoStoreBodyEndTimezoneMax).nullish(),
+  startTime: zod.union([zod.string(), zod.iso.datetime({})]).optional(),
+  endTime: zod.union([zod.string(), zod.iso.datetime({})]).nullish(),
+  listId: zod.number().nullish(),
+  position: zod.string().max(todoStoreBodyPositionMax).optional(),
+});
 
 export const TodoStoreResponse = zod.object({
-  "id": zod.number(),
-  "subject": zod.string(),
-  "description": zod.string().nullable(),
-  "enableDeadline": zod.boolean().nullable(),
-  "isAllDay": zod.boolean().nullable(),
-  "location": zod.string().nullable(),
-  "recurrenceRule": zod.string().nullable(),
-  "startTimezone": zod.string().nullable(),
-  "endTimezone": zod.string().nullable(),
-  "startTime": zod.iso.datetime({}).nullable(),
-  "endTime": zod.iso.datetime({}).nullable(),
-  "recurrenceException": zod.string().nullable(),
-  "position": zod.string(),
-  "done": zod.boolean(),
-  "listId": zod.number().nullable(),
-  "userId": zod.number(),
-  "createdAt": zod.iso.datetime({}),
-  "updatedAt": zod.iso.datetime({})
-})
-
+  id: zod.number(),
+  subject: zod.string(),
+  description: zod.string().nullable(),
+  enableDeadline: zod.boolean().nullable(),
+  isAllDay: zod.boolean().nullable(),
+  location: zod.string().nullable(),
+  recurrenceRule: zod.string().nullable(),
+  startTimezone: zod.string().nullable(),
+  endTimezone: zod.string().nullable(),
+  startTime: zod.iso.datetime({}).nullable(),
+  endTime: zod.iso.datetime({}).nullable(),
+  recurrenceException: zod.string().nullable(),
+  position: zod.string(),
+  done: zod.boolean(),
+  listId: zod.number().nullable(),
+  userId: zod.number(),
+  createdAt: zod.iso.datetime({}),
+  updatedAt: zod.iso.datetime({}),
+});
 
 export const TodoUpdateParams = zod.object({
-  "todoId": zod.number()
-})
+  todoId: zod.number(),
+});
 
 export const todoUpdateBodySubjectMax = 255;
 
@@ -168,115 +163,105 @@ export const todoUpdateBodyEndTimezoneMax = 255;
 
 export const todoUpdateBodyPositionMax = 255;
 
-
-
 export const TodoUpdateBody = zod.object({
-  "done": zod.boolean().optional(),
-  "subject": zod.string().min(1).max(todoUpdateBodySubjectMax),
-  "enableDeadline": zod.boolean().nullish(),
-  "description": zod.string().max(todoUpdateBodyDescriptionMax).nullish(),
-  "isAllDay": zod.boolean().nullish(),
-  "location": zod.string().max(todoUpdateBodyLocationMax).nullish(),
-  "recurrenceRule": zod.string().max(todoUpdateBodyRecurrenceRuleMax).nullish(),
-  "recurrenceException": zod.string().max(todoUpdateBodyRecurrenceExceptionMax).nullish(),
-  "startTimezone": zod.string().max(todoUpdateBodyStartTimezoneMax).nullish(),
-  "endTimezone": zod.string().max(todoUpdateBodyEndTimezoneMax).nullish(),
-  "startTime": zod.union([zod.string(),zod.iso.datetime({})]).optional(),
-  "endTime": zod.union([zod.string(),zod.iso.datetime({})]).nullish(),
-  "listId": zod.number().nullish(),
-  "position": zod.string().max(todoUpdateBodyPositionMax).optional()
-})
+  done: zod.boolean().optional(),
+  subject: zod.string().min(1).max(todoUpdateBodySubjectMax),
+  enableDeadline: zod.boolean().nullish(),
+  description: zod.string().max(todoUpdateBodyDescriptionMax).nullish(),
+  isAllDay: zod.boolean().nullish(),
+  location: zod.string().max(todoUpdateBodyLocationMax).nullish(),
+  recurrenceRule: zod.string().max(todoUpdateBodyRecurrenceRuleMax).nullish(),
+  recurrenceException: zod.string().max(todoUpdateBodyRecurrenceExceptionMax).nullish(),
+  startTimezone: zod.string().max(todoUpdateBodyStartTimezoneMax).nullish(),
+  endTimezone: zod.string().max(todoUpdateBodyEndTimezoneMax).nullish(),
+  startTime: zod.union([zod.string(), zod.iso.datetime({})]).optional(),
+  endTime: zod.union([zod.string(), zod.iso.datetime({})]).nullish(),
+  listId: zod.number().nullish(),
+  position: zod.string().max(todoUpdateBodyPositionMax).optional(),
+});
 
 export const TodoUpdateResponse = zod.object({
-  "id": zod.number(),
-  "subject": zod.string(),
-  "description": zod.string().nullable(),
-  "enableDeadline": zod.boolean().nullable(),
-  "isAllDay": zod.boolean().nullable(),
-  "location": zod.string().nullable(),
-  "recurrenceRule": zod.string().nullable(),
-  "startTimezone": zod.string().nullable(),
-  "endTimezone": zod.string().nullable(),
-  "startTime": zod.iso.datetime({}).nullable(),
-  "endTime": zod.iso.datetime({}).nullable(),
-  "recurrenceException": zod.string().nullable(),
-  "position": zod.string(),
-  "done": zod.boolean(),
-  "listId": zod.number().nullable(),
-  "userId": zod.number(),
-  "createdAt": zod.iso.datetime({}),
-  "updatedAt": zod.iso.datetime({})
-})
-
+  id: zod.number(),
+  subject: zod.string(),
+  description: zod.string().nullable(),
+  enableDeadline: zod.boolean().nullable(),
+  isAllDay: zod.boolean().nullable(),
+  location: zod.string().nullable(),
+  recurrenceRule: zod.string().nullable(),
+  startTimezone: zod.string().nullable(),
+  endTimezone: zod.string().nullable(),
+  startTime: zod.iso.datetime({}).nullable(),
+  endTime: zod.iso.datetime({}).nullable(),
+  recurrenceException: zod.string().nullable(),
+  position: zod.string(),
+  done: zod.boolean(),
+  listId: zod.number().nullable(),
+  userId: zod.number(),
+  createdAt: zod.iso.datetime({}),
+  updatedAt: zod.iso.datetime({}),
+});
 
 export const TodoDestroyParams = zod.object({
-  "todoId": zod.number()
-})
+  todoId: zod.number(),
+});
 
-export const TodoDestroyResponse = zod.boolean()
-
+export const TodoDestroyResponse = zod.boolean();
 
 export const ListIndexResponseItem = zod.object({
-  "id": zod.number(),
-  "name": zod.string(),
-  "color": zod.string(),
-  "userId": zod.number(),
-  "createdAt": zod.iso.datetime({}),
-  "updatedAt": zod.iso.datetime({})
-})
-export const ListIndexResponse = zod.array(ListIndexResponseItem)
-
+  id: zod.number(),
+  name: zod.string(),
+  color: zod.string(),
+  userId: zod.number(),
+  createdAt: zod.iso.datetime({}),
+  updatedAt: zod.iso.datetime({}),
+});
+export const ListIndexResponse = zod.array(ListIndexResponseItem);
 
 export const listStoreBodyNameMax = 20;
 
-export const listStoreBodyColorRegExp = new RegExp('^#[0-9A-Fa-f]{6}$');
-
+export const listStoreBodyColorRegExp = new RegExp("^#[0-9A-Fa-f]{6}$");
 
 export const ListStoreBody = zod.object({
-  "name": zod.string().min(1).max(listStoreBodyNameMax),
-  "color": zod.string().regex(listStoreBodyColorRegExp)
-})
+  name: zod.string().min(1).max(listStoreBodyNameMax),
+  color: zod.string().regex(listStoreBodyColorRegExp),
+});
 
 export const ListStoreResponse = zod.object({
-  "id": zod.number(),
-  "name": zod.string(),
-  "color": zod.string(),
-  "userId": zod.number(),
-  "createdAt": zod.iso.datetime({}),
-  "updatedAt": zod.iso.datetime({})
-})
-
+  id: zod.number(),
+  name: zod.string(),
+  color: zod.string(),
+  userId: zod.number(),
+  createdAt: zod.iso.datetime({}),
+  updatedAt: zod.iso.datetime({}),
+});
 
 export const ListUpdateParams = zod.object({
-  "listId": zod.number()
-})
+  listId: zod.number(),
+});
 
 export const listUpdateBodyNameMax = 20;
 
-export const listUpdateBodyColorRegExp = new RegExp('^#[0-9A-Fa-f]{6}$');
-
+export const listUpdateBodyColorRegExp = new RegExp("^#[0-9A-Fa-f]{6}$");
 
 export const ListUpdateBody = zod.object({
-  "name": zod.string().min(1).max(listUpdateBodyNameMax),
-  "color": zod.string().regex(listUpdateBodyColorRegExp)
-})
+  name: zod.string().min(1).max(listUpdateBodyNameMax),
+  color: zod.string().regex(listUpdateBodyColorRegExp),
+});
 
 export const ListUpdateResponse = zod.object({
-  "id": zod.number(),
-  "name": zod.string(),
-  "color": zod.string(),
-  "userId": zod.number(),
-  "createdAt": zod.iso.datetime({}),
-  "updatedAt": zod.iso.datetime({})
-})
-
+  id: zod.number(),
+  name: zod.string(),
+  color: zod.string(),
+  userId: zod.number(),
+  createdAt: zod.iso.datetime({}),
+  updatedAt: zod.iso.datetime({}),
+});
 
 export const ListDestroyParams = zod.object({
-  "listId": zod.number()
-})
+  listId: zod.number(),
+});
 
-export const ListDestroyResponse = zod.boolean()
-
+export const ListDestroyResponse = zod.boolean();
 
 export const authLoginBodyEmailMin = 3;
 export const authLoginBodyEmailMax = 50;
@@ -284,17 +269,14 @@ export const authLoginBodyEmailMax = 50;
 export const authLoginBodyPasswordMin = 8;
 export const authLoginBodyPasswordMax = 50;
 
-
-
 export const AuthLoginBody = zod.object({
-  "email": zod.email().min(authLoginBodyEmailMin).max(authLoginBodyEmailMax),
-  "password": zod.string().min(authLoginBodyPasswordMin).max(authLoginBodyPasswordMax)
-})
+  email: zod.email().min(authLoginBodyEmailMin).max(authLoginBodyEmailMax),
+  password: zod.string().min(authLoginBodyPasswordMin).max(authLoginBodyPasswordMax),
+});
 
 export const AuthLoginResponse = zod.object({
-  "message": zod.string()
-})
-
+  message: zod.string(),
+});
 
 export const authRegisterBodyUsernameMax = 50;
 
@@ -304,28 +286,24 @@ export const authRegisterBodyEmailMax = 50;
 export const authRegisterBodyPasswordMin = 8;
 export const authRegisterBodyPasswordMax = 50;
 
-
-
 export const AuthRegisterBody = zod.object({
-  "username": zod.string().min(1).max(authRegisterBodyUsernameMax),
-  "email": zod.email().min(authRegisterBodyEmailMin).max(authRegisterBodyEmailMax),
-  "password": zod.string().min(authRegisterBodyPasswordMin).max(authRegisterBodyPasswordMax)
-})
+  username: zod.string().min(1).max(authRegisterBodyUsernameMax),
+  email: zod.email().min(authRegisterBodyEmailMin).max(authRegisterBodyEmailMax),
+  password: zod.string().min(authRegisterBodyPasswordMin).max(authRegisterBodyPasswordMax),
+});
 
 export const AuthRegisterResponse = zod.object({
-  "message": zod.string()
-})
-
+  message: zod.string(),
+});
 
 export const AuthLogoutResponse = zod.object({
-  "message": zod.string()
-})
-
+  message: zod.string(),
+});
 
 export const AuthGoogleBody = zod.object({
-  "token": zod.string()
-})
+  token: zod.string(),
+});
 
 export const AuthGoogleResponse = zod.object({
-  "message": zod.string()
-})
+  message: zod.string(),
+});

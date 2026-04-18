@@ -8,18 +8,18 @@
 
 export interface RegisterRequest {
   /**
-     * @minLength 1
-     * @maxLength 50
-     */
+   * @minLength 1
+   * @maxLength 50
+   */
   username: string;
   /**
-     * @minLength 3
-     * @maxLength 50
-     */
+   * @minLength 3
+   * @maxLength 50
+   */
   email: string;
   /**
-     * @minLength 8
-     * @maxLength 50
-     */
+   * @minLength 8
+   * @maxLength 50
+   */
   password: string;
 }

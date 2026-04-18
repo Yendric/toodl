@@ -54,8 +54,18 @@ const TodoContextMenu: FC<Props> = ({ todo, contextMenu, handleClose }) => {
         onDismissed={() => setOpenModal(null)}
         onDeleteClicked={() => setOpenModal("delete")}
       />
-      <DeadlineModal key={`deadline-${todo.id}`} todo={todo} visible={openModal === "deadline"} onDismissed={() => setOpenModal(null)} />
-      <DestroyModal key={`delete-${todo.id}`} todo={todo} visible={openModal === "delete"} onDismissed={() => setOpenModal(null)} />
+      <DeadlineModal
+        key={`deadline-${todo.id}`}
+        todo={todo}
+        visible={openModal === "deadline"}
+        onDismissed={() => setOpenModal(null)}
+      />
+      <DestroyModal
+        key={`delete-${todo.id}`}
+        todo={todo}
+        visible={openModal === "delete"}
+        onDismissed={() => setOpenModal(null)}
+      />
     </>
   );
 };
