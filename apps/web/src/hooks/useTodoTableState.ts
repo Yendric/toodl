@@ -2,15 +2,15 @@ import type { DragEndEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { generateKeyBetween } from "fractional-indexing";
 import { useMemo, useState } from "react";
-import { useTodoDestroy, useTodoGetByListSuspense, useTodoUpdate } from "../api/generated/toodl";
+import { useTodoGetByListSuspense } from "../api/generated/toodl";
 import { useCurrentList } from "../context/CurrentListState";
+import { useTodoOptimisticMutations } from "./useTodoOptimisticMutations";
 
 export function useTodoTableState() {
   const { list, currentListId } = useCurrentList();
   const { data: listTodos = [] } = useTodoGetByListSuspense(currentListId);
 
-  const updateTodoMutation = useTodoUpdate();
-  const deleteTodoMutation = useTodoDestroy();
+  const { deleteTodo, reorderTodo } = useTodoOptimisticMutations();
 
   const [destroyCompletedModalOpen, setDestroyCompletedModalOpen] = useState(false);
 
@@ -70,7 +70,7 @@ export function useTodoTableState() {
       newPosition = new Date().getTime().toString();
     }
 
-    updateTodoMutation.mutate({
+    reorderTodo({
       todoId: movedTodo.id,
       data: {
         subject: movedTodo.subject,
@@ -95,7 +95,7 @@ export function useTodoTableState() {
   const destroyCompleted = () => {
     // Note: No bulk delete endpoint available in the API yet.
     // Iterating individual mutations as a fallback.
-    completedTodos.forEach((todo) => deleteTodoMutation.mutate({ todoId: todo.id }));
+    completedTodos.forEach((todo) => deleteTodo({ todoId: todo.id }));
   };
 
   return {

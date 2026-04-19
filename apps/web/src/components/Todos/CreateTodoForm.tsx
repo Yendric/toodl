@@ -12,10 +12,11 @@ import {
 import { generateKeyBetween } from "fractional-indexing";
 import { Suspense, type FC, type KeyboardEvent } from "react";
 import type { TodoResponse } from "../../api/generated/model";
-import { useCategoryIndexSuspense, useTodoStore, useUserInfoSuspense } from "../../api/generated/toodl";
+import { useCategoryIndexSuspense, useUserInfoSuspense } from "../../api/generated/toodl";
 import { TodoStoreBody } from "../../api/generated/toodlApi.zod";
 import { useCurrentList } from "../../context/CurrentListState";
 import { useCategoryPredictor } from "../../hooks/useCategoryPredictor";
+import { useTodoOptimisticMutations } from "../../hooks/useTodoOptimisticMutations";
 import { useZodForm } from "../../hooks/useZodForm";
 
 const CreateTodoForm: FC<{ activeTodos: TodoResponse[]; disabled?: boolean }> = ({ activeTodos, disabled = false }) => {
@@ -24,7 +25,7 @@ const CreateTodoForm: FC<{ activeTodos: TodoResponse[]; disabled?: boolean }> = 
   const currentList = useCurrentList();
   const isShoppingList = currentList.list?.type === "SHOPPING";
 
-  const createTodoMutation = useTodoStore();
+  const { createTodo } = useTodoOptimisticMutations();
   const { handlePredict, isPredicting } = useCategoryPredictor(isShoppingList, (categoryId) =>
     form.setFieldValue("categoryId", categoryId),
   );
@@ -40,7 +41,7 @@ const CreateTodoForm: FC<{ activeTodos: TodoResponse[]; disabled?: boolean }> = 
       const firstTodo = activeTodos[0];
       const newPosition = generateKeyBetween(null, firstTodo?.position || null);
 
-      createTodoMutation.mutate({
+      createTodo({
         data: {
           ...value,
           done: false,

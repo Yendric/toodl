@@ -1,7 +1,7 @@
 import { Box, Button, Modal, Typography } from "@mui/material";
 import { type FC } from "react";
 import type { TodoResponse } from "../../../api/generated/model";
-import { useTodoDestroy } from "../../../api/generated/toodl";
+import { useTodoOptimisticMutations } from "../../../hooks/useTodoOptimisticMutations";
 
 interface Props {
   todo: TodoResponse;
@@ -10,7 +10,7 @@ interface Props {
 }
 
 const DestroyModal: FC<Props> = ({ todo, visible, onDismissed }) => {
-  const destroyTodoMutation = useTodoDestroy();
+  const { deleteTodo } = useTodoOptimisticMutations();
 
   return (
     <Modal
@@ -42,7 +42,7 @@ const DestroyModal: FC<Props> = ({ todo, visible, onDismissed }) => {
             sx={{ mr: 1 }}
             color="error"
             onClick={() => {
-              destroyTodoMutation.mutate({ todoId: todo.id });
+              deleteTodo({ todoId: todo.id });
               onDismissed();
             }}
           >
