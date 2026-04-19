@@ -24,7 +24,6 @@ const TodoTableSkeleton: FC = () => {
           <Button disabled variant="contained" sx={{ height: 40 }}>
             Verwijder voltooid
           </Button>
-          <Skeleton variant="rectangular" width={150} height={40} sx={{ borderRadius: 1 }} />
         </Box>
         <Typography variant="body2">
           <Skeleton width={100} />
@@ -42,13 +41,11 @@ const TodoTableSkeleton: FC = () => {
           <Table size="small">
             <TableBody>
               {[1, 2, 3, 4, 5].map((i) => (
-                <TableRow key={i} sx={{ height: 48 }}>
+                <TableRow key={i} sx={{ height: 45 }}>
                   <TableCell sx={{ width: 48, p: "0 !important", textAlign: "center" }}>
                     <Skeleton variant="circular" width={20} height={20} sx={{ mx: "auto" }} />
                   </TableCell>
-                  <TableCell sx={{ width: 48, p: "0 !important", textAlign: "center" }}>
-                    <Skeleton variant="rounded" width={20} height={20} sx={{ mx: "auto" }} />
-                  </TableCell>
+
                   <TableCell sx={{ p: "0 !important" }}>
                     <Skeleton variant="text" width="60%" height={20} />
                   </TableCell>
@@ -70,7 +67,6 @@ const TodoTableSkeleton: FC = () => {
             <TableBody>
               {[1, 2].map((i) => (
                 <TableRow key={i} sx={{ height: 48 }}>
-                  <TableCell sx={{ width: 48, p: "0 !important" }} />
                   <TableCell sx={{ width: 48, p: "0 !important", textAlign: "center" }}>
                     <Skeleton variant="rounded" width={20} height={20} sx={{ mx: "auto" }} />
                   </TableCell>
