@@ -1,4 +1,5 @@
-import type { DropResult } from "@hello-pangea/dnd";
+import type { DragEndEvent } from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
 import { generateKeyBetween } from "fractional-indexing";
 import { useMemo, useState } from "react";
 import { useTodoDestroy, useTodoGetByListSuspense, useTodoUpdate } from "../api/generated/toodl";
@@ -46,16 +47,21 @@ export function useTodoTableState() {
     return listTodos.filter((todo) => todo.done);
   }, [listTodos]);
 
-  const handleDragEnd = (result: DropResult) => {
-    const { destination, source } = result;
-    if (!destination || destination.index === source.index) return;
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
 
-    const movedTodo = activeTodos[source.index]!;
-    const tempActiveTodos = [...activeTodos];
-    tempActiveTodos.splice(source.index, 1);
+    if (!over || active.id === over.id) return;
 
-    const prevPos = tempActiveTodos[destination.index - 1]?.position || null;
-    const nextPos = tempActiveTodos[destination.index]?.position || null;
+    const oldIndex = activeTodos.findIndex((todo) => todo.id === active.id);
+    const newIndex = activeTodos.findIndex((todo) => todo.id === over.id);
+
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    const movedTodo = activeTodos[oldIndex];
+    const tempActiveTodos = arrayMove(activeTodos, oldIndex, newIndex);
+
+    const prevPos = tempActiveTodos[newIndex - 1]?.position || null;
+    const nextPos = tempActiveTodos[newIndex + 1]?.position || null;
 
     let newPosition: string;
     try {
