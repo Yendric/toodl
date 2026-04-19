@@ -71,7 +71,6 @@ const TodoEditRow: FC<Props> = ({
 
   const draggingStyles: CSSProperties = isOverlay
     ? {
-      transform: "scale(1.03)",
       boxShadow: "0 10px 20px rgba(0,0,0,0.15)",
       opacity: 1,
       zIndex: 99,
@@ -82,7 +81,6 @@ const TodoEditRow: FC<Props> = ({
       ? {
         transform: style.transform,
         opacity: 0.4,
-        backgroundColor: "var(--mui-palette-background-paper)",
       }
       : {
         transform: style.transform,
@@ -94,9 +92,6 @@ const TodoEditRow: FC<Props> = ({
       style={{
         ...style,
         ...draggingStyles,
-        transition: isOverlay
-          ? "transform 250ms ease, box-shadow 250ms ease"
-          : style.transition,
         touchAction: "none",
       }}
       {...attributes}

@@ -1,16 +1,17 @@
+import type { DragEndEvent, DragStartEvent, DropAnimation } from "@dnd-kit/core";
 import {
+  closestCenter,
+  defaultDropAnimationSideEffects,
   DndContext,
+  DragOverlay,
   MouseSensor,
   TouchSensor,
   useSensor,
   useSensors,
-  closestCenter,
-  DragOverlay,
 } from "@dnd-kit/core";
-import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
-import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { Paper, Table, TableBody, TableContainer } from "@mui/material";
-import { useRef, useState, type FC } from "react";
+import { useEffect, useRef, useState, type FC } from "react";
 import type { TodoResponse } from "../../api/generated/model";
 import { triggerHaptic } from "../../helpers/haptic";
 import TodoRow from "./TodoRow";
@@ -20,10 +21,26 @@ interface Props {
   onDragEnd: (event: DragEndEvent) => void;
 }
 
-const RegularTodoTable: FC<Props> = ({ activeTodos, onDragEnd }) => {
+const dropAnimation: DropAnimation = {
+  sideEffects: defaultDropAnimationSideEffects({
+    styles: {
+      active: {
+        opacity: "0.5",
+      },
+    },
+  }),
+};
+
+const RegularTodoTable: FC<Props> = ({ activeTodos: initialTodos, onDragEnd }) => {
+  const [activeTodos, setActiveTodos] = useState(initialTodos);
   const [activeId, setActiveId] = useState<number | null>(null);
   const [tableWidth, setTableWidth] = useState<number | undefined>(undefined);
   const tableRef = useRef<HTMLTableElement>(null);
+
+  // Keep local state in sync with props
+  useEffect(() => {
+    setActiveTodos(initialTodos);
+  }, [initialTodos]);
 
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -40,14 +57,22 @@ const RegularTodoTable: FC<Props> = ({ activeTodos, onDragEnd }) => {
   );
 
   const handleDragStart = (event: DragStartEvent) => {
+    triggerHaptic();
     setActiveId(event.active.id as number);
     if (tableRef.current) {
       setTableWidth(tableRef.current.clientWidth);
     }
-    triggerHaptic();
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex = activeTodos.findIndex((t) => t.id === active.id);
+      const newIndex = activeTodos.findIndex((t) => t.id === over.id);
+      setActiveTodos((todos) => arrayMove(todos, oldIndex, newIndex));
+    }
+
     setActiveId(null);
     onDragEnd(event);
   };
@@ -81,7 +106,7 @@ const RegularTodoTable: FC<Props> = ({ activeTodos, onDragEnd }) => {
           </SortableContext>
         </Table>
       </TableContainer>
-      <DragOverlay dropAnimation={null}>
+      <DragOverlay dropAnimation={dropAnimation}>
         {activeId && activeTodo ? (
           <Paper elevation={3} style={{ width: tableWidth }}>
             <Table
