@@ -65,3 +65,11 @@ a {
 td {
   padding: 0 !important;
 }
+
+/* Ensure the sidebar view transition is layered above the main content transition */
+::view-transition-group(sidebar) {
+  z-index: 10;
+}
+::view-transition-group(main-content) {
+  z-index: 0;
+}

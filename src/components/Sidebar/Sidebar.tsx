@@ -61,6 +61,8 @@ const Sidebar: FC = () => {
         sx={{
           width: containerWidth,
           flexShrink: 0,
+          position: "relative",
+          zIndex: (theme) => theme.zIndex.drawer + 1,
           transition: theme.transitions.create("width", {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
@@ -76,6 +78,7 @@ const Sidebar: FC = () => {
             }),
             whiteSpace: "nowrap",
             "& .MuiDrawer-paper": {
+              viewTransitionName: "sidebar",
               width: drawerWidth,
               transition: theme.transitions.create("width", {
                 easing: theme.transitions.easing.sharp,
