@@ -42,6 +42,13 @@ const SidebarSkeleton: FC = () => {
       }}
     >
       <Drawer
+        slotProps={{
+          paper: {
+            sx: {
+              touchAction: isLargeScreen ? "auto" : "none",
+            },
+          },
+        }}
         sx={{
           width: containerWidth,
           transition: theme.transitions.create("width", {

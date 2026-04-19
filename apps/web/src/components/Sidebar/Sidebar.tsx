@@ -41,6 +41,27 @@ const Sidebar: FC = () => {
     setUserControlledOpen(!open);
   };
 
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent | React.MouseEvent) => {
+    if (isLargeScreen) return;
+    const clientX = "touches" in e ? e.touches[0]!.clientX : e.clientX;
+    setTouchStart(clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent | React.MouseEvent) => {
+    if (isLargeScreen || touchStart === null) return;
+    const clientX = "changedTouches" in e ? e.changedTouches[0]!.clientX : e.clientX;
+    const distance = clientX - touchStart;
+
+    if (distance > 50 && !open) {
+      setUserControlledOpen(true);
+    } else if (distance < -50 && open) {
+      setUserControlledOpen(false);
+    }
+    setTouchStart(null);
+  };
+
   const handleClickAway = () => {
     if (!isLargeScreen && open) {
       setUserControlledOpen(false);
@@ -70,6 +91,15 @@ const Sidebar: FC = () => {
         }}
       >
         <Drawer
+          slotProps={{
+            paper: {
+              onTouchStart: handleTouchStart,
+              onTouchEnd: handleTouchEnd,
+              sx: {
+                touchAction: isLargeScreen ? "auto" : "none", // Prevent back gesture
+              },
+            },
+          }}
           sx={{
             width: containerWidth,
             transition: theme.transitions.create("width", {
