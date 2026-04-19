@@ -3,11 +3,11 @@ import type { DraggableAttributes, DraggableSyntheticListeners } from "@dnd-kit/
 import { MoreVert } from "@mui/icons-material";
 import { Checkbox, IconButton, TableCell, Typography } from "@mui/material";
 import TableRow from "@mui/material/TableRow";
-import { CSSProperties, type FC } from "react";
+import { type CSSProperties, type FC } from "react";
 import type { TodoResponse } from "../../api/generated/model";
-import { useTodoUpdate } from "../../api/generated/toodl";
 import { toDateTimeString } from "../../helpers/dateTime";
 import useContextMenu from "../../hooks/useContextMenu";
+import { useTodoOptimisticMutations } from "../../hooks/useTodoOptimisticMutations";
 import TodoContextMenu from "./TodoContextMenu/TodoContextMenu";
 
 import { triggerHaptic } from "../../helpers/haptic";
@@ -33,28 +33,28 @@ const TodoShowRow: FC<Props> = ({
   isDragging,
   isOverlay,
 }) => {
-  const toggleTodoMutation = useTodoUpdate();
+  const { updateTodo } = useTodoOptimisticMutations();
 
   const { handleContextMenu, contextMenu, handleClose } = useContextMenu();
 
   const draggingStyles: CSSProperties = isOverlay
     ? {
-        transform: "scale(1.03)",
-        boxShadow: "0 10px 20px rgba(0,0,0,0.15)",
-        opacity: 1,
-        zIndex: 99,
-        position: "relative",
-        backgroundColor: "var(--mui-palette-background-paper)",
-      }
+      transform: "scale(1.03)",
+      boxShadow: "0 10px 20px rgba(0,0,0,0.15)",
+      opacity: 1,
+      zIndex: 99,
+      position: "relative",
+      backgroundColor: "var(--mui-palette-background-paper)",
+    }
     : isDragging
       ? {
-          transform: style.transform,
-          opacity: 0.4,
-          backgroundColor: "var(--mui-palette-background-paper)",
-        }
+        transform: style.transform,
+        opacity: 0.4,
+        backgroundColor: "var(--mui-palette-background-paper)",
+      }
       : {
-          transform: style.transform,
-        };
+        transform: style.transform,
+      };
 
   return (
     <>
@@ -94,7 +94,7 @@ const TodoShowRow: FC<Props> = ({
               checked={todo.done}
               onChange={() => {
                 triggerHaptic();
-                toggleTodoMutation.mutate({
+                updateTodo({
                   todoId: todo.id,
                   data: {
                     subject: todo.subject,

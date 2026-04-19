@@ -3,8 +3,8 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { StaticDateTimePicker } from "@mui/x-date-pickers";
 import { type FC } from "react";
 import type { TodoResponse } from "../../../api/generated/model";
-import { useTodoUpdate } from "../../../api/generated/toodl";
 import { TodoUpdateBody } from "../../../api/generated/toodlApi.zod";
+import { useTodoOptimisticMutations } from "../../../hooks/useTodoOptimisticMutations";
 import { useZodForm } from "../../../hooks/useZodForm";
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
 }
 
 const DeadlineModal: FC<Props> = ({ visible, onDismissed, todo }) => {
-  const updateTodoMutation = useTodoUpdate();
+  const { updateTodo } = useTodoOptimisticMutations();
   const smallScreen = useMediaQuery("(max-width:1279px)");
 
   const form = useZodForm(TodoUpdateBody, {
@@ -27,7 +27,7 @@ const DeadlineModal: FC<Props> = ({ visible, onDismissed, todo }) => {
     onSubmit: ({ value }) => {
       onDismissed();
 
-      updateTodoMutation.mutate({
+      updateTodo({
         todoId: todo.id,
         data: {
           ...value,

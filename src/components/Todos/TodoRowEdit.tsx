@@ -12,12 +12,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { CSSProperties, type FC, type KeyboardEvent } from "react";
+import { type CSSProperties, type FC, type KeyboardEvent } from "react";
 import type { TodoResponse } from "../../api/generated/model";
-import { useCategoryIndexSuspense, useTodoUpdate } from "../../api/generated/toodl";
+import { useCategoryIndexSuspense } from "../../api/generated/toodl";
 import { TodoUpdateBody } from "../../api/generated/toodlApi.zod";
 import { useCurrentList } from "../../context/CurrentListState";
 import { toDateTimeString } from "../../helpers/dateTime";
+import { useTodoOptimisticMutations } from "../../hooks/useTodoOptimisticMutations";
 import { useZodForm } from "../../hooks/useZodForm";
 
 interface Props {
@@ -44,7 +45,7 @@ const TodoEditRow: FC<Props> = ({
   const { list } = useCurrentList();
   const { data: categories } = useCategoryIndexSuspense();
   const isShoppingList = list?.type === "SHOPPING";
-  const updateTodoMutation = useTodoUpdate();
+  const { updateTodo } = useTodoOptimisticMutations();
 
   const form = useZodForm(TodoUpdateBody, {
     defaultValues: {
@@ -54,7 +55,7 @@ const TodoEditRow: FC<Props> = ({
       categoryId: todo.categoryId || null,
     },
     onSubmit: ({ value }) => {
-      updateTodoMutation.mutate({
+      updateTodo({
         todoId: todo.id,
         data: value,
       });
@@ -70,22 +71,22 @@ const TodoEditRow: FC<Props> = ({
 
   const draggingStyles: CSSProperties = isOverlay
     ? {
-        transform: "scale(1.03)",
-        boxShadow: "0 10px 20px rgba(0,0,0,0.15)",
-        opacity: 1,
-        zIndex: 99,
-        position: "relative",
-        backgroundColor: "var(--mui-palette-background-paper)",
-      }
+      transform: "scale(1.03)",
+      boxShadow: "0 10px 20px rgba(0,0,0,0.15)",
+      opacity: 1,
+      zIndex: 99,
+      position: "relative",
+      backgroundColor: "var(--mui-palette-background-paper)",
+    }
     : isDragging
       ? {
-          transform: style.transform,
-          opacity: 0.4,
-          backgroundColor: "var(--mui-palette-background-paper)",
-        }
+        transform: style.transform,
+        opacity: 0.4,
+        backgroundColor: "var(--mui-palette-background-paper)",
+      }
       : {
-          transform: style.transform,
-        };
+        transform: style.transform,
+      };
 
   return (
     <TableRow

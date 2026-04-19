@@ -2,8 +2,8 @@ import { Box, Button, FormLabel, Modal, Stack, Typography } from "@mui/material"
 import { MobileDateTimePicker } from "@mui/x-date-pickers";
 import { type FC } from "react";
 import type { TodoResponse } from "../../../api/generated/model";
-import { useTodoUpdate } from "../../../api/generated/toodl";
 import { TodoUpdateBody } from "../../../api/generated/toodlApi.zod";
+import { useTodoOptimisticMutations } from "../../../hooks/useTodoOptimisticMutations";
 import { useZodForm } from "../../../hooks/useZodForm";
 import { ZodCheckbox } from "../../Form/ZodCheckbox";
 import { ZodTextField } from "../../Form/ZodTextField";
@@ -16,7 +16,7 @@ interface Props {
 }
 
 const EditModal: FC<Props> = ({ visible, onDismissed, onDeleteClicked, todo }) => {
-  const updateTodoMutation = useTodoUpdate();
+  const { updateTodo } = useTodoOptimisticMutations();
 
   const form = useZodForm(TodoUpdateBody, {
     defaultValues: {
@@ -27,7 +27,7 @@ const EditModal: FC<Props> = ({ visible, onDismissed, onDeleteClicked, todo }) =
     },
     onSubmit: ({ value }) => {
       onDismissed();
-      updateTodoMutation.mutate({
+      updateTodo({
         todoId: todo.id,
         data: {
           ...value,
