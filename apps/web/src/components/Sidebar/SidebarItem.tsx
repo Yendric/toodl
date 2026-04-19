@@ -1,9 +1,10 @@
 import CircleIcon from "@mui/icons-material/Circle";
 import { ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
-import { useState, type FC, type MouseEvent } from "react";
+import { useRef, useState, type FC, type MouseEvent, type TouchEvent } from "react";
 import { Link } from "react-router";
 import type { ListResponse } from "../../api/generated/model";
 import { useCurrentList } from "../../context/CurrentListState";
+import { triggerHaptic } from "../../helpers/haptic";
 import DestroyListModal from "./DestroyListModal";
 import EditListModal from "./EditListModal";
 
@@ -14,6 +15,31 @@ type Props = {
 const SidebarItem: FC<Props> = ({ list }) => {
   const currentList = useCurrentList();
   const [modalMode, setModalMode] = useState<"hidden" | "edit" | "delete">("hidden");
+  const longPressTimer = useRef<NodeJS.Timeout | null>(null);
+
+  const startLongPress = (e: TouchEvent | MouseEvent) => {
+    // We only use this for touch events, mouse events are handled by onContextMenu
+    if ("touches" in e) {
+      longPressTimer.current = setTimeout(() => {
+        triggerHaptic();
+        setModalMode("edit");
+        longPressTimer.current = null;
+      }, 500);
+    }
+  };
+
+  const cancelLongPress = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+  };
+
+  const handleContextMenu = (e: MouseEvent) => {
+    e.preventDefault();
+    triggerHaptic();
+    setModalMode("edit");
+  };
 
   return (
     <>
@@ -22,10 +48,10 @@ const SidebarItem: FC<Props> = ({ list }) => {
           selected={currentList.list?.id === list.id}
           key={list.id}
           onDoubleClick={() => setModalMode("edit")}
-          onContextMenu={(e: MouseEvent) => {
-            e.preventDefault();
-            setModalMode("edit");
-          }}
+          onContextMenu={handleContextMenu}
+          onTouchStart={startLongPress}
+          onTouchEnd={cancelLongPress}
+          onTouchMove={cancelLongPress}
         >
           <ListItemIcon>
             <div
