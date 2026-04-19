@@ -1,5 +1,4 @@
-import { type DraggableProvided } from "@hello-pangea/dnd";
-import { DragIndicator } from "@mui/icons-material";
+import type { DraggableAttributes, DraggableSyntheticListeners } from "@dnd-kit/core";
 import SaveIcon from "@mui/icons-material/Save";
 import {
   Box,
@@ -13,7 +12,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { type FC, type KeyboardEvent } from "react";
+import { CSSProperties, type FC, type KeyboardEvent } from "react";
 import type { TodoResponse } from "../../api/generated/model";
 import { useCategoryIndexSuspense, useTodoUpdate } from "../../api/generated/toodl";
 import { TodoUpdateBody } from "../../api/generated/toodlApi.zod";
@@ -24,11 +23,24 @@ import { useZodForm } from "../../hooks/useZodForm";
 interface Props {
   todo: TodoResponse;
   toggleEditing: () => void;
-  provided?: DraggableProvided;
+  setNodeRef: (node: HTMLElement | null) => void;
+  style: CSSProperties;
+  attributes: DraggableAttributes;
+  listeners: DraggableSyntheticListeners;
   isDragging?: boolean;
+  isOverlay?: boolean;
 }
 
-const TodoEditRow: FC<Props> = ({ todo, toggleEditing, provided, isDragging }) => {
+const TodoEditRow: FC<Props> = ({
+  todo,
+  toggleEditing,
+  setNodeRef,
+  style,
+  attributes,
+  listeners,
+  isDragging,
+  isOverlay,
+}) => {
   const { list } = useCurrentList();
   const { data: categories } = useCategoryIndexSuspense();
   const isShoppingList = list?.type === "SHOPPING";
@@ -56,24 +68,51 @@ const TodoEditRow: FC<Props> = ({ todo, toggleEditing, provided, isDragging }) =
     }
   }
 
+  const draggingStyles: CSSProperties = isOverlay
+    ? {
+        transform: "scale(1.03)",
+        boxShadow: "0 10px 20px rgba(0,0,0,0.15)",
+        opacity: 1,
+        zIndex: 99,
+        position: "relative",
+        backgroundColor: "var(--mui-palette-background-paper)",
+      }
+    : isDragging
+      ? {
+          transform: style.transform,
+          opacity: 0.4,
+          backgroundColor: "var(--mui-palette-background-paper)",
+        }
+      : {
+          transform: style.transform,
+        };
+
   return (
     <TableRow
-      ref={provided?.innerRef}
-      {...provided?.draggableProps}
-      style={{ transition: "height 2s", ...provided?.draggableProps.style }}
+      ref={setNodeRef}
+      style={{
+        ...style,
+        ...draggingStyles,
+        transition: isOverlay
+          ? "transform 250ms ease, box-shadow 250ms ease"
+          : style.transition,
+        touchAction: "none",
+      }}
+      {...attributes}
+      {...listeners}
       sx={{
-        backgroundColor: isDragging ? "action.hover" : "inherit",
+        backgroundColor: isOverlay ? "background.paper" : isDragging ? "action.hover" : "inherit",
         display: "table-row",
+        cursor: isOverlay ? "grabbing" : isDragging ? "grabbing" : "grab",
+        "& td": {
+          borderBottom: (isDragging || isOverlay) ? "none !important" : undefined,
+        }
       }}
     >
-      <TableCell sx={{ padding: "0 !important", width: 0 }}>
-        {provided && (
-          <div {...provided.dragHandleProps} style={{ display: "flex", alignItems: "center", paddingLeft: 8 }}>
-            <DragIndicator fontSize="small" color="disabled" />
-          </div>
-        )}
-      </TableCell>
-      <TableCell padding="checkbox" sx={{ padding: "0 !important" }}>
+      <TableCell
+        padding="checkbox"
+        sx={{ padding: "0 !important", paddingLeft: "8px !important", width: "48px" }}
+      >
         <div>
           <form.Field name="done">
             {(field) => (
@@ -87,7 +126,7 @@ const TodoEditRow: FC<Props> = ({ todo, toggleEditing, provided, isDragging }) =
         </div>
       </TableCell>
       <TableCell sx={{ paddingLeft: "0 !important", paddingRight: "0 !important" }}>
-        <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
           <Box sx={{ flexGrow: 1 }}>
             <form.Field name="subject">
               {(field) => (
@@ -148,7 +187,7 @@ const TodoEditRow: FC<Props> = ({ todo, toggleEditing, provided, isDragging }) =
           )}
         </Box>
       </TableCell>
-      <TableCell align="right" style={{ width: 0, whiteSpace: "nowrap" }} sx={{ padding: "0 !important" }}>
+      <TableCell align="right" sx={{ padding: "0 !important", width: "48px" }}>
         <div>
           <IconButton onClick={() => void form.handleSubmit()} aria-label="edit" size="large">
             <SaveIcon fontSize="small" />
