@@ -10,10 +10,14 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { Paper, Table, TableBody, TableContainer } from "@mui/material";
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableContainer
+} from "@mui/material";
 import { useEffect, useRef, useState, type FC } from "react";
 import type { TodoResponse } from "../../api/generated/model";
-import { triggerHaptic } from "../../helpers/haptic";
 import TodoRow from "./TodoRow";
 
 interface Props {
@@ -23,11 +27,7 @@ interface Props {
 
 const dropAnimation: DropAnimation = {
   sideEffects: defaultDropAnimationSideEffects({
-    styles: {
-      active: {
-        opacity: "0.5",
-      },
-    },
+    styles: { active: { opacity: "0" } },
   }),
 };
 
@@ -37,27 +37,16 @@ const RegularTodoTable: FC<Props> = ({ activeTodos: initialTodos, onDragEnd }) =
   const [tableWidth, setTableWidth] = useState<number | undefined>(undefined);
   const tableRef = useRef<HTMLTableElement>(null);
 
-  // Keep local state in sync with props
   useEffect(() => {
     setActiveTodos(initialTodos);
   }, [initialTodos]);
 
   const sensors = useSensors(
-    useSensor(MouseSensor, {
-      activationConstraint: {
-        distance: 5,
-      },
-    }),
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 250,
-        tolerance: 5,
-      },
-    })
+    useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } })
   );
 
   const handleDragStart = (event: DragStartEvent) => {
-    triggerHaptic();
     setActiveId(event.active.id as number);
     if (tableRef.current) {
       setTableWidth(tableRef.current.clientWidth);
@@ -66,6 +55,7 @@ const RegularTodoTable: FC<Props> = ({ activeTodos: initialTodos, onDragEnd }) =
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+    setActiveId(null);
 
     if (over && active.id !== over.id) {
       const oldIndex = activeTodos.findIndex((t) => t.id === active.id);
@@ -73,7 +63,6 @@ const RegularTodoTable: FC<Props> = ({ activeTodos: initialTodos, onDragEnd }) =
       setActiveTodos((todos) => arrayMove(todos, oldIndex, newIndex));
     }
 
-    setActiveId(null);
     onDragEnd(event);
   };
 
@@ -106,19 +95,14 @@ const RegularTodoTable: FC<Props> = ({ activeTodos: initialTodos, onDragEnd }) =
           </SortableContext>
         </Table>
       </TableContainer>
+
       <DragOverlay dropAnimation={dropAnimation}>
-        {activeId && activeTodo ? (
-          <Paper elevation={3} style={{ width: tableWidth }}>
-            <Table
-              size="small"
-              sx={{
-                width: "100%",
-                borderCollapse: "separate",
-                borderSpacing: 0,
-              }}
-            >
-              <TableBody>
-                <TodoRow todo={activeTodo} draggable isOverlay />
+        {activeId != null && activeTodo != null ? (
+          <Paper style={{ width: tableWidth, cursor: "grabbing", boxShadow: "0px 0px 5px rgba(0,0,0,0.4)" }}>
+            <Table size="small" sx={{ width: "100%", borderCollapse: "separate", borderSpacing: 0 }}>
+              <TableBody sx={{ "& tr th , & tr td": { borderBottom: "none" } }}>
+
+                <TodoRow key={activeTodo.id + "-overlay"} todo={activeTodo} draggable />
               </TableBody>
             </Table>
           </Paper>
@@ -129,4 +113,3 @@ const RegularTodoTable: FC<Props> = ({ activeTodos: initialTodos, onDragEnd }) =
 };
 
 export default RegularTodoTable;
-
