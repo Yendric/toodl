@@ -6,11 +6,10 @@ import TableRow from "@mui/material/TableRow";
 import { type CSSProperties, type FC } from "react";
 import type { TodoResponse } from "../../api/generated/model";
 import { toDateTimeString } from "../../helpers/dateTime";
+import { triggerHaptic } from "../../helpers/haptic";
 import useContextMenu from "../../hooks/useContextMenu";
 import { useTodoOptimisticMutations } from "../../hooks/useTodoOptimisticMutations";
 import TodoContextMenu from "./TodoContextMenu/TodoContextMenu";
-
-import { triggerHaptic } from "../../helpers/haptic";
 
 interface Props {
   todo: TodoResponse;
@@ -20,7 +19,6 @@ interface Props {
   attributes: DraggableAttributes;
   listeners: DraggableSyntheticListeners;
   isDragging?: boolean;
-  isOverlay?: boolean;
 }
 
 const TodoShowRow: FC<Props> = ({
@@ -31,28 +29,10 @@ const TodoShowRow: FC<Props> = ({
   attributes,
   listeners,
   isDragging,
-  isOverlay,
 }) => {
   const { updateTodo } = useTodoOptimisticMutations();
 
   const { handleContextMenu, contextMenu, handleClose } = useContextMenu();
-
-  const draggingStyles: CSSProperties = isOverlay
-    ? {
-      boxShadow: "0 10px 20px rgba(0,0,0,0.15)",
-      opacity: 1,
-      zIndex: 99,
-      position: "relative",
-      backgroundColor: "var(--mui-palette-background-paper)",
-    }
-    : isDragging
-      ? {
-        transform: style.transform,
-        opacity: 0.4,
-      }
-      : {
-        transform: style.transform,
-      };
 
   return (
     <>
@@ -61,24 +41,13 @@ const TodoShowRow: FC<Props> = ({
         ref={setNodeRef}
         style={{
           ...style,
-          ...draggingStyles,
           touchAction: "none",
+          opacity: isDragging ? 0.4 : undefined,
         }}
         {...attributes}
         {...listeners}
         onContextMenu={handleContextMenu}
-        sx={{
-          backgroundColor: isOverlay ? "background.paper" : isDragging ? "action.hover" : "inherit",
-          display: "table-row",
-          cursor: isOverlay ? "grabbing" : isDragging ? "grabbing" : "grab",
-          "&.Mui-selected": {
-            backgroundColor: isOverlay ? "background.paper" : undefined,
-          },
-          // Fix for table borders during drag
-          "& td": {
-            borderBottom: (isDragging || isOverlay) ? "none !important" : undefined,
-          }
-        }}
+        sx={{ display: "table-row", cursor: "grab" }}
       >
         <TableCell
           padding="checkbox"

@@ -29,7 +29,6 @@ interface Props {
   attributes: DraggableAttributes;
   listeners: DraggableSyntheticListeners;
   isDragging?: boolean;
-  isOverlay?: boolean;
 }
 
 const TodoEditRow: FC<Props> = ({
@@ -40,7 +39,6 @@ const TodoEditRow: FC<Props> = ({
   attributes,
   listeners,
   isDragging,
-  isOverlay,
 }) => {
   const { list } = useCurrentList();
   const { data: categories } = useCategoryIndexSuspense();
@@ -69,41 +67,17 @@ const TodoEditRow: FC<Props> = ({
     }
   }
 
-  const draggingStyles: CSSProperties = isOverlay
-    ? {
-      boxShadow: "0 10px 20px rgba(0,0,0,0.15)",
-      opacity: 1,
-      zIndex: 99,
-      position: "relative",
-      backgroundColor: "var(--mui-palette-background-paper)",
-    }
-    : isDragging
-      ? {
-        transform: style.transform,
-        opacity: 0.4,
-      }
-      : {
-        transform: style.transform,
-      };
-
   return (
     <TableRow
       ref={setNodeRef}
       style={{
         ...style,
-        ...draggingStyles,
         touchAction: "none",
+        opacity: isDragging ? 0.4 : undefined,
       }}
       {...attributes}
       {...listeners}
-      sx={{
-        backgroundColor: isOverlay ? "background.paper" : isDragging ? "action.hover" : "inherit",
-        display: "table-row",
-        cursor: isOverlay ? "grabbing" : isDragging ? "grabbing" : "grab",
-        "& td": {
-          borderBottom: (isDragging || isOverlay) ? "none !important" : undefined,
-        }
-      }}
+      sx={{ display: "table-row", cursor: "grab" }}
     >
       <TableCell
         padding="checkbox"
@@ -193,4 +167,5 @@ const TodoEditRow: FC<Props> = ({
     </TableRow>
   );
 };
+
 export default TodoEditRow;

@@ -8,10 +8,9 @@ import TodoShowRow from "./TodoRowShow";
 interface Props {
   todo: TodoResponse;
   draggable?: boolean;
-  isOverlay?: boolean;
 }
 
-const TodoRow: FC<Props> = ({ todo, draggable = false, isOverlay = false }) => {
+const TodoRow: FC<Props> = ({ todo, draggable = false }) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const {
@@ -27,8 +26,8 @@ const TodoRow: FC<Props> = ({ todo, draggable = false, isOverlay = false }) => {
   });
 
   const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
+    transform: CSS.Translate.toString(transform),
+    transition: isDragging ? undefined : transition,
   };
 
   const toggleEditing = () => setIsEditing(!isEditing);
@@ -42,7 +41,6 @@ const TodoRow: FC<Props> = ({ todo, draggable = false, isOverlay = false }) => {
       attributes={attributes}
       listeners={listeners}
       isDragging={isDragging}
-      isOverlay={isOverlay}
     />
   ) : (
     <TodoShowRow
@@ -53,7 +51,6 @@ const TodoRow: FC<Props> = ({ todo, draggable = false, isOverlay = false }) => {
       attributes={attributes}
       listeners={listeners}
       isDragging={isDragging}
-      isOverlay={isOverlay}
     />
   );
 };

@@ -9,7 +9,12 @@ export const triggerHaptic = () => {
   
   if (!hapticLabel) {
     const container = document.createElement("div");
-    container.style.position = "absolute";
+    container.style.position = "fixed";
+    container.style.top = "0";
+    container.style.left = "0";
+    container.style.width = "0";
+    container.style.height = "0";
+    container.style.overflow = "hidden";
     container.style.opacity = "0";
     container.style.pointerEvents = "none";
 
