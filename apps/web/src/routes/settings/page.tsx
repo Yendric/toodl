@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { type FC } from "react";
 import PasswordForm from "../../components/Settings/PasswordForm";
 import ProfileForm from "../../components/Settings/ProfileForm";
@@ -8,6 +8,9 @@ const Settings: FC = () => {
     <Box sx={{ mx: "auto", my: 2, px: { xs: 2, sm: 4 }, width: { xs: "100%", sm: "90%" } }}>
       <ProfileForm />
       <PasswordForm />
+      <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 2, textAlign: "center" }}>
+        Toodl v{__APP_VERSION__} · {__BUILD_SHA__} · {__BUILD_DATE__}
+      </Typography>
     </Box>
   );
 };
