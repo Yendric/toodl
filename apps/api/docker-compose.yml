@@ -3,7 +3,7 @@ version: "3.8"
 services:
   toodl_api:
     container_name: toodl_api
-    image: yendric/toodl-api:main
+    image: ghcr.io/yendric/toodl:main
     restart: always
     volumes:
       - ./sessions:/repo/apps/api/sessions
