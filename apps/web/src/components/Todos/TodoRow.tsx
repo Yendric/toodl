@@ -13,14 +13,7 @@ interface Props {
 const TodoRow: FC<Props> = ({ todo, draggable = false }) => {
   const [isEditing, setIsEditing] = useState(false);
 
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: todo.id,
     disabled: !draggable,
   });

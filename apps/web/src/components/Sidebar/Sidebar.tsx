@@ -123,66 +123,68 @@ const Sidebar: FC = () => {
           variant="permanent"
           open={open}
         >
-        <List>
-          <ListItem disablePadding>
-            <ListItemButton onClick={handleDrawerToggle} sx={{ height: 48 }}>
-              <ListItemIcon sx={{ minWidth: open ? 40 : 24 }}>{open ? <ChevronLeftIcon /> : <MenuIcon />}</ListItemIcon>
-              {open && (
-                <Typography variant="h6" sx={{ ml: 1 }}>
-                  Toodl
-                </Typography>
-              )}
-            </ListItemButton>
-          </ListItem>
-        </List>
-        <Divider />
-        <List sx={{ flexGrow: 1, overflowY: "auto", overflowX: "hidden" }}>
-          {lists.map((list: ListResponse) => (
-            <SidebarItem key={list.id} list={list} />
-          ))}
-        </List>
-        <Divider />
-        <List>
-          <ListItemButton onClick={() => setModalVisible(true)}>
-            <ListItemIcon>
-              <AddCircleIcon />
-            </ListItemIcon>
-            <ListItemText primary="Maak een todolijst" />
-          </ListItemButton>
-        </List>
-        <Divider />
-        <List>
-          <Link to="/shopping-settings" viewTransition style={{ textDecoration: "none", color: "inherit" }}>
-            <ListItemButton selected={isShoppingSettingsRoute}>
+          <List>
+            <ListItem disablePadding>
+              <ListItemButton onClick={handleDrawerToggle} sx={{ height: 48 }}>
+                <ListItemIcon sx={{ minWidth: open ? 40 : 24 }}>
+                  {open ? <ChevronLeftIcon /> : <MenuIcon />}
+                </ListItemIcon>
+                {open && (
+                  <Typography variant="h6" sx={{ ml: 1 }}>
+                    Toodl
+                  </Typography>
+                )}
+              </ListItemButton>
+            </ListItem>
+          </List>
+          <Divider />
+          <List sx={{ flexGrow: 1, overflowY: "auto", overflowX: "hidden" }}>
+            {lists.map((list: ListResponse) => (
+              <SidebarItem key={list.id} list={list} />
+            ))}
+          </List>
+          <Divider />
+          <List>
+            <ListItemButton onClick={() => setModalVisible(true)}>
               <ListItemIcon>
-                <ShoppingCartIcon />
+                <AddCircleIcon />
               </ListItemIcon>
-              <ListItemText primary="Winkelinstellingen" />
+              <ListItemText primary="Maak een todolijst" />
             </ListItemButton>
-          </Link>
-          <Link to="/settings" viewTransition style={{ textDecoration: "none", color: "inherit" }}>
-            <ListItemButton selected={isSettingsRoute}>
-              <ListItemIcon>
-                <SettingsIcon />
-              </ListItemIcon>
-              <ListItemText primary="Instellingen" />
-            </ListItemButton>
-          </Link>
-          <ListItem disablePadding>
-            <ListItemButton
-              onClick={() => {
-                void logout();
-              }}
-            >
-              <ListItemIcon>
-                <LogoutIcon />
-              </ListItemIcon>
-              <ListItemText primary="Afmelden" />
-            </ListItemButton>
-          </ListItem>
-        </List>
-        <CreateListModal visible={modalVisible} onDismissed={() => setModalVisible(false)} />
-      </Drawer>
+          </List>
+          <Divider />
+          <List>
+            <Link to="/shopping-settings" viewTransition style={{ textDecoration: "none", color: "inherit" }}>
+              <ListItemButton selected={isShoppingSettingsRoute}>
+                <ListItemIcon>
+                  <ShoppingCartIcon />
+                </ListItemIcon>
+                <ListItemText primary="Winkelinstellingen" />
+              </ListItemButton>
+            </Link>
+            <Link to="/settings" viewTransition style={{ textDecoration: "none", color: "inherit" }}>
+              <ListItemButton selected={isSettingsRoute}>
+                <ListItemIcon>
+                  <SettingsIcon />
+                </ListItemIcon>
+                <ListItemText primary="Instellingen" />
+              </ListItemButton>
+            </Link>
+            <ListItem disablePadding>
+              <ListItemButton
+                onClick={() => {
+                  void logout();
+                }}
+              >
+                <ListItemIcon>
+                  <LogoutIcon />
+                </ListItemIcon>
+                <ListItemText primary="Afmelden" />
+              </ListItemButton>
+            </ListItem>
+          </List>
+          <CreateListModal visible={modalVisible} onDismissed={() => setModalVisible(false)} />
+        </Drawer>
       </Box>
     </ClickAwayListener>
   );

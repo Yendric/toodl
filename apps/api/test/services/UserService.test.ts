@@ -67,7 +67,7 @@ describe("UserService", () => {
     it("should delete a user and send a removal mail", async () => {
       const user = await prisma.user.create({ data: { id: 1, email: "test@example.com", username: "testuser" } });
 
-      await userService.delete(user as any);
+      await userService.delete(user);
 
       const dbUser = await prisma.user.findUnique({ where: { id: 1 } });
       expect(dbUser).toBeNull();
@@ -88,7 +88,7 @@ describe("UserService", () => {
     it("should update password directly if user has no password (SSO)", async () => {
       const user = await prisma.user.create({ data: { id: 1, email: "test@example.com", username: "test" } });
 
-      await userService.updatePassword(user as any, { newPassword: "new", confirmPassword: "new" });
+      await userService.updatePassword(user, { newPassword: "new", confirmPassword: "new" });
 
       const dbUser = await prisma.user.findUnique({ where: { id: 1 } });
       expect(await bcrypt.compare("new", dbUser!.password!)).toBe(true);
@@ -121,7 +121,7 @@ describe("UserService", () => {
         data: { id: 1, email: "test@example.com", password: hashedPassword, username: "test" },
       });
 
-      await userService.updatePassword(user as any, {
+      await userService.updatePassword(user, {
         newPassword: "new",
         confirmPassword: "new",
         oldPassword: "correct",

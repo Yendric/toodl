@@ -31,15 +31,7 @@ interface Props {
   isDragging?: boolean;
 }
 
-const TodoEditRow: FC<Props> = ({
-  todo,
-  toggleEditing,
-  setNodeRef,
-  style,
-  attributes,
-  listeners,
-  isDragging,
-}) => {
+const TodoEditRow: FC<Props> = ({ todo, toggleEditing, setNodeRef, style, attributes, listeners, isDragging }) => {
   const { list } = useCurrentList();
   const { data: categories } = useCategoryIndexSuspense();
   const isShoppingList = list?.type === "SHOPPING";
@@ -79,10 +71,7 @@ const TodoEditRow: FC<Props> = ({
       {...listeners}
       sx={{ display: "table-row", cursor: "grab" }}
     >
-      <TableCell
-        padding="checkbox"
-        sx={{ padding: "0 !important", paddingLeft: "8px !important", width: "48px" }}
-      >
+      <TableCell padding="checkbox" sx={{ padding: "0 !important", paddingLeft: "8px !important", width: "48px" }}>
         <div>
           <form.Field name="done">
             {(field) => (

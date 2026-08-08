@@ -10,12 +10,7 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableContainer
-} from "@mui/material";
+import { Paper, Table, TableBody, TableContainer } from "@mui/material";
 import { useEffect, useRef, useState, type FC } from "react";
 import type { TodoResponse } from "../../api/generated/model";
 import TodoRow from "./TodoRow";
@@ -43,7 +38,7 @@ const RegularTodoTable: FC<Props> = ({ activeTodos: initialTodos, onDragEnd }) =
 
   const sensors = useSensors(
     useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } })
+    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
   );
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -77,12 +72,7 @@ const RegularTodoTable: FC<Props> = ({ activeTodos: initialTodos, onDragEnd }) =
       onDragCancel={() => setActiveId(null)}
     >
       <TableContainer component={Paper} sx={{ mb: 2 }}>
-        <Table
-          ref={tableRef}
-          size="small"
-          aria-label="todos"
-          sx={{ borderCollapse: "separate", borderSpacing: 0 }}
-        >
+        <Table ref={tableRef} size="small" aria-label="todos" sx={{ borderCollapse: "separate", borderSpacing: 0 }}>
           {activeTodos.length === 0 && (
             <caption>Zo te zien heb je nog geen todos in deze lijst, maak er één bovenaan!</caption>
           )}
@@ -101,7 +91,6 @@ const RegularTodoTable: FC<Props> = ({ activeTodos: initialTodos, onDragEnd }) =
           <Paper style={{ width: tableWidth, cursor: "grabbing", boxShadow: "0px 0px 5px rgba(0,0,0,0.4)" }}>
             <Table size="small" sx={{ width: "100%", borderCollapse: "separate", borderSpacing: 0 }}>
               <TableBody sx={{ "& tr th , & tr td": { borderBottom: "none" } }}>
-
                 <TodoRow key={activeTodo.id + "-overlay"} todo={activeTodo} draggable />
               </TableBody>
             </Table>

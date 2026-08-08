@@ -1,37 +1,12 @@
-import {
-  closestCenter,
-  DndContext,
-  MouseSensor,
-  TouchSensor,
-  useSensor,
-  useSensors,
-  DragOverlay,
-} from "@dnd-kit/core";
+import { closestCenter, DndContext, MouseSensor, TouchSensor, useSensor, useSensors, DragOverlay } from "@dnd-kit/core";
 import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { DragIndicator } from "@mui/icons-material";
-import {
-  Card,
-  CardContent,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-} from "@mui/material";
+import { Card, CardContent, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { CSSProperties, useRef, useState, type FC } from "react";
-import {
-  useCategoryIndexSuspense,
-  useStoreGetOrderSuspense,
-  useStoreUpdateOrder,
-} from "../../api/generated/toodl";
+import { useCategoryIndexSuspense, useStoreGetOrderSuspense, useStoreUpdateOrder } from "../../api/generated/toodl";
 import { triggerHaptic } from "../../helpers/haptic";
 
 interface SortableCategoryItemProps {
@@ -41,14 +16,7 @@ interface SortableCategoryItemProps {
 }
 
 const SortableCategoryItem: FC<SortableCategoryItemProps> = ({ id, name, isOverlay }) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
 
   const style: CSSProperties = {
     transform: CSS.Transform.toString(transform),
@@ -59,13 +27,14 @@ const SortableCategoryItem: FC<SortableCategoryItemProps> = ({ id, name, isOverl
     touchAction: "none",
   };
 
-  const draggingStyles: CSSProperties = isDragging || isOverlay
-    ? {
-        transform: isOverlay ? "scale(1.03)" : `${CSS.Transform.toString(transform)} scale(1.03)`,
-        boxShadow: "0 10px 20px rgba(0,0,0,0.15)",
-        opacity: 1,
-      }
-    : {};
+  const draggingStyles: CSSProperties =
+    isDragging || isOverlay
+      ? {
+          transform: isOverlay ? "scale(1.03)" : `${CSS.Transform.toString(transform)} scale(1.03)`,
+          boxShadow: "0 10px 20px rgba(0,0,0,0.15)",
+          opacity: 1,
+        }
+      : {};
 
   return (
     <ListItem
@@ -74,9 +43,9 @@ const SortableCategoryItem: FC<SortableCategoryItemProps> = ({ id, name, isOverl
       {...attributes}
       {...listeners}
       sx={{
-        borderBottom: (isDragging || isOverlay) ? "none" : "1px solid",
+        borderBottom: isDragging || isOverlay ? "none" : "1px solid",
         borderColor: "divider",
-        cursor: (isDragging || isOverlay) ? "grabbing" : "grab"
+        cursor: isDragging || isOverlay ? "grabbing" : "grab",
       }}
     >
       <ListItemIcon>
@@ -98,9 +67,7 @@ const StoreOrderManager: FC<{ storeId: number }> = ({ storeId }) => {
   const listRef = useRef<HTMLUListElement>(null);
 
   const [order, setOrder] = useState<number[]>(() => {
-    const existingCategoryIds = [...initialOrder]
-      .sort((a, b) => a.position - b.position)
-      .map((o) => o.categoryId);
+    const existingCategoryIds = [...initialOrder].sort((a, b) => a.position - b.position).map((o) => o.categoryId);
     const allCategoryIds = categories.map((c) => c.id);
     const missingCategoryIds = allCategoryIds.filter((id) => !existingCategoryIds.includes(id));
     return [...existingCategoryIds, ...missingCategoryIds];
@@ -117,7 +84,7 @@ const StoreOrderManager: FC<{ storeId: number }> = ({ storeId }) => {
         delay: 250,
         tolerance: 5,
       },
-    })
+    }),
   );
 
   const handleDragStart = (event: DragStartEvent) => {

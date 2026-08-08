@@ -6,7 +6,7 @@ export const triggerHaptic = () => {
 
   // iOS Workaround for Haptic Feedback (iOS 17.4+ supports 'switch' attribute which provides haptic on toggle)
   let hapticLabel = document.getElementById("ios-haptic-label");
-  
+
   if (!hapticLabel) {
     const container = document.createElement("div");
     container.style.position = "fixed";

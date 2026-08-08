@@ -21,15 +21,7 @@ interface Props {
   isDragging?: boolean;
 }
 
-const TodoShowRow: FC<Props> = ({
-  todo,
-  toggleEditing,
-  setNodeRef,
-  style,
-  attributes,
-  listeners,
-  isDragging,
-}) => {
+const TodoShowRow: FC<Props> = ({ todo, toggleEditing, setNodeRef, style, attributes, listeners, isDragging }) => {
   const { updateTodo } = useTodoOptimisticMutations();
 
   const { handleContextMenu, contextMenu, handleClose } = useContextMenu();
@@ -49,10 +41,7 @@ const TodoShowRow: FC<Props> = ({
         onContextMenu={handleContextMenu}
         sx={{ display: "table-row", cursor: "grab" }}
       >
-        <TableCell
-          padding="checkbox"
-          sx={{ padding: "0 !important", paddingLeft: "8px !important", width: "48px" }}
-        >
+        <TableCell padding="checkbox" sx={{ padding: "0 !important", paddingLeft: "8px !important", width: "48px" }}>
           <div>
             <Checkbox
               checked={todo.done}
