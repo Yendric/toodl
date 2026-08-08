@@ -12,6 +12,8 @@ export * from "./categoryPredictResponse";
 export * from "./categoryRequest";
 export * from "./categoryResponse";
 export * from "./googleLoginRequest";
+export * from "./healthResponse";
+export * from "./healthResponseStatus";
 export * from "./listRequest";
 export * from "./listResponse";
 export * from "./listType";

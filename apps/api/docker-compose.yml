@@ -11,6 +11,9 @@ services:
       - ${PORT}:${PORT}
     env_file:
       - .env
+    depends_on:
+      database:
+        condition: service_healthy
   database:
     container_name: toodl_postgres
     image: postgres
@@ -21,6 +24,11 @@ services:
       POSTGRES_DB: ${DB_NAME}
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   pgdata:

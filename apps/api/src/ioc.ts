@@ -2,6 +2,7 @@ import { Container } from "inversify";
 import "reflect-metadata";
 import { AuthController } from "./controllers/auth.js";
 import { CategoryController } from "./controllers/category.js";
+import { HealthController } from "./controllers/health.js";
 import { ListController } from "./controllers/list.js";
 import { NotificationController } from "./controllers/notification.js";
 import { StoreController } from "./controllers/store.js";
@@ -24,6 +25,7 @@ const iocContainer = new Container();
 
 iocContainer.bind<AuthController>(AuthController).toSelf();
 iocContainer.bind<CategoryController>(CategoryController).toSelf();
+iocContainer.bind<HealthController>(HealthController).toSelf();
 iocContainer.bind<ListController>(ListController).toSelf();
 iocContainer.bind<StoreController>(StoreController).toSelf();
 iocContainer.bind<TodoController>(TodoController).toSelf();

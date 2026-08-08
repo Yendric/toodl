@@ -30,6 +30,7 @@ import type {
   CategoryRequest,
   CategoryResponse,
   GoogleLoginRequest,
+  HealthResponse,
   ListRequest,
   ListResponse,
   LoginRequest,
@@ -1767,6 +1768,130 @@ export const useListDestroy = <TError = unknown, TContext = unknown>(
 ): UseMutationResult<Awaited<ReturnType<typeof listDestroy>>, TError, { listId: number }, TContext> => {
   return useMutation(getListDestroyMutationOptions(options), queryClient);
 };
+
+export const healthIndex = (signal?: AbortSignal) => {
+  return api<HealthResponse>({ url: `/health`, method: "GET", signal });
+};
+
+export const getHealthIndexQueryKey = () => {
+  return [`/health`] as const;
+};
+
+export const getHealthIndexQueryOptions = <
+  TData = Awaited<ReturnType<typeof healthIndex>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof healthIndex>>, TError, TData>>;
+}) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getHealthIndexQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof healthIndex>>> = ({ signal }) => healthIndex(signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof healthIndex>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type HealthIndexQueryResult = NonNullable<Awaited<ReturnType<typeof healthIndex>>>;
+export type HealthIndexQueryError = unknown;
+
+export function useHealthIndex<TData = Awaited<ReturnType<typeof healthIndex>>, TError = unknown>(
+  options: {
+    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof healthIndex>>, TError, TData>> &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof healthIndex>>,
+          TError,
+          Awaited<ReturnType<typeof healthIndex>>
+        >,
+        "initialData"
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useHealthIndex<TData = Awaited<ReturnType<typeof healthIndex>>, TError = unknown>(
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof healthIndex>>, TError, TData>> &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof healthIndex>>,
+          TError,
+          Awaited<ReturnType<typeof healthIndex>>
+        >,
+        "initialData"
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useHealthIndex<TData = Awaited<ReturnType<typeof healthIndex>>, TError = unknown>(
+  options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof healthIndex>>, TError, TData>> },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+export function useHealthIndex<TData = Awaited<ReturnType<typeof healthIndex>>, TError = unknown>(
+  options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof healthIndex>>, TError, TData>> },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getHealthIndexQueryOptions(options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+export const getHealthIndexSuspenseQueryOptions = <
+  TData = Awaited<ReturnType<typeof healthIndex>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof healthIndex>>, TError, TData>>;
+}) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getHealthIndexQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof healthIndex>>> = ({ signal }) => healthIndex(signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
+    Awaited<ReturnType<typeof healthIndex>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type HealthIndexSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof healthIndex>>>;
+export type HealthIndexSuspenseQueryError = unknown;
+
+export function useHealthIndexSuspense<TData = Awaited<ReturnType<typeof healthIndex>>, TError = unknown>(
+  options: { query: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof healthIndex>>, TError, TData>> },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useHealthIndexSuspense<TData = Awaited<ReturnType<typeof healthIndex>>, TError = unknown>(
+  options?: { query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof healthIndex>>, TError, TData>> },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useHealthIndexSuspense<TData = Awaited<ReturnType<typeof healthIndex>>, TError = unknown>(
+  options?: { query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof healthIndex>>, TError, TData>> },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+export function useHealthIndexSuspense<TData = Awaited<ReturnType<typeof healthIndex>>, TError = unknown>(
+  options?: { query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof healthIndex>>, TError, TData>> },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getHealthIndexSuspenseQueryOptions(options);
+
+  const query = useSuspenseQuery(queryOptions, queryClient) as UseSuspenseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
 
 export const categoryPredict = (categoryPredictRequest: CategoryPredictRequest, signal?: AbortSignal) => {
   return api<CategoryPredictResponse>({

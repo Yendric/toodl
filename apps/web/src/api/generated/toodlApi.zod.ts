@@ -407,6 +407,10 @@ export const ListDestroyParams = zod.object({
 
 export const ListDestroyResponse = zod.boolean();
 
+export const HealthIndexResponse = zod.object({
+  status: zod.enum(["ok"]),
+});
+
 export const categoryPredictBodyItemNameMax = 300;
 
 export const CategoryPredictBody = zod.object({

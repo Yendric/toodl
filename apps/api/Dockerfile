@@ -49,4 +49,6 @@ COPY --from=builder --chown=node:node /repo/apps/api/prisma.config.ts ./apps/api
 WORKDIR /repo/apps/api
 USER node
 EXPOSE 3001
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+  CMD wget -qO- "http://127.0.0.1:${PORT:-3001}/v1/health" || exit 1
 CMD ["pnpm", "serve"]
