@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  toodl_api:
+    container_name: toodl_api
+    image: yendric/toodl-api:main
+    restart: always
+    volumes:
+      - ./sessions:/app/sessions
+    ports:
+      - ${PORT}:${PORT}
+    env_file:
+      - .env
+  database:
+    container_name: toodl_postgres
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
