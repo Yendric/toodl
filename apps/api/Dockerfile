@@ -13,7 +13,7 @@ FROM base AS builder
 COPY --from=deps /repo ./
 COPY apps/api apps/api
 WORKDIR /repo/apps/api
-RUN pnpm dlx prisma generate
+RUN pnpm exec prisma generate
 RUN pnpm build
 
 FROM base AS prod-deps
@@ -30,7 +30,7 @@ ENV NODE_ENV=development
 COPY --from=deps /repo ./
 COPY apps/api apps/api
 WORKDIR /repo/apps/api
-RUN pnpm dlx prisma generate
+RUN pnpm exec prisma generate
 EXPOSE 3001
 CMD ["pnpm", "dev"]
 
