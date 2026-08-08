@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/Yendric/toodl/compare/v2.1.0...v2.2.0) (2026-08-08)
+
+
+### Features
+
+* add api healthcheck ([e44f0e3](https://github.com/Yendric/toodl/commit/e44f0e3639e61cf52acc0a8cc8c124aa85f81a44))
+
 ## [2.1.0](https://github.com/Yendric/toodl/compare/v2.0.0...v2.1.0) (2026-08-08)
 
 
