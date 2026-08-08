@@ -5,7 +5,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { DragIndicator } from "@mui/icons-material";
 import { Card, CardContent, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
-import { CSSProperties, useRef, useState, type FC } from "react";
+import { useRef, useState, type CSSProperties, type FC } from "react";
 import { useCategoryIndexSuspense, useStoreGetOrderSuspense, useStoreUpdateOrder } from "../../api/generated/toodl";
 import { triggerHaptic } from "../../helpers/haptic";
 

@@ -64,7 +64,7 @@ export function useTodoOptimisticMutations() {
         if (previousTodos) {
           queryClient.setQueryData<TodoResponse[]>(
             queryKey,
-            previousTodos.map((todo) => (todo.id === todoId ? ({ ...todo, ...data }) : todo)),
+            previousTodos.map((todo) => (todo.id === todoId ? { ...todo, ...data } : todo)),
           );
         }
 

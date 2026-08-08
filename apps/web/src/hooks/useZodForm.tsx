@@ -1,4 +1,10 @@
-import { useForm, type FormAsyncValidateOrFn, type FormOptions, type FormValidateOrFn } from "@tanstack/react-form";
+import {
+  useForm,
+  type FormAsyncValidateOrFn,
+  type FormOptions,
+  type FormValidateOrFn,
+  type RejectPromiseValidator,
+} from "@tanstack/react-form";
 import { z } from "zod";
 
 // Typescript moment
@@ -51,7 +57,7 @@ export function useZodForm<
   >({
     ...options,
     validators: {
-      onSubmit: schema as unknown as TOnSubmit,
+      onSubmit: schema as unknown as RejectPromiseValidator<TOnSubmit>,
     },
   });
 }

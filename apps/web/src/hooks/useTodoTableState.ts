@@ -58,6 +58,7 @@ export function useTodoTableState() {
     if (oldIndex === -1 || newIndex === -1) return;
 
     const movedTodo = activeTodos[oldIndex];
+    if (!movedTodo) return;
     const tempActiveTodos = arrayMove(activeTodos, oldIndex, newIndex);
 
     const prevPos = tempActiveTodos[newIndex - 1]?.position || null;

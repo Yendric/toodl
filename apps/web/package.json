@@ -30,6 +30,7 @@
   "scripts": {
     "dev": "vite --open --port=3000 --host=localhost",
     "build": "vite build",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "gen": "orval && prettier --write src/api/generated",
     "format:check": "prettier --check .",
