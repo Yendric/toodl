@@ -20,7 +20,6 @@ export default defineConfig({
           name: "api",
         },
         query: {
-          useQuery: true,
           useSuspenseQuery: true,
           useInfinite: false,
         },

@@ -37,7 +37,7 @@ export function useTodoOptimisticMutations() {
               categoryId: newTodo.data.categoryId ?? null,
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
-            } as TodoResponse,
+            },
             ...previousTodos,
           ]);
         }
@@ -64,7 +64,7 @@ export function useTodoOptimisticMutations() {
         if (previousTodos) {
           queryClient.setQueryData<TodoResponse[]>(
             queryKey,
-            previousTodos.map((todo) => (todo.id === todoId ? ({ ...todo, ...data } as TodoResponse) : todo)),
+            previousTodos.map((todo) => (todo.id === todoId ? ({ ...todo, ...data }) : todo)),
           );
         }
 
