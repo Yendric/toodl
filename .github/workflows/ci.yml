@@ -29,7 +29,7 @@ jobs:
             ${{ runner.os }}-pnpm-store-
       - run: pnpm install --frozen-lockfile
       - name: Generate Prisma Client
-        run: npx prisma generate
+        run: pnpm --filter toodl-api exec prisma generate
       - run: pnpm run lint
 
   format:
@@ -75,7 +75,7 @@ jobs:
             ${{ runner.os }}-pnpm-store-
       - run: pnpm install --frozen-lockfile
       - name: Generate Prisma Client
-        run: npx prisma generate
+        run: pnpm --filter toodl-api exec prisma generate
       - run: pnpm run build
 
   test:
@@ -99,7 +99,7 @@ jobs:
             ${{ runner.os }}-pnpm-store-
       - run: pnpm install --frozen-lockfile
       - name: Generate Prisma Client
-        run: npx prisma generate
+        run: pnpm --filter toodl-api exec prisma generate
       - run: pnpm run test
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5

@@ -3,13 +3,15 @@ services:
     container_name: toodl_api
     stdin_open: true
     build:
-      context: .
+      context: ../..
+      dockerfile: apps/api/Dockerfile
       target: development
     environment:
       - TZ=Europe/Brussels
     volumes:
-      - ./:/app
-      - /app/node_modules
+      - ../..:/repo
+      - /repo/node_modules
+      - /repo/apps/api/node_modules
     ports:
       - ${PORT}:${PORT}
     depends_on:
