@@ -2,7 +2,7 @@ import { defineConfig } from "orval";
 
 export default defineConfig({
   toodl: {
-    input: "./swagger.json",
+    input: "../api/src/swagger.json",
     output: {
       mode: "split",
       target: "./src/api/generated/toodl.ts",
@@ -28,7 +28,7 @@ export default defineConfig({
     },
   },
   toodlZod: {
-    input: "./swagger.json",
+    input: "../api/src/swagger.json",
     output: {
       mode: "single",
       target: "./src/api/generated",
