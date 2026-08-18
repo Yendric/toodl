@@ -5,6 +5,7 @@
  * Toodl Api
  * OpenAPI spec version: 2.0.0
  */
+import type { ListResponsePermission } from "./listResponsePermission";
 import type { ListType } from "./listType";
 
 export interface ListResponse {
@@ -13,6 +14,9 @@ export interface ListResponse {
   color: string;
   type: ListType;
   userId: number;
+  permission: ListResponsePermission;
+  isShared: boolean;
+  ownerUsername: string;
   createdAt: string;
   updatedAt: string;
 }

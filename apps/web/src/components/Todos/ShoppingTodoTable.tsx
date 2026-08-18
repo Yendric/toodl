@@ -11,6 +11,17 @@ const GroupedList: FC<{
 }> = ({ categories, grouped, storeOrder }) => {
   const categoriesMap = useMemo(() => new Map(categories.map((c) => [c.id, c])), [categories]);
 
+  // Valt terug op de categorienaam uit de todo zelf voor categorieën van andere lijstdeelnemers
+  const groupNames = useMemo(() => {
+    const names = new Map<number, string>();
+    for (const key of Object.keys(grouped)) {
+      if (key === "null") continue;
+      const id = Number(key);
+      names.set(id, categoriesMap.get(id)?.name || grouped[id]?.[0]?.categoryName || "");
+    }
+    return names;
+  }, [grouped, categoriesMap]);
+
   const sortedCategoryIds = useMemo(() => {
     const existingIds = Object.keys(grouped)
       .map((k) => (k === "null" ? null : Number(k)))
@@ -28,25 +39,24 @@ const GroupedList: FC<{
         if (posA !== -1) return -1;
         if (posB !== -1) return 1;
       }
-      const nameA = categoriesMap.get(a)?.name || "";
-      const nameB = categoriesMap.get(b)?.name || "";
+      const nameA = groupNames.get(a) || "";
+      const nameB = groupNames.get(b) || "";
       return nameA.localeCompare(nameB);
     });
 
     const result: (number | null)[] = [...sorted];
     if (grouped["null"] && grouped["null"].length > 0) result.push(null);
     return result;
-  }, [grouped, storeOrder, categoriesMap]);
+  }, [grouped, storeOrder, groupNames]);
 
   return (
     <>
       {sortedCategoryIds.map((catId) => {
-        const category = catId !== null ? categoriesMap.get(catId) : null;
         const todos = grouped[catId === null ? "null" : catId];
         return (
           <Box key={catId ?? "null"} sx={{ mb: 3 }}>
             <Typography variant="subtitle2" sx={{ ml: 1, mb: 1, color: "text.secondary", fontWeight: "bold" }}>
-              {category?.name || "Geen categorie"}
+              {(catId !== null && groupNames.get(catId)) || "Geen categorie"}
             </Typography>
             <TableContainer component={Paper}>
               <Table size="small">

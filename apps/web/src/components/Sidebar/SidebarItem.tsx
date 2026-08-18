@@ -1,4 +1,5 @@
 import CircleIcon from "@mui/icons-material/Circle";
+import PeopleIcon from "@mui/icons-material/People";
 import { ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import { useRef, useState, type FC, type MouseEvent, type TouchEvent } from "react";
 import { Link } from "react-router";
@@ -7,6 +8,7 @@ import { useCurrentList } from "../../context/CurrentListState";
 import { triggerHaptic } from "../../helpers/haptic";
 import DestroyListModal from "./DestroyListModal";
 import EditListModal from "./EditListModal";
+import LeaveListModal from "./LeaveListModal";
 
 type Props = {
   list: ListResponse;
@@ -14,15 +16,18 @@ type Props = {
 
 const SidebarItem: FC<Props> = ({ list }) => {
   const currentList = useCurrentList();
-  const [modalMode, setModalMode] = useState<"hidden" | "edit" | "delete">("hidden");
+  const [modalMode, setModalMode] = useState<"hidden" | "edit" | "delete" | "leave">("hidden");
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
+
+  const isOwner = list.permission === "OWNER";
+  const openListModal = () => setModalMode(isOwner ? "edit" : "leave");
 
   const startLongPress = (e: TouchEvent | MouseEvent) => {
     // We only use this for touch events, mouse events are handled by onContextMenu
     if ("touches" in e) {
       longPressTimer.current = setTimeout(() => {
         triggerHaptic();
-        setModalMode("edit");
+        openListModal();
         longPressTimer.current = null;
       }, 500);
     }
@@ -38,7 +43,7 @@ const SidebarItem: FC<Props> = ({ list }) => {
   const handleContextMenu = (e: MouseEvent) => {
     e.preventDefault();
     triggerHaptic();
-    setModalMode("edit");
+    openListModal();
   };
 
   return (
@@ -47,7 +52,7 @@ const SidebarItem: FC<Props> = ({ list }) => {
         <ListItemButton
           selected={currentList.list?.id === list.id}
           key={list.id}
-          onDoubleClick={() => setModalMode("edit")}
+          onDoubleClick={openListModal}
           onContextMenu={handleContextMenu}
           onTouchStart={startLongPress}
           onTouchEnd={cancelLongPress}
@@ -77,16 +82,23 @@ const SidebarItem: FC<Props> = ({ list }) => {
             </div>
           </ListItemIcon>
           <ListItemText primary={list.name} />
+          {list.isShared && <PeopleIcon fontSize="small" sx={{ color: "text.secondary" }} />}
         </ListItemButton>
       </Link>
-      <EditListModal
-        key={list.id}
-        list={list}
-        visible={modalMode === "edit"}
-        onDismissed={() => setModalMode("hidden")}
-        onDeleteRequest={() => setModalMode("delete")}
-      />
-      <DestroyListModal list={list} visible={modalMode === "delete"} onDismissed={() => setModalMode("hidden")} />
+      {isOwner ? (
+        <>
+          <EditListModal
+            key={list.id}
+            list={list}
+            visible={modalMode === "edit"}
+            onDismissed={() => setModalMode("hidden")}
+            onDeleteRequest={() => setModalMode("delete")}
+          />
+          <DestroyListModal list={list} visible={modalMode === "delete"} onDismissed={() => setModalMode("hidden")} />
+        </>
+      ) : (
+        <LeaveListModal list={list} visible={modalMode === "leave"} onDismissed={() => setModalMode("hidden")} />
+      )}
     </>
   );
 };

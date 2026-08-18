@@ -24,6 +24,7 @@ import type { ListResponse } from "../../api/generated/model";
 import { useListIndexSuspense } from "../../api/generated/toodl";
 import { useAuth } from "../../context/AuthState";
 import CreateListModal from "./CreateListModal";
+import SidebarInvitations from "./SidebarInvitations";
 import SidebarItem from "./SidebarItem";
 
 const Sidebar: FC = () => {
@@ -143,6 +144,7 @@ const Sidebar: FC = () => {
               <SidebarItem key={list.id} list={list} />
             ))}
           </List>
+          <SidebarInvitations />
           <Divider />
           <List>
             <ListItemButton onClick={() => setModalVisible(true)}>

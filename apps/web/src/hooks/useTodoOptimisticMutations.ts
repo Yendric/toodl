@@ -35,6 +35,8 @@ export function useTodoOptimisticMutations() {
               endTime: newTodo.data.endTime ?? null,
               recurrenceException: newTodo.data.recurrenceException ?? null,
               categoryId: newTodo.data.categoryId ?? null,
+              createdBy: "",
+              categoryName: null,
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
             },

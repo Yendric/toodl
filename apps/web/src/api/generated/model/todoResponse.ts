@@ -36,6 +36,9 @@ export interface TodoResponse {
   userId: number;
   /** @nullable */
   categoryId: number | null;
+  createdBy: string;
+  /** @nullable */
+  categoryName: string | null;
   createdAt: string;
   updatedAt: string;
 }

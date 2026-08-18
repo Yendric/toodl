@@ -5,6 +5,7 @@ import { Checkbox, IconButton, TableCell, Typography } from "@mui/material";
 import TableRow from "@mui/material/TableRow";
 import { type CSSProperties, type FC } from "react";
 import type { TodoResponse } from "../../api/generated/model";
+import { useCurrentList } from "../../context/CurrentListState";
 import { toDateTimeString } from "../../helpers/dateTime";
 import { triggerHaptic } from "../../helpers/haptic";
 import useContextMenu from "../../hooks/useContextMenu";
@@ -23,8 +24,17 @@ interface Props {
 
 const TodoShowRow: FC<Props> = ({ todo, toggleEditing, setNodeRef, style, attributes, listeners, isDragging }) => {
   const { updateTodo } = useTodoOptimisticMutations();
+  const { list } = useCurrentList();
+  const readOnly = list?.permission === "READ";
 
   const { handleContextMenu, contextMenu, handleClose } = useContextMenu();
+
+  const details = [
+    todo.enableDeadline && todo.startTime ? toDateTimeString(new Date(todo.startTime)) : null,
+    list?.isShared ? todo.createdBy : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
   return (
     <>
@@ -38,13 +48,14 @@ const TodoShowRow: FC<Props> = ({ todo, toggleEditing, setNodeRef, style, attrib
         }}
         {...attributes}
         {...listeners}
-        onContextMenu={handleContextMenu}
-        sx={{ display: "table-row", cursor: "grab" }}
+        onContextMenu={readOnly ? undefined : handleContextMenu}
+        sx={{ display: "table-row", cursor: readOnly ? "default" : "grab" }}
       >
         <TableCell padding="checkbox" sx={{ padding: "0 !important", paddingLeft: "8px !important", width: "48px" }}>
           <div>
             <Checkbox
               checked={todo.done}
+              disabled={readOnly}
               onChange={() => {
                 triggerHaptic();
                 updateTodo({
@@ -66,23 +77,25 @@ const TodoShowRow: FC<Props> = ({ todo, toggleEditing, setNodeRef, style, attrib
             <Typography onClick={toggleEditing} style={{ textDecoration: todo.done ? "line-through" : "none" }}>
               {todo.subject}
             </Typography>
-            {todo.enableDeadline && todo.startTime && (
+            {details && (
               <Typography
                 onClick={toggleEditing}
                 sx={{ color: "text.secondary", fontSize: "0.75rem" }}
                 style={{ textDecoration: todo.done ? "line-through" : "none" }}
               >
-                {toDateTimeString(new Date(todo.startTime))}
+                {details}
               </Typography>
             )}
           </div>
         </TableCell>
         <TableCell align="right" sx={{ padding: "0 !important", width: "48px" }}>
-          <div>
-            <IconButton onClick={handleContextMenu} aria-label="edit" size="large">
-              <MoreVert fontSize="small" />
-            </IconButton>
-          </div>
+          {!readOnly && (
+            <div>
+              <IconButton onClick={handleContextMenu} aria-label="edit" size="large">
+                <MoreVert fontSize="small" />
+              </IconButton>
+            </div>
+          )}
         </TableCell>
       </TableRow>
     </>

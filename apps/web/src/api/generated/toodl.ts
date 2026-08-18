@@ -31,6 +31,7 @@ import type {
   CategoryResponse,
   GoogleLoginRequest,
   HealthResponse,
+  InvitationResponse,
   ListRequest,
   ListResponse,
   LoginRequest,
@@ -40,6 +41,9 @@ import type {
   PasswordUpdateRequest,
   PushSubscriptionData,
   RegisterRequest,
+  SharePermissionRequest,
+  ShareRequest,
+  ShareResponse,
   StoreCategoryOrderRequest,
   StoreCategoryOrderResponse,
   StoreRequest,
@@ -1209,6 +1213,503 @@ export const useStoreUpdateOrder = <TError = unknown, TContext = unknown>(
   TContext
 > => {
   return useMutation(getStoreUpdateOrderMutationOptions(options), queryClient);
+};
+
+export const shareInvitations = (signal?: AbortSignal) => {
+  return api<InvitationResponse[]>({ url: `/shares/invitations`, method: "GET", signal });
+};
+
+export const getShareInvitationsQueryKey = () => {
+  return [`/shares/invitations`] as const;
+};
+
+export const getShareInvitationsQueryOptions = <
+  TData = Awaited<ReturnType<typeof shareInvitations>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof shareInvitations>>, TError, TData>>;
+}) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getShareInvitationsQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof shareInvitations>>> = ({ signal }) => shareInvitations(signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof shareInvitations>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type ShareInvitationsQueryResult = NonNullable<Awaited<ReturnType<typeof shareInvitations>>>;
+export type ShareInvitationsQueryError = unknown;
+
+export function useShareInvitations<TData = Awaited<ReturnType<typeof shareInvitations>>, TError = unknown>(
+  options: {
+    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof shareInvitations>>, TError, TData>> &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof shareInvitations>>,
+          TError,
+          Awaited<ReturnType<typeof shareInvitations>>
+        >,
+        "initialData"
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useShareInvitations<TData = Awaited<ReturnType<typeof shareInvitations>>, TError = unknown>(
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof shareInvitations>>, TError, TData>> &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof shareInvitations>>,
+          TError,
+          Awaited<ReturnType<typeof shareInvitations>>
+        >,
+        "initialData"
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useShareInvitations<TData = Awaited<ReturnType<typeof shareInvitations>>, TError = unknown>(
+  options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof shareInvitations>>, TError, TData>> },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+export function useShareInvitations<TData = Awaited<ReturnType<typeof shareInvitations>>, TError = unknown>(
+  options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof shareInvitations>>, TError, TData>> },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getShareInvitationsQueryOptions(options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+export const getShareInvitationsSuspenseQueryOptions = <
+  TData = Awaited<ReturnType<typeof shareInvitations>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof shareInvitations>>, TError, TData>>;
+}) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getShareInvitationsQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof shareInvitations>>> = ({ signal }) => shareInvitations(signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
+    Awaited<ReturnType<typeof shareInvitations>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type ShareInvitationsSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof shareInvitations>>>;
+export type ShareInvitationsSuspenseQueryError = unknown;
+
+export function useShareInvitationsSuspense<TData = Awaited<ReturnType<typeof shareInvitations>>, TError = unknown>(
+  options: { query: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof shareInvitations>>, TError, TData>> },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useShareInvitationsSuspense<TData = Awaited<ReturnType<typeof shareInvitations>>, TError = unknown>(
+  options?: { query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof shareInvitations>>, TError, TData>> },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useShareInvitationsSuspense<TData = Awaited<ReturnType<typeof shareInvitations>>, TError = unknown>(
+  options?: { query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof shareInvitations>>, TError, TData>> },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+export function useShareInvitationsSuspense<TData = Awaited<ReturnType<typeof shareInvitations>>, TError = unknown>(
+  options?: { query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof shareInvitations>>, TError, TData>> },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getShareInvitationsSuspenseQueryOptions(options);
+
+  const query = useSuspenseQuery(queryOptions, queryClient) as UseSuspenseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+export const shareIndexForList = (listId: number, signal?: AbortSignal) => {
+  return api<ShareResponse[]>({ url: `/shares/list/${listId}`, method: "GET", signal });
+};
+
+export const getShareIndexForListQueryKey = (listId: number) => {
+  return [`/shares/list/${listId}`] as const;
+};
+
+export const getShareIndexForListQueryOptions = <
+  TData = Awaited<ReturnType<typeof shareIndexForList>>,
+  TError = unknown,
+>(
+  listId: number,
+  options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof shareIndexForList>>, TError, TData>> },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getShareIndexForListQueryKey(listId);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof shareIndexForList>>> = ({ signal }) =>
+    shareIndexForList(listId, signal);
+
+  return { queryKey, queryFn, enabled: listId !== null && listId !== undefined, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof shareIndexForList>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type ShareIndexForListQueryResult = NonNullable<Awaited<ReturnType<typeof shareIndexForList>>>;
+export type ShareIndexForListQueryError = unknown;
+
+export function useShareIndexForList<TData = Awaited<ReturnType<typeof shareIndexForList>>, TError = unknown>(
+  listId: number,
+  options: {
+    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof shareIndexForList>>, TError, TData>> &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof shareIndexForList>>,
+          TError,
+          Awaited<ReturnType<typeof shareIndexForList>>
+        >,
+        "initialData"
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useShareIndexForList<TData = Awaited<ReturnType<typeof shareIndexForList>>, TError = unknown>(
+  listId: number,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof shareIndexForList>>, TError, TData>> &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof shareIndexForList>>,
+          TError,
+          Awaited<ReturnType<typeof shareIndexForList>>
+        >,
+        "initialData"
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useShareIndexForList<TData = Awaited<ReturnType<typeof shareIndexForList>>, TError = unknown>(
+  listId: number,
+  options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof shareIndexForList>>, TError, TData>> },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+export function useShareIndexForList<TData = Awaited<ReturnType<typeof shareIndexForList>>, TError = unknown>(
+  listId: number,
+  options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof shareIndexForList>>, TError, TData>> },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getShareIndexForListQueryOptions(listId, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+export const getShareIndexForListSuspenseQueryOptions = <
+  TData = Awaited<ReturnType<typeof shareIndexForList>>,
+  TError = unknown,
+>(
+  listId: number,
+  options?: { query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof shareIndexForList>>, TError, TData>> },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getShareIndexForListQueryKey(listId);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof shareIndexForList>>> = ({ signal }) =>
+    shareIndexForList(listId, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
+    Awaited<ReturnType<typeof shareIndexForList>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type ShareIndexForListSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof shareIndexForList>>>;
+export type ShareIndexForListSuspenseQueryError = unknown;
+
+export function useShareIndexForListSuspense<TData = Awaited<ReturnType<typeof shareIndexForList>>, TError = unknown>(
+  listId: number,
+  options: { query: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof shareIndexForList>>, TError, TData>> },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useShareIndexForListSuspense<TData = Awaited<ReturnType<typeof shareIndexForList>>, TError = unknown>(
+  listId: number,
+  options?: { query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof shareIndexForList>>, TError, TData>> },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useShareIndexForListSuspense<TData = Awaited<ReturnType<typeof shareIndexForList>>, TError = unknown>(
+  listId: number,
+  options?: { query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof shareIndexForList>>, TError, TData>> },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+export function useShareIndexForListSuspense<TData = Awaited<ReturnType<typeof shareIndexForList>>, TError = unknown>(
+  listId: number,
+  options?: { query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof shareIndexForList>>, TError, TData>> },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getShareIndexForListSuspenseQueryOptions(listId, options);
+
+  const query = useSuspenseQuery(queryOptions, queryClient) as UseSuspenseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+export const shareStore = (listId: number, shareRequest: ShareRequest, signal?: AbortSignal) => {
+  return api<ShareResponse>({
+    url: `/shares/list/${listId}`,
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    data: shareRequest,
+    signal,
+  });
+};
+
+export const getShareStoreMutationOptions = <TError = unknown, TContext = unknown>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof shareStore>>,
+    TError,
+    { listId: number; data: ShareRequest },
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof shareStore>>,
+  TError,
+  { listId: number; data: ShareRequest },
+  TContext
+> => {
+  const mutationKey = ["shareStore"];
+  const { mutation: mutationOptions } = options
+    ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
+
+  const mutationFn: MutationFunction<Awaited<ReturnType<typeof shareStore>>, { listId: number; data: ShareRequest }> = (
+    props,
+  ) => {
+    const { listId, data } = props ?? {};
+
+    return shareStore(listId, data);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ShareStoreMutationResult = NonNullable<Awaited<ReturnType<typeof shareStore>>>;
+export type ShareStoreMutationBody = ShareRequest;
+export type ShareStoreMutationError = unknown;
+
+export const useShareStore = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof shareStore>>,
+      TError,
+      { listId: number; data: ShareRequest },
+      TContext
+    >;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof shareStore>>,
+  TError,
+  { listId: number; data: ShareRequest },
+  TContext
+> => {
+  return useMutation(getShareStoreMutationOptions(options), queryClient);
+};
+
+export const shareAccept = (listId: number, signal?: AbortSignal) => {
+  return api<boolean>({ url: `/shares/list/${listId}/accept`, method: "POST", signal });
+};
+
+export const getShareAcceptMutationOptions = <TError = unknown, TContext = unknown>(options?: {
+  mutation?: UseMutationOptions<Awaited<ReturnType<typeof shareAccept>>, TError, { listId: number }, TContext>;
+}): UseMutationOptions<Awaited<ReturnType<typeof shareAccept>>, TError, { listId: number }, TContext> => {
+  const mutationKey = ["shareAccept"];
+  const { mutation: mutationOptions } = options
+    ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
+
+  const mutationFn: MutationFunction<Awaited<ReturnType<typeof shareAccept>>, { listId: number }> = (props) => {
+    const { listId } = props ?? {};
+
+    return shareAccept(listId);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ShareAcceptMutationResult = NonNullable<Awaited<ReturnType<typeof shareAccept>>>;
+
+export type ShareAcceptMutationError = unknown;
+
+export const useShareAccept = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<Awaited<ReturnType<typeof shareAccept>>, TError, { listId: number }, TContext>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<Awaited<ReturnType<typeof shareAccept>>, TError, { listId: number }, TContext> => {
+  return useMutation(getShareAcceptMutationOptions(options), queryClient);
+};
+
+export const shareLeave = (listId: number, signal?: AbortSignal) => {
+  return api<boolean>({ url: `/shares/list/${listId}/leave`, method: "DELETE", signal });
+};
+
+export const getShareLeaveMutationOptions = <TError = unknown, TContext = unknown>(options?: {
+  mutation?: UseMutationOptions<Awaited<ReturnType<typeof shareLeave>>, TError, { listId: number }, TContext>;
+}): UseMutationOptions<Awaited<ReturnType<typeof shareLeave>>, TError, { listId: number }, TContext> => {
+  const mutationKey = ["shareLeave"];
+  const { mutation: mutationOptions } = options
+    ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
+
+  const mutationFn: MutationFunction<Awaited<ReturnType<typeof shareLeave>>, { listId: number }> = (props) => {
+    const { listId } = props ?? {};
+
+    return shareLeave(listId);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ShareLeaveMutationResult = NonNullable<Awaited<ReturnType<typeof shareLeave>>>;
+
+export type ShareLeaveMutationError = unknown;
+
+export const useShareLeave = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<Awaited<ReturnType<typeof shareLeave>>, TError, { listId: number }, TContext>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<Awaited<ReturnType<typeof shareLeave>>, TError, { listId: number }, TContext> => {
+  return useMutation(getShareLeaveMutationOptions(options), queryClient);
+};
+
+export const shareUpdate = (shareId: number, sharePermissionRequest: SharePermissionRequest, signal?: AbortSignal) => {
+  return api<ShareResponse>({
+    url: `/shares/${shareId}`,
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    data: sharePermissionRequest,
+    signal,
+  });
+};
+
+export const getShareUpdateMutationOptions = <TError = unknown, TContext = unknown>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof shareUpdate>>,
+    TError,
+    { shareId: number; data: SharePermissionRequest },
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof shareUpdate>>,
+  TError,
+  { shareId: number; data: SharePermissionRequest },
+  TContext
+> => {
+  const mutationKey = ["shareUpdate"];
+  const { mutation: mutationOptions } = options
+    ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof shareUpdate>>,
+    { shareId: number; data: SharePermissionRequest }
+  > = (props) => {
+    const { shareId, data } = props ?? {};
+
+    return shareUpdate(shareId, data);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ShareUpdateMutationResult = NonNullable<Awaited<ReturnType<typeof shareUpdate>>>;
+export type ShareUpdateMutationBody = SharePermissionRequest;
+export type ShareUpdateMutationError = unknown;
+
+export const useShareUpdate = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof shareUpdate>>,
+      TError,
+      { shareId: number; data: SharePermissionRequest },
+      TContext
+    >;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof shareUpdate>>,
+  TError,
+  { shareId: number; data: SharePermissionRequest },
+  TContext
+> => {
+  return useMutation(getShareUpdateMutationOptions(options), queryClient);
+};
+
+export const shareDestroy = (shareId: number, signal?: AbortSignal) => {
+  return api<boolean>({ url: `/shares/${shareId}`, method: "DELETE", signal });
+};
+
+export const getShareDestroyMutationOptions = <TError = unknown, TContext = unknown>(options?: {
+  mutation?: UseMutationOptions<Awaited<ReturnType<typeof shareDestroy>>, TError, { shareId: number }, TContext>;
+}): UseMutationOptions<Awaited<ReturnType<typeof shareDestroy>>, TError, { shareId: number }, TContext> => {
+  const mutationKey = ["shareDestroy"];
+  const { mutation: mutationOptions } = options
+    ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
+
+  const mutationFn: MutationFunction<Awaited<ReturnType<typeof shareDestroy>>, { shareId: number }> = (props) => {
+    const { shareId } = props ?? {};
+
+    return shareDestroy(shareId);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ShareDestroyMutationResult = NonNullable<Awaited<ReturnType<typeof shareDestroy>>>;
+
+export type ShareDestroyMutationError = unknown;
+
+export const useShareDestroy = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<Awaited<ReturnType<typeof shareDestroy>>, TError, { shareId: number }, TContext>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<Awaited<ReturnType<typeof shareDestroy>>, TError, { shareId: number }, TContext> => {
+  return useMutation(getShareDestroyMutationOptions(options), queryClient);
 };
 
 export const notificationGetVapidPublicKey = (signal?: AbortSignal) => {

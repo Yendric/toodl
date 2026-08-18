@@ -33,6 +33,7 @@ const TodoTable: FC = () => {
   }
 
   const isShoppingList = list.type === "SHOPPING";
+  const readOnly = list.permission === "READ";
 
   return (
     <>
@@ -50,9 +51,10 @@ const TodoTable: FC = () => {
           selectedStoreId={selectedStoreId}
           onStoreChange={setSelectedStoreId}
           onDestroyCompleted={() => setDestroyCompletedModalOpen(true)}
+          readOnly={readOnly}
         />
 
-        <CreateTodoForm activeTodos={activeTodos} />
+        {!readOnly && <CreateTodoForm activeTodos={activeTodos} />}
 
         <Container sx={{ p: 0 }} maxWidth="md">
           {isShoppingList ? (

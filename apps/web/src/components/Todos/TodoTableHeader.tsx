@@ -38,6 +38,7 @@ interface Props {
   selectedStoreId: number | "";
   onStoreChange: (id: number | "") => void;
   onDestroyCompleted: () => void;
+  readOnly?: boolean;
 }
 
 const TodoTableHeader: FC<Props> = ({
@@ -47,15 +48,18 @@ const TodoTableHeader: FC<Props> = ({
   selectedStoreId,
   onStoreChange,
   onDestroyCompleted,
+  readOnly = false,
 }) => {
   return (
     <Box
       sx={{ mb: 2, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 2 }}
     >
       <Stack direction="row" spacing={1} sx={{ alignItems: "center" }}>
-        <Button disabled={completedCount === 0} onClick={onDestroyCompleted} variant="contained" sx={{ height: 40 }}>
-          Verwijder voltooid
-        </Button>
+        {!readOnly && (
+          <Button disabled={completedCount === 0} onClick={onDestroyCompleted} variant="contained" sx={{ height: 40 }}>
+            Verwijder voltooid
+          </Button>
+        )}
         {isShoppingList && (
           <Suspense fallback={null}>
             <StoreSelect selectedStoreId={selectedStoreId} onStoreChange={onStoreChange} />

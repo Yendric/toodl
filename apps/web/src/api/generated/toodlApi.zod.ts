@@ -98,6 +98,8 @@ export const TodoIndexResponseItem = zod.object({
   listId: zod.number().nullable(),
   userId: zod.number(),
   categoryId: zod.number().nullable(),
+  createdBy: zod.string(),
+  categoryName: zod.string().nullable(),
   createdAt: zod.iso.datetime({ offset: true }),
   updatedAt: zod.iso.datetime({ offset: true }),
 });
@@ -155,6 +157,8 @@ export const TodoStoreResponse = zod.object({
   listId: zod.number().nullable(),
   userId: zod.number(),
   categoryId: zod.number().nullable(),
+  createdBy: zod.string(),
+  categoryName: zod.string().nullable(),
   createdAt: zod.iso.datetime({ offset: true }),
   updatedAt: zod.iso.datetime({ offset: true }),
 });
@@ -185,6 +189,8 @@ export const TodoGetByListResponseItem = zod.object({
   listId: zod.number().nullable(),
   userId: zod.number(),
   categoryId: zod.number().nullable(),
+  createdBy: zod.string(),
+  categoryName: zod.string().nullable(),
   createdAt: zod.iso.datetime({ offset: true }),
   updatedAt: zod.iso.datetime({ offset: true }),
 });
@@ -246,6 +252,8 @@ export const TodoUpdateResponse = zod.object({
   listId: zod.number().nullable(),
   userId: zod.number(),
   categoryId: zod.number().nullable(),
+  createdBy: zod.string(),
+  categoryName: zod.string().nullable(),
   createdAt: zod.iso.datetime({ offset: true }),
   updatedAt: zod.iso.datetime({ offset: true }),
 });
@@ -326,6 +334,91 @@ export const StoreUpdateOrderBody = zod.array(StoreUpdateOrderBodyItem);
 
 export const StoreUpdateOrderResponse = zod.boolean();
 
+export const ShareInvitationsResponseItem = zod.object({
+  id: zod.number(),
+  listId: zod.number(),
+  listName: zod.string(),
+  listColor: zod.string(),
+  ownerUsername: zod.string(),
+  permission: zod.enum(["READ", "WRITE"]),
+  createdAt: zod.iso.datetime({ offset: true }),
+});
+export const ShareInvitationsResponse = zod.array(ShareInvitationsResponseItem);
+
+export const ShareIndexForListParams = zod.object({
+  listId: zod.number(),
+});
+
+export const ShareIndexForListResponseItem = zod.object({
+  id: zod.number(),
+  listId: zod.number(),
+  email: zod.string(),
+  permission: zod.enum(["READ", "WRITE"]),
+  status: zod.enum(["PENDING", "ACCEPTED"]),
+  createdAt: zod.iso.datetime({ offset: true }),
+  updatedAt: zod.iso.datetime({ offset: true }),
+});
+export const ShareIndexForListResponse = zod.array(ShareIndexForListResponseItem);
+
+export const ShareStoreParams = zod.object({
+  listId: zod.number(),
+});
+
+export const shareStoreBodyEmailMax = 255;
+
+export const shareStoreBodyEmailRegExp = new RegExp("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$");
+
+export const ShareStoreBody = zod.object({
+  email: zod.string().max(shareStoreBodyEmailMax).regex(shareStoreBodyEmailRegExp),
+  permission: zod.enum(["READ", "WRITE"]),
+});
+
+export const ShareStoreResponse = zod.object({
+  id: zod.number(),
+  listId: zod.number(),
+  email: zod.string(),
+  permission: zod.enum(["READ", "WRITE"]),
+  status: zod.enum(["PENDING", "ACCEPTED"]),
+  createdAt: zod.iso.datetime({ offset: true }),
+  updatedAt: zod.iso.datetime({ offset: true }),
+});
+
+export const ShareAcceptParams = zod.object({
+  listId: zod.number(),
+});
+
+export const ShareAcceptResponse = zod.boolean();
+
+export const ShareLeaveParams = zod.object({
+  listId: zod.number(),
+});
+
+export const ShareLeaveResponse = zod.boolean();
+
+export const ShareUpdateParams = zod.object({
+  shareId: zod.number(),
+});
+
+export const ShareUpdateBody = zod.object({
+  permission: zod.enum(["READ", "WRITE"]),
+});
+
+export const ShareUpdateResponse = zod.object({
+  id: zod.number(),
+  listId: zod.number(),
+  email: zod.string(),
+  permission: zod.enum(["READ", "WRITE"]),
+  status: zod.enum(["PENDING", "ACCEPTED"]),
+  createdAt: zod.iso.datetime({ offset: true }),
+  updatedAt: zod.iso.datetime({ offset: true }),
+});
+
+export const ShareDestroyParams = zod.object({
+  shareId: zod.number(),
+});
+
+export const ShareDestroyResponse = zod.boolean();
+
 export const NotificationGetVapidPublicKeyResponse = zod.object({
   publicKey: zod.string(),
 });
@@ -352,6 +445,9 @@ export const ListIndexResponseItem = zod.object({
   color: zod.string(),
   type: zod.enum(["REGULAR", "SHOPPING"]),
   userId: zod.number(),
+  permission: zod.enum(["OWNER", "WRITE", "READ"]),
+  isShared: zod.boolean(),
+  ownerUsername: zod.string(),
   createdAt: zod.iso.datetime({ offset: true }),
   updatedAt: zod.iso.datetime({ offset: true }),
 });
@@ -373,6 +469,9 @@ export const ListStoreResponse = zod.object({
   color: zod.string(),
   type: zod.enum(["REGULAR", "SHOPPING"]),
   userId: zod.number(),
+  permission: zod.enum(["OWNER", "WRITE", "READ"]),
+  isShared: zod.boolean(),
+  ownerUsername: zod.string(),
   createdAt: zod.iso.datetime({ offset: true }),
   updatedAt: zod.iso.datetime({ offset: true }),
 });
@@ -397,6 +496,9 @@ export const ListUpdateResponse = zod.object({
   color: zod.string(),
   type: zod.enum(["REGULAR", "SHOPPING"]),
   userId: zod.number(),
+  permission: zod.enum(["OWNER", "WRITE", "READ"]),
+  isShared: zod.boolean(),
+  ownerUsername: zod.string(),
   createdAt: zod.iso.datetime({ offset: true }),
   updatedAt: zod.iso.datetime({ offset: true }),
 });

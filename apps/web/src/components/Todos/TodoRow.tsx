@@ -2,6 +2,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useState, type FC } from "react";
 import type { TodoResponse } from "../../api/generated/model";
+import { useCurrentList } from "../../context/CurrentListState";
 import TodoEditRow from "./TodoRowEdit";
 import TodoShowRow from "./TodoRowShow";
 
@@ -12,10 +13,12 @@ interface Props {
 
 const TodoRow: FC<Props> = ({ todo, draggable = false }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const { list } = useCurrentList();
+  const readOnly = list?.permission === "READ";
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: todo.id,
-    disabled: !draggable,
+    disabled: !draggable || readOnly,
   });
 
   const style = {
@@ -23,7 +26,9 @@ const TodoRow: FC<Props> = ({ todo, draggable = false }) => {
     transition: isDragging ? undefined : transition,
   };
 
-  const toggleEditing = () => setIsEditing(!isEditing);
+  const toggleEditing = () => {
+    if (!readOnly) setIsEditing(!isEditing);
+  };
 
   return isEditing ? (
     <TodoEditRow
