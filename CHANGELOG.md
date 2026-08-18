@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.3.0](https://github.com/Yendric/toodl/compare/v2.2.0...v2.3.0) (2026-08-18)
+
+
+### Features
+
+* **api:** add list sharing with permissions ([fbe2149](https://github.com/Yendric/toodl/commit/fbe214994f133d8e437151244e29c9d69d7ce59b))
+* **web:** add shared list UI ([ba0fc4d](https://github.com/Yendric/toodl/commit/ba0fc4d66dc23610e84f23b57fad828a37c65fac))
+
 ## [2.2.0](https://github.com/Yendric/toodl/compare/v2.1.0...v2.2.0) (2026-08-08)
 
 
