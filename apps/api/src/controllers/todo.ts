@@ -65,6 +65,8 @@ interface TodoResponse {
   listId: number | null;
   userId: number;
   categoryId: number | null;
+  createdBy: string;
+  categoryName: string | null;
   createdAt: Date;
   updatedAt: Date;
 }

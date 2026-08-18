@@ -6,9 +6,10 @@ import { vi } from "vitest";
 describe("ListService", () => {
   let listService: ListService;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks();
     listService = new ListService();
+    await prisma.user.create({ data: { id: 1, email: "user@example.com", username: "User" } });
   });
 
   describe("listForUser", () => {
@@ -20,6 +21,29 @@ describe("ListService", () => {
       expect(lists).toHaveLength(2);
       expect(lists[0]?.name).toBe("A List");
       expect(lists[1]?.name).toBe("B List");
+      expect(lists[0]?.permission).toBe("OWNER");
+      expect(lists[0]?.isShared).toBe(false);
+    });
+
+    it("should include accepted shared lists with their permission", async () => {
+      await prisma.user.create({ data: { id: 2, email: "owner@example.com", username: "Owner" } });
+      await prisma.list.create({ data: { id: 1, name: "Mine", userId: 1 } });
+      await prisma.list.create({ data: { id: 2, name: "Shared", userId: 2 } });
+      await prisma.list.create({ data: { id: 3, name: "Pending", userId: 2 } });
+      await prisma.listShare.create({
+        data: { listId: 2, email: "user@example.com", userId: 1, permission: "WRITE", status: "ACCEPTED" },
+      });
+      await prisma.listShare.create({
+        data: { listId: 3, email: "user@example.com", userId: 1, permission: "READ", status: "PENDING" },
+      });
+
+      const lists = await listService.listForUser(1);
+      expect(lists.map((l) => l.name)).toEqual(["Mine", "Shared"]);
+
+      const shared = lists.find((l) => l.name === "Shared");
+      expect(shared?.permission).toBe("WRITE");
+      expect(shared?.isShared).toBe(true);
+      expect(shared?.ownerUsername).toBe("Owner");
     });
   });
 

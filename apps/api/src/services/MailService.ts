@@ -3,12 +3,19 @@ import { Resend } from "resend";
 import { LoggingService } from "./LoggingService.js";
 import { emailTemplate } from "./mailTemplate.js";
 
+const escapeHtml = (value: string) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
 export interface IMailService {
   sendWelcomeMail(
     user: { email: string; username: string } & { [x: string | number | symbol]: unknown },
   ): Promise<void>;
   sendRemovalMail(
     user: { email: string; username: string } & { [x: string | number | symbol]: unknown },
+  ): Promise<void>;
+  sendShareInvitationMail(
+    user: { email: string; username: string } & { [x: string | number | symbol]: unknown },
+    inviterUsername: string,
+    listName: string,
   ): Promise<void>;
 }
 
@@ -75,6 +82,26 @@ Het Toodl-team`,
 
     Met vriendelijke groeten,<br/>
     Het Toodl-team`,
+    );
+  }
+
+  public async sendShareInvitationMail(
+    user: { email: string; username: string } & { [x: string | number | symbol]: unknown },
+    inviterUsername: string,
+    listName: string,
+  ) {
+    await this.sendMail(
+      user.email,
+      "",
+      "Lijst met je gedeeld",
+      `Beste ${escapeHtml(user.username)},<br/><br/>
+
+${escapeHtml(inviterUsername)} heeft de lijst "${escapeHtml(listName)}" met je gedeeld.<br/><br/>
+
+Open Toodl om de uitnodiging te accepteren: ${process.env.APP_URI || "http://localhost:3000"}<br/><br/>
+
+Met vriendelijke groeten,<br/>
+Het Toodl-team`,
     );
   }
 }

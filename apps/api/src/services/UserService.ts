@@ -53,6 +53,9 @@ export class UserService implements IUserService {
     return await prisma.$transaction(async (tx) => {
       const user = await tx.user.create({ data });
 
+      // Koppel openstaande uitnodigingen die naar dit e-mailadres zijn gestuurd
+      await tx.listShare.updateMany({ where: { email: user.email, userId: null }, data: { userId: user.id } });
+
       // Create default categories
       const categories = [
         "Groenten & Fruit",
@@ -152,15 +155,23 @@ export class UserService implements IUserService {
 
   public async update(userId: number, data: UserUpdateData): Promise<User> {
     const { email, ...rest } = data;
-    return await prisma.user.update({
+    const newEmail = email?.toLowerCase();
+
+    const updated = await prisma.user.update({
       where: {
         id: userId,
       },
       data: {
         ...rest,
-        email: email ? email.toLowerCase() : undefined,
+        email: newEmail,
       },
     });
+
+    if (newEmail) {
+      await prisma.listShare.updateMany({ where: { email: newEmail, userId: null }, data: { userId } });
+    }
+
+    return updated;
   }
 
   public async delete(user: User): Promise<void> {

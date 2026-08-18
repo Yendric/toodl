@@ -1,11 +1,18 @@
 import { DatabaseLimitError } from "#/errors/DatabaseLimitError.js";
 import { type List } from "#/generated/prisma/client.js";
 import prisma from "#/prisma.js";
+import { type ListAccess } from "#/services/ListAccessService.js";
+
+export type ListWithAccess = List & { permission: ListAccess; isShared: boolean; ownerUsername: string };
 
 export interface IListService {
-  listForUser(userId: number): Promise<List[]>;
+  listForUser(userId: number): Promise<ListWithAccess[]>;
   create(userId: number, data: Pick<List, "name" | "color"> & { type?: List["type"] }): Promise<List>;
-  update(userId: number, listId: number, data: Partial<Pick<List, "name" | "color" | "type">>): Promise<List>;
+  update(
+    userId: number,
+    listId: number,
+    data: Partial<Pick<List, "name" | "color" | "type">>,
+  ): Promise<List & { isShared: boolean }>;
   delete(userId: number, listId: number): Promise<List>;
 }
 
@@ -13,10 +20,23 @@ import { injectable } from "inversify";
 
 @injectable()
 export class ListService implements IListService {
-  public async listForUser(userId: number): Promise<List[]> {
-    return await prisma.list.findMany({
-      where: { userId },
+  public async listForUser(userId: number): Promise<ListWithAccess[]> {
+    const lists = await prisma.list.findMany({
+      where: {
+        OR: [{ userId }, { shares: { some: { userId, status: "ACCEPTED" } } }],
+      },
+      include: { user: { select: { username: true } }, shares: true },
       orderBy: { name: "asc" },
+    });
+
+    return lists.map(({ user: owner, shares, ...list }) => {
+      const ownShare = shares.find((share) => share.userId === userId);
+      return {
+        ...list,
+        permission: list.userId === userId ? "OWNER" : ownShare?.permission === "WRITE" ? "WRITE" : "READ",
+        isShared: shares.some((share) => share.status === "ACCEPTED"),
+        ownerUsername: owner.username,
+      };
     });
   }
 
@@ -40,11 +60,13 @@ export class ListService implements IListService {
     userId: number,
     listId: number,
     data: Partial<Pick<List, "name" | "color" | "type">>,
-  ): Promise<List> {
-    return await prisma.list.update({
+  ): Promise<List & { isShared: boolean }> {
+    const { shares, ...list } = await prisma.list.update({
       data,
       where: { id: listId, userId },
+      include: { shares: { where: { status: "ACCEPTED" } } },
     });
+    return { ...list, isShared: shares.length > 0 };
   }
 
   public async delete(userId: number, listId: number): Promise<List> {

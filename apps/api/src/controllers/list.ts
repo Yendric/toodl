@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { ListService } from "#/services/ListService.js";
-import { getAuthenticatedUserId } from "#/utils/auth.js";
+import { getAuthenticatedUser, getAuthenticatedUserId } from "#/utils/auth.js";
 import { type Request as ExRequest } from "express";
 import { Body, Controller, Delete, Get, Path, Post, Request, Route, Security, Tags } from "tsoa";
 import type { ListType } from "../generated/prisma/enums.js";
@@ -24,6 +24,9 @@ interface ListResponse {
   color: string;
   type: ListType;
   userId: number;
+  permission: "OWNER" | "WRITE" | "READ";
+  isShared: boolean;
+  ownerUsername: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -45,8 +48,9 @@ export class ListController extends Controller {
 
   @Post("/")
   public async store(@Request() request: ExRequest, @Body() body: ListRequest): Promise<ListResponse> {
-    const userId = getAuthenticatedUserId(request);
-    return await this.listService.create(userId, body);
+    const user = getAuthenticatedUser(request);
+    const list = await this.listService.create(user.id, body);
+    return { ...list, permission: "OWNER", isShared: false, ownerUsername: user.username };
   }
 
   @Post("{listId}")
@@ -55,8 +59,9 @@ export class ListController extends Controller {
     @Path() listId: number,
     @Body() body: ListRequest,
   ): Promise<ListResponse> {
-    const userId = getAuthenticatedUserId(request);
-    return await this.listService.update(userId, listId, body);
+    const user = getAuthenticatedUser(request);
+    const list = await this.listService.update(user.id, listId, body);
+    return { ...list, permission: "OWNER", ownerUsername: user.username };
   }
 
   @Delete("{listId}")

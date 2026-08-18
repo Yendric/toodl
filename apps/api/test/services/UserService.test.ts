@@ -32,6 +32,17 @@ describe("UserService", () => {
       const stores = await prisma.store.findMany({ where: { userId: result.id } });
       expect(stores).toHaveLength(1);
     });
+
+    it("should link pending shares addressed to the new user's email", async () => {
+      await prisma.user.create({ data: { id: 50, email: "owner@example.com", username: "owner" } });
+      await prisma.list.create({ data: { id: 1, name: "List", userId: 50 } });
+      await prisma.listShare.create({ data: { listId: 1, email: "test@example.com" } });
+
+      const user = await userService.createUserWithDefaults({ email: "test@example.com", username: "testuser" });
+
+      const share = await prisma.listShare.findFirst({ where: { listId: 1 } });
+      expect(share?.userId).toBe(user.id);
+    });
   });
 
   describe("update", () => {
@@ -60,6 +71,18 @@ describe("UserService", () => {
       const dbUser = await prisma.user.findUnique({ where: { id: 1 } });
       expect(dbUser?.username).toBe("newuser");
       expect(dbUser?.email).toBe("test@example.com");
+    });
+
+    it("should link unlinked shares addressed to the new email", async () => {
+      await prisma.user.create({ data: { id: 1, email: "old@example.com", username: "user" } });
+      await prisma.user.create({ data: { id: 2, email: "owner@example.com", username: "owner" } });
+      await prisma.list.create({ data: { id: 1, name: "List", userId: 2 } });
+      await prisma.listShare.create({ data: { listId: 1, email: "new@example.com" } });
+
+      await userService.update(1, { email: "new@example.com" });
+
+      const share = await prisma.listShare.findFirst({ where: { listId: 1 } });
+      expect(share?.userId).toBe(1);
     });
   });
 
