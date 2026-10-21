@@ -23,7 +23,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-l
 COPY apps/api/prisma apps/api/prisma
 COPY apps/api/prisma.config.ts apps/api/
 WORKDIR /repo/apps/api
-RUN pnpm dlx prisma generate --generator client
+RUN pnpm exec prisma generate --generator client
 
 FROM base AS development
 ENV NODE_ENV=development
