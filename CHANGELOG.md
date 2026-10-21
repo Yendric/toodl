@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.1](https://github.com/Yendric/toodl/compare/v2.3.0...v2.3.1) (2026-10-21)
+
+
+### Bug Fixes
+
+* **api:** run prisma cli from lockfile instead of dlx ([b5a5424](https://github.com/Yendric/toodl/commit/b5a54244bdbb26a6b23febc6e3d8122a82c8adf2))
+
 ## [2.3.0](https://github.com/Yendric/toodl/compare/v2.2.0...v2.3.0) (2026-08-18)
 
 
